@@ -1,0 +1,121 @@
+<?php
+namespace ApprenticeshipOnlineAssessmentTool;
+
+/**
+ * Scripts and Styles Class
+ */
+class Assets {
+
+    function __construct() {
+
+        if ( is_admin() ) {
+            add_action( 'admin_enqueue_scripts', [ $this, 'register' ], 5 );
+        } else {
+            add_action( 'wp_enqueue_scripts', [ $this, 'register' ], 5 );
+        }
+    }
+
+    /**
+     * Register our app scripts and styles
+     *
+     * @return void
+     */
+    public function register() {
+        $this->register_scripts( $this->get_scripts() );
+        $this->register_styles( $this->get_styles() );
+    }
+
+    /**
+     * Register scripts
+     *
+     * @param  array $scripts
+     *
+     * @return void
+     */
+    private function register_scripts( $scripts ) {
+        foreach ( $scripts as $handle => $script ) {
+            $deps      = isset( $script['deps'] ) ? $script['deps'] : false;
+            $in_footer = isset( $script['in_footer'] ) ? $script['in_footer'] : false;
+            $version   = isset( $script['version'] ) ? $script['version'] : APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_VERSION;
+
+            wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
+        }
+    }
+
+    /**
+     * Register styles
+     *
+     * @param  array $styles
+     *
+     * @return void
+     */
+    public function register_styles( $styles ) {
+        foreach ( $styles as $handle => $style ) {
+            $deps = isset( $style['deps'] ) ? $style['deps'] : false;
+
+            wp_register_style( $handle, $style['src'], $deps, APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_VERSION );
+        }
+    }
+
+    /**
+     * Get all registered scripts
+     *
+     * @return array
+     */
+    public function get_scripts() {
+        $prefix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.min' : '';
+
+        $scripts = [
+            'apprenticeship-online-assessment-tool-runtime' => [
+                'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/runtime.js',
+                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/runtime.js' ),
+                'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-vendor' => [
+                'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/vendors.js',
+                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/vendors.js' ),
+                'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-frontend' => [
+                'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/frontend.js',
+                'deps'      => [ 'jquery', 'apprenticeship-online-assessment-tool-vendor', 'apprenticeship-online-assessment-tool-runtime' ],
+                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/frontend.js' ),
+                'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-admin' => [
+                'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/admin.js',
+                'deps'      => [ 'jquery', 'apprenticeship-online-assessment-tool-vendor', 'apprenticeship-online-assessment-tool-runtime' ],
+                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/admin.js' ),
+                'in_footer' => true
+            ]
+        ];
+
+        return $scripts;
+    }
+
+    /**
+     * Get registered styles
+     *
+     * @return array
+     */
+    public function get_styles() {
+
+        $styles = [
+            'apprenticeship-online-assessment-tool-style' => [
+                'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/style.css'
+            ],
+            'apprenticeship-online-assessment-tool-frontend' => [
+                'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/frontend.css'
+            ],
+            'apprenticeship-online-assessment-tool-admin' => [
+                'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.css'
+            ],
+            'apprenticeship-online-assessment-tool-admin-extend' => [
+                'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.extend.css'
+            ],
+        ];
+
+        return $styles;
+    }
+
+}

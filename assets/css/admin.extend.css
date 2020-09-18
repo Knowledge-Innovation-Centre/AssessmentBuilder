@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.more-options-button {
+  position: absolute;
+  top: -20px;
+  right: 10px;
+}
+
+.width-100 {
+  width: 100%;
+}
