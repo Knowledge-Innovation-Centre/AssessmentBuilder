@@ -68,24 +68,24 @@ class Assets {
         $scripts = [
             'apprenticeship-online-assessment-tool-runtime' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/runtime.js',
-                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/runtime.js' ),
+                'version'   => '0.5.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-vendor' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/vendors.js',
-                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/vendors.js' ),
+                'version'   => '0.5.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-frontend' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/frontend.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/frontend.js' ),
+                'version'   => '0.5.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-admin' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/admin.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => filemtime( APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/assets/js/admin.js' ),
+                'version'   => '0.5.0',
                 'in_footer' => true
             ],
             //'apprenticeship-online-assessment-tool-frontend' => [
