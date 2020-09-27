@@ -39,9 +39,6 @@
       }
     },
     methods: {
-      updateObject(object) {
-        console.log(object);
-      }
     }
   };
 </script>

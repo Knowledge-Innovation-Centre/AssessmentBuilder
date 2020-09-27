@@ -26,6 +26,9 @@ class Api extends WP_REST_Controller {
         if ( !class_exists( __NAMESPACE__ . '\Api\Form'  ) ) {
             require_once __DIR__ . '/Api/Form.php';
         }
+        if ( !class_exists( __NAMESPACE__ . '\Api\Report'  ) ) {
+            require_once __DIR__ . '/Api/Report.php';
+        }
         if ( !class_exists( __NAMESPACE__ . '\Api\Assessment'  ) ) {
             require_once __DIR__ . '/Api/Assessment.php';
         }
@@ -39,6 +42,7 @@ class Api extends WP_REST_Controller {
     public function register_routes() {
         (new Api\Form())->register_routes();
         (new Api\Assessment())->register_routes();
+        (new Api\Report())->register_routes();
     }
 
 }

@@ -2,10 +2,8 @@
   <div>
         <label for="label">
           {{ object.label }} <template v-if="object.required">*</template>
-          <input v-model="value" type="text"  :placeholder="object.placeholder">
-<!--          <date-picker v-model="value"  :placeholder="object.placeholder" valueType="format"></date-picker>-->
+          <date-picker v-model="localDate"  :placeholder="object.placeholder"></date-picker>
         </label>
-
     </div>
 </template>
 
@@ -31,23 +29,22 @@ import 'vue2-datepicker/index.css';
 
     data () {
       return {
+        localDate: null
       };
     },
+
     computed: {
-      value: {
-        get () {
-          return this.$store.state.assessment[this.object.key]
-        },
-        set (newValue) {
-          return this.$store.dispatch('updateValue', { key: this.object.key, value: newValue})
-        }
+
+    },
+
+    watch: {
+      localDate() {
+        this.$store.dispatch('updateValue', { key: this.object.key, value: this.localDate})
       }
     },
 
+
     methods: {
-      updateObject(object) {
-        console.log(object);
-      }
     }
   };
 </script>

@@ -6,6 +6,12 @@ export const mutations = {
   REMOVE_FIELD(state, payload) {
     state.form.items = removeByKey(state.form.items, payload);
   },
+  UPDATE_REPORT(state, payload) {
+    state.report = payload
+  },
+  REMOVE_FIELD_REPORT(state, payload) {
+    state.report.items = removeByKey(state.report.items, payload);
+  },
 }
 
 function removeByKey(items, key) {

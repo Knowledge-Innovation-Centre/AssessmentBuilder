@@ -1,6 +1,7 @@
 <template>
   <div>
-    <flex :items="object.items" :object="object" class="row" direction="column"></flex>
+    <h2 v-if="object.showTitle">{{ object.name }}</h2>
+    <flex :items="object.items" :object="object" direction="column"></flex>
   </div>
 </template>
 

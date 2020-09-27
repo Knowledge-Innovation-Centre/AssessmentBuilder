@@ -1,30 +1,36 @@
 <template>
-    <div>
-        <template v-for="(item, index) in items">
+    <div :class="classes">
+        <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div v-show="item.key === currentPage">
+            <div class="aoat-flex-1" :class="elementClass" v-show="item.key === currentPage">
               <generic :key="item.key" :form="item"></generic>
-              <template v-if="index === 0 && items.length > 1">
+              <div class="aoat-flex aoat-flex-row aoat-justify-between">
+                <template v-if="index === 0 && getItems.length > 1">
+                  <div></div>
                   <button @click="setNextPage(index)">Next</button>
-              </template>
-              <template v-else-if="index < items.length -1 && items.length > 1">
-                  <button @click="setPreviousPage(index)">Back</button>
-                  <button @click="setNextPage(index)">Next</button>
-              </template>
-              <template v-else>
-                <template v-if="items.length > 1">
-                  <button @click="setPreviousPage(index)">Back</button>
                 </template>
-                <button @click="save()">Submit</button>
+                <template v-else-if="index < getItems.length -1 && getItems.length > 1">
+                  <button @click="setPreviousPage(index)">Back</button>
+                  <button @click="setNextPage(index)">Next</button>
+                </template>
+                <template v-else>
+                  <template v-if="getItems.length > 1">
+                    <button @click="setPreviousPage(index)">Back</button>
+                  </template>
 
-              </template>
+                  <div v-else></div>
+                  <!--                <button v-if="isReport" @click="download()">Download</button>-->
+                  <button @click="save()">Submit</button>
+
+                </template>
+              </div>
+
             </div>
             </transition>
           </template>
           <template v-else>
-            <generic :key="item.key" :form="item"></generic>
-
+            <generic :key="item.key" :class="elementClass" :form="item"></generic>
           </template>
         </template>
             <p class="message" v-if="message">{{ message }}</p>
@@ -34,20 +40,55 @@
 <script>
 
   import axios from "axios";
+  import isEmpty from "lodash/isEmpty";
 
   export default {
     name: "Flex",
     components: {
       Generic: () => import('./Generic.vue'),
     },
+    computed: {
+      isReport() {
+        return isEmpty(this.$store.state.report)
+      },
+      getItems() {
+        return this.items.filter(item => {
+          if (!item.showIf) {
+            return true
+          }
+          if (!item.showIf.field) {
+            return true
+          }
+          let field = item.showIf.field;
+          let value = item.showIf.value;
+          let assessment = this.$store.state.assessment;
+          if (!assessment[field]) {
+            return false
+          }
+
+          return assessment[field] === value
+        })
+      },
+      classes() {
+        let classes = []
+        if (this.direction === 'row') {
+          classes.push('aoat-flex-row');
+        } else {
+          classes.push('aoat-flex-col');
+        }
+        classes.push('aoat-flex')
+        return classes;
+      }
+    },
     props: {
       items: null,
-      direction: String
+      direction: String,
+      elementClass: String
     },
     data() {
       return {
         currentPage: null,
-        title: null,
+        title: "",
         message: null,
       }
     },
@@ -64,9 +105,10 @@
         let $this = this
         this.setTitle(this.items);
         let assessmentData = this.$store.state.assessment
-        axios.post(aoatSaveAssessmentUrl, {
+        axios.post(aoat_config.aoatSaveAssessmentUrl, {
           title: this.title,
           assessmentData: assessmentData,
+          formId: this.$store.state.formId,
         })
             .then(function (response) {
               $this.$store.dispatch('clearAssessment');
@@ -75,7 +117,6 @@
 
               $this.currentPage = $this.items[0].key
 
-              console.log(response);
             })
             .catch(function (error) {
               console.log(error);

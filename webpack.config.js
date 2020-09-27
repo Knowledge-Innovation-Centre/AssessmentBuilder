@@ -1,186 +1,42 @@
-const webpack = require('webpack');
 const path = require('path');
-const package = require('./package.json');
+const webpack = require('webpack');
+const {merge} = require('webpack-merge');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TerserJSPlugin = require('terser-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const config = require( './config.json' );
 
-const devMode = true//process.env.NODE_ENV !== 'production';
+const modeConfig = env => require(`./webpack-configs/${env.mode}.js`)(env);
 
-// Naming and path settings
-var appName = 'app';
-var entryPoint = {
-  frontend: './src/frontend/main.js',
-  admin: './src/admin/main.js',
-  adminStyle: './assets/scss/admin.scss',
-  frontendStyle: './assets/scss/frontend.scss',
-};
-
-var exportPath = path.resolve(__dirname, './assets/js');
-
-// Enviroment flag
-var plugins = [];
-var env = process.env.NODE_ENV;
-
-function isProduction() {
-  return process.env.NODE_ENV === 'production';
-}
-
-// extract css into its own file
-plugins.push(new MiniCssExtractPlugin({
-  filename: '../css/[name].css',
-  ignoreOrder: false, // Enable to remove warnings about conflicting order
-}));
-
-// plugins.push(new BrowserSyncPlugin( {
-//   proxy: {
-//     target: config.proxyURL
-//   },
-//   files: [
-//     '**/*.php'
-//   ],
-//   cors: true,
-//   reloadDelay: 0
-// } ));
-
-plugins.push(new VueLoaderPlugin());
-plugins.push(require('tailwindcss'));
-plugins.push(require('autoprefixer'));
-
-// Differ settings based on production flag
-if ( devMode ) {
-  appName = '[name].js';
-} else {
-  appName = '[name].min.js';
-}
-
-module.exports = {
-  entry: entryPoint,
-  mode: devMode ? 'development' : 'production',
-  output: {
-    path: exportPath,
-    filename: appName,
-  },
-
-  resolve: {
-    alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      '@': path.resolve('./src/'),
-      'frontend': path.resolve('./src/frontend/'),
-      'admin': path.resolve('./src/admin/'),
-    },
-    modules: [
-      path.resolve('./node_modules'),
-      path.resolve(path.join(__dirname, 'src/')),
-    ]
-  },
-
-  optimization: {
-    runtimeChunk: 'single',
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          test: /[\\\/]node_modules[\\\/]/,
-          name: 'vendors',
-          chunks: 'all'
-        }
-      }
-    },
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-  },
-
-  plugins,
-
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader'
+module.exports = env => {
+  return merge(
+    {
+      mode: env.mode,
+      entry: {
+        frontend: './src/frontend/main.js',
+        admin: './src/admin/main.js',
       },
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
+      output: {
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'assets/js/'),
+        chunkFilename: '[name].[contenthash].js',
       },
-      {
-        test: /admin.scss$/,
-        use: [
+      module: {
+        rules: [
+          { test: /\.js$/, exclude: /(node_modules)/, loader: ['babel-loader'] },
           {
-            loader: 'file-loader',
+            test: /\.vue$/,
+            exclude: /(node_modules)/,
+            loader: 'vue-loader',
             options: {
-              name: '../css/admin.extend.css',
-            }
-          },
-          {
-            loader: 'extract-loader'
-          },
-          {
-            loader: 'css-loader?-url'
-          },
-          {
-            loader: 'postcss-loader'
-          },
-          {
-            loader: 'sass-loader'
-          }
-        ]
-      },
-      {
-        test: /frontend.scss$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '../css/frontend.extend.css',
-            }
-          },
-          {
-            loader: 'extract-loader'
-          },
-          {
-            loader: 'css-loader?-url'
-          },
-          {
-            loader: 'postcss-loader'
-          },
-          {
-            loader: 'sass-loader'
-          }
-        ]
-      },
-      {
-        test: /\.png$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              mimetype: 'image/png'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.svg$/,
-        use: 'file-loader'
-      },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: (resourcePath, context) => {
-                return path.relative(path.dirname(resourcePath), context) + '/';
+              loaders: {
+                scss: 'vue-style-loader!css-loader!sass-loader',
+                css: 'vue-style-loader!css-loader',
               },
-              hmr: process.env.NODE_ENV === 'development',
             },
           },
-          'css-loader',
         ],
       },
-    ]
-  },
-}
+      resolve: { extensions: ['.js'], alias: { vue$: 'vue/dist/vue.esm.js' } },
+      plugins: [new webpack.ProgressPlugin(), new VueLoaderPlugin()],
+    },
+    modeConfig(env),
+  );
+};

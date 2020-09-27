@@ -1,47 +1,43 @@
 <template>
-    <div>
-      <table class="table">
-        <tbody>
+  <div class="aoat-flex aoat-flex-col">
+    <strong class="aoat-m-1">Label/Question:</strong>
+    <input class="aoat-w-full aoat-m-1" placeholder="Enter question here" v-model="object.label" type="text" >
+    <strong class="aoat-m-1">Options:</strong>
+    <table class="aoat-w-full">
+      <thead>
         <tr>
-          <th>Label/Question:</th>
-          <td>
-            <input name="label" placeholder="Enter question here" v-model="object.label" type="text" >
-          </td>
+          <th>Unique ID</th>
+          <th>Value</th>
+          <th>Score</th>
+          <th>Color</th>
+          <th>Actions</th>
         </tr>
-        <tr>
-          <th>Options:</th>
-          <td>
-            <table>
-              <thead>
-              <tr>
-                <th>Unique ID</th>
-                <th>Value</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="option in object.options">
-                <td><input type="text" v-model="option.id"></td>
-                <td><input type="text" v-model="option.name"></td>
-              </tr>
-              </tbody>
-              <tfoot>
-              <tr>
-                <td colspan="2" style="text-align: center">
-                  <button @click="addOption()">+</button>
-                </td>
-              </tr>
-              </tfoot>
-            </table>
-          </td>
+        </thead>
+        <tbody>
+        <tr v-for="(option, index) in object.options">
+          <td class="aoat-w-32"><input type="text" class="aoat-w-full" v-model="option.id"></td>
+          <td><input type="text" class="aoat-w-full" v-model="option.name"></td>
+          <td class="aoat-w-12"><input type="number" class="aoat-w-full" v-model="option.score"></td>
+          <td class="aoat-w-12">    <v-swatches v-model="option.color"></v-swatches></td>
+          <td class="aoat-w-12"><button class="aoat-h-6" @click="removeOption(index)">X</button></td>
         </tr>
         </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="2" style="text-align: center">
+            <button @click="addOption()">+</button>
+          </td>
+        </tr>
+        </tfoot>
       </table>
-
-
     </div>
 </template>
 
 <script>
+import VSwatches from 'vue-swatches'
+
+// Import the styles too, globally
+import "vue-swatches/dist/vue-swatches.css"
 
   export default {
 
@@ -49,6 +45,7 @@
 
 
     components: {
+      VSwatches
     },
 
     props: {
@@ -67,8 +64,13 @@
       addOption() {
         this.object.options.push({
           id: "",
-          name: ""
+          name: "",
+          score: 1,
+          color: '#E84B3C',
         })
+      },
+      removeOption(index) {
+        this.object.options.splice(index, 1);
       }
     }
   };

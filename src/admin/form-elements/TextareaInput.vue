@@ -1,17 +1,8 @@
 <template>
-    <div>
-      <table class="table">
-        <tbody>
-        <tr>
-          <th>Label/Question:</th>
-          <td>
-            <input name="label" placeholder="Enter question here" v-model="object.label" type="text" >
-          </td>
-        </tr>
-        </tbody>
-      </table>
-
-    </div>
+  <div class="aoat-flex aoat-flex-col">
+    <strong class="aoat-m-1">Label/Question:</strong>
+    <input class="aoat-m-1" placeholder="Enter question here" v-model="object.label" type="text" >
+  </div>
 </template>
 
 <script>

@@ -231,6 +231,17 @@ final class Apprenticeship_Online_Assessment_Tool {
 			    'show_in_menu' => 'apprenticeship-online-assessment-tool'
 		    )
 	    );
+	    register_post_type('aoat_report',
+		    array(
+			    'labels'      => array(
+				    'name'          => __('Reports', 'apprenticeship-online-report-tool'),
+				    'singular_name' => __('Report', 'apprenticeship-online-report-tool'),
+			    ),
+			    'public'      => true,
+			    'has_archive' => true,
+			    'show_in_menu' => 'apprenticeship-online-report-tool'
+		    )
+	    );
 
 	    add_filter( 'admin_url', array( $this, 'aoat_change_add_new_for_form'), 10, 2 );
 
@@ -241,6 +252,9 @@ final class Apprenticeship_Online_Assessment_Tool {
 		if( $path === 'post-new.php?post_type=aoat_form' ) {
 			$url = admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/create'); // or any other url
 		}
+		if( $path === 'post-new.php?post_type=aoat_report' ) {
+			$url = admin_url('admin.php?page=apprenticeship-online-assessment-tool#/reports/create'); // or any other url
+		}
 
 		return $url;
 	}
@@ -248,14 +262,30 @@ final class Apprenticeship_Online_Assessment_Tool {
 	// Change the "View" link on the all posts page.
 	function aoat_change_edit_for_form( $actions, $page_object ) {
 
-		$title = _draft_or_post_title();
+    	if ( $page_object->post_type == 'aoat_form') {
+		    $title = _draft_or_post_title();
 
-		$actions['edit'] = sprintf(
-			'<a href="%s" rel="permalink" aria-label="%s">%s</a>',
-			admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/' . $page_object->ID),
-			esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'my-text-domain' ), $title ) ),
-			__( 'Edit', 'my-text-domain' )
-		);
+		    $actions['edit'] = sprintf(
+			    '<a href="%s" rel="permalink" aria-label="%s">%s</a>',
+			    admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/' . $page_object->ID),
+			    esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'my-text-domain' ), $title ) ),
+			    __( 'Edit', 'my-text-domain' )
+		    );
+	    }
+
+    	if ( $page_object->post_type == 'aoat_report') {
+		    $title = _draft_or_post_title();
+
+		    $formId = get_post_meta($page_object->ID, 'form_id');
+
+		    $actions['edit'] = sprintf(
+			    '<a href="%s" rel="permalink" aria-label="%s">%s</a>',
+			    admin_url('admin.php?page=apprenticeship-online-assessment-tool#/reports/' . $formId . '/' . $page_object->ID),
+			    esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'my-text-domain' ), $title ) ),
+			    __( 'Edit', 'my-text-domain' )
+		    );
+	    }
+
 
 		return $actions;
 	}

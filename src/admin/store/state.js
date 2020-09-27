@@ -1,4 +1,5 @@
 
 export const state = () => ({
-  form: []
+  form: {},
+  report: {},
 })

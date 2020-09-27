@@ -1,15 +1,32 @@
 <template>
     <div class="background-grey">
-      <textarea class="width-100" v-model="object.value" rows="10"></textarea>
+      <editor
+          api-key="lho3l6oj8tvr7qmrxxmj3i4t8zwc6nk7h1ic415l2dyjzmt1"
+          v-model="object.label"
+          :init="{
+         height: 200,
+         menubar: false,
+         plugins: [
+           'advlist autolink lists link image charmap print preview anchor',
+           'searchreplace visualblocks code fullscreen',
+           'insertdatetime media table paste code help wordcount'
+         ],
+         toolbar:
+           'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | \
+           bullist numlist outdent indent | removeformat | help | image'
+       }"
+      />
     </div>
 </template>
 
 <script>
-
+import Editor from '@tinymce/tinymce-vue'
   export default {
 
     name: 'Paragraph',
     components: {
+      Editor
     },
 
     props: {

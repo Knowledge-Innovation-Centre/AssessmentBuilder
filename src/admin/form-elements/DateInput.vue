@@ -1,15 +1,7 @@
 <template>
-    <div>
-      <table class="table">
-        <tbody>
-        <tr>
-          <th>Label/Question:</th>
-          <td>
-            <input name="label" placeholder="Enter question here" v-model="object.label" type="text" >
-          </td>
-        </tr>
-        </tbody>
-      </table>
+    <div class="aoat-flex aoat-flex-col">
+      <strong class="aoat-m-1">Label/Question:</strong>
+      <input class="aoat-w-full aoat-m-1" placeholder="Enter question here" v-model="object.label" type="text" />
     </div>
 </template>
 
@@ -17,7 +9,7 @@
 
   export default {
 
-    name: 'TextareaInput',
+    name: 'DateInput',
 
     components: {
     },
@@ -38,11 +30,4 @@
   };
 </script>
 <style scoped>
-
-.table > tbody > tr > th, .table > tbody > tr > td {
-  padding: 5px 10px;
-}
-.table > tbody > tr > th {
-  text-align: right;
-}
 </style>

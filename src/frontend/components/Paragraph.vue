@@ -1,6 +1,6 @@
 <template>
     <div>
-      <p>{{ object.value }}</p>
+      <p v-html="object.label"></p>
     </div>
 </template>
 

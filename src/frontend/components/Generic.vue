@@ -1,9 +1,7 @@
 <template>
-    <div class="generic">
-      <div v-if="checkShow" :class="form.class">
-        <component :is="getComponent" :object="form" class="inner"></component>
+    <div v-if="checkShow"  class="generic aoat-flex-1" :class="form.class">
+        <component :is="getComponent" :object="form"></component>
         <slot/>
-      </div>
     </div>
 </template>
 
@@ -19,6 +17,16 @@
   import RadioGridInput from "./form-elements/RadioGridInput.vue";
   import RadioInput from "./form-elements/RadioInput.vue";
   import Form from "./form-elements/Form.vue";
+  import Report from "./report-elements/Report.vue";
+  import DefaultReportElement from "./report-elements/DefaultReportElement.vue";
+  import SelectReportElement from "./report-elements/SelectReportElement.vue";
+  import RadioGridReportElement from "./report-elements/RadioGridReportElement.vue";
+  import RadioReportElement from "./report-elements/RadioReportElement.vue";
+  import TextReportElement from "./report-elements/TextReportElement.vue";
+  import TextAreaReportElement from "./report-elements/TextAreaReportElement.vue";
+  import DateReportElement from "./report-elements/DateReportElement.vue";
+  import FileUploadReportElement from "./report-elements/FileUploadReportElement.vue";
+  import FileUpload from "./form-elements/FileUpload.vue";
 
   export default {
     name: "Generic",
@@ -40,12 +48,23 @@
       DateInput,
       RadioGridInput,
       Form,
+      Report,
+      DefaultReportElement,
+      SelectReportElement,
+      RadioGridReportElement,
+      RadioReportElement,
+      TextReportElement,
+      TextAreaReportElement,
+      DateReportElement,
+      FileUploadReportElement,
+      FileUpload,
     },
     computed: {
       getComponent() {
         return this.form.component
       },
       checkShow() {
+        console.log('not');
         if (!this.form.showIf) {
           return true
         }

@@ -12,11 +12,11 @@
       <transition>
         <div v-if="show">
           <div class="background-info">
-          <table class="table">
+          <table class="table aoat-w-full">
             <tbody>
             <tr>
               <th>Name:</th>
-              <td><input v-model="object.name" type="text"></td>
+              <td><input v-model="object.name" class="aoat-w-full" type="text"></td>
             </tr>
             <tr v-if="typeof object.placeholder !== 'undefined'">
               <th>Placeholder:</th>
@@ -26,6 +26,14 @@
               <th>Required:</th>
               <td><input  v-model="object.required" type="checkbox"></td>
             </tr>
+            <tr v-if="typeof object.hidden !== 'undefined'">
+              <th>Hidden:</th>
+              <td><input  v-model="object.hidden" type="checkbox"></td>
+            </tr>
+            <tr v-if="typeof object.showTitle !== 'undefined'">
+              <th>Show title:</th>
+              <td><input  v-model="object.showTitle" type="checkbox"></td>
+            </tr>
             <tr v-if="typeof object.includeInAssessmentTitle !== 'undefined'">
               <th>Include in assessment title:</th>
               <td><input v-model="object.includeInAssessmentTitle" type="checkbox"></td>
@@ -34,14 +42,18 @@
               <th>Show if:</th>
               <td>
                 <select v-model="object.showIf.field">
-                  <option v-for="fieldInForm in fieldsInForm" :key="fieldInForm.key" :value="fieldInForm.key">{{fieldInForm.label}}{{fieldInForm.name}}</option>
+                  <option v-for="fieldInForm in fieldsInForm" :key="fieldInForm.key" :value="fieldInForm.key">
+                    {{fieldInForm.name}}
+                  </option>
                 </select>
               </td>
               <th v-if="object.showIf.field">is:</th>
               <td v-if="object.showIf.field">
                   <div v-if="isSelect(getFieldByKey(object.showIf.field))">
                     <select v-model="object.showIf.value">
-                      <option v-for="option in getFieldByKey(object.showIf.field).options" :key="option.id" :value="option.id">{{option.name}}</option>
+                      <option v-for="option in getFieldByKey(object.showIf.field).options" :key="option.id" :value="option.id">
+                        {{option.name}}
+                      </option>
                     </select>
                   </div>
                   <div v-else>
@@ -64,6 +76,7 @@
 
 <script>
   import {Multiselect} from "vue-multiselect";
+  import isEmpty from "lodash/isEmpty";
 
   export default {
 
@@ -83,7 +96,9 @@
     computed: {
       fieldsInForm() {
         let childrenKeys = this.getItemsRecursive([this.object]).map(item => item.key)
-        return this.getItemsRecursive(this.$store.state.form.items).filter(field => !childrenKeys.includes(field.key) )
+        return this.getItemsRecursive(this.$store.state.form.items)
+                      .filter(field => !childrenKeys.includes(field.key) )
+                      .filter(field => ['text','select','date','radio','radio_grid'].includes(field.type))
 
       }
     },
@@ -104,15 +119,18 @@
         return items;
       },
       getFieldByKey(key) {
-        console.log(this.fieldsInForm);
-        console.log(key);
         return this.fieldsInForm.find(fieldInForm => fieldInForm.key === key)
       },
       isSelect(field) {
         return field.type === 'select'
       },
       remove() {
-        this.$store.dispatch('removeField', this.object.key);
+
+        if(!isEmpty(this.$store.state.report)) {
+          this.$store.dispatch('removeFieldReport', this.object.key);
+        } else {
+          this.$store.dispatch('removeField', this.object.key);
+        }
       }
     }
   };
@@ -126,7 +144,7 @@
     text-align: right;
   }
   .background-info {
-    background: lightskyblue;
+    background: lightgrey;
     padding: 5px 10px;
   }
 </style>

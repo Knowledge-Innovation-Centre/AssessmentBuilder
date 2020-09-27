@@ -58,7 +58,7 @@
     },
     watch: {
       value() {
-        return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value})
+        return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value, score: this.score})
       }
     },
     methods: {

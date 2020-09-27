@@ -36,7 +36,7 @@
           return this.$store.state.assessment[this.object.key]
         },
         set (newValue) {
-          return this.$store.dispatch('updateValue', { key: this.object.key, value: newValue})
+          return this.$store.dispatch('updateValue', { key: this.object.key, value: newValue, score: score})
         }
       },
       options() {

@@ -20,7 +20,6 @@
     },
     computed: {
       items() {
-        console.log(this.object);
         if (this.object) {
           return this.object.items
         }

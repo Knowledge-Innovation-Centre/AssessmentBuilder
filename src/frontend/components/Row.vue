@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <flex :items="object.items" class="row" direction="row"></flex>
-  </div>
+    <flex :items="object.items" direction="column"></flex>
 </template>
 
 <script>

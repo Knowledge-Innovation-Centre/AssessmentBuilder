@@ -1,17 +1,41 @@
 <template>
-  <div class="home tw-flex">
+  <div class="home">
     <h2 v-if="id">Editing form: {{title}}</h2>
     <h2 v-else>Creating new form</h2>
-    <label>
-      Enter title here:
-      <input v-model="title" type="text">
-    </label>
-    Short code: [aoat-form id="{{ form.ID }}"]
+    <div class="aoat-flex">
+      <label class="aoat-flex-1">
+        Enter title here:
+        <input v-model="title" type="text">
+      </label>
+      <div  class="aoat-flex-1">
+        Short code: [aoat-form id="{{ form.ID }}"]
+      </div>
+    </div>
     <hr>
-    <div class="elements">
+    <template  v-if="id">
+      <h2>Reports</h2>
+      <template v-for="report in reports">
+        <router-link :key="report.id" :to="'/reports/' + id + '/' + report.ID">{{ report.post_title }}</router-link><br>
+      </template>
+      <router-link  :to="'/reports/' + id + '/create'">Create new</router-link>
+      <hr>
+    </template>
+    <h2>Form settings</h2>
+    <table class="table">
+      <tbody>
+      <tr>
+        <th>Show page numbers:</th>
+        <td><input v-model="formSettings.showPageNumbers" type="checkbox"></td>
+      </tr>
+      </tbody>
+    </table>
+    <hr>
+    <div class="elements aoat-pb-5">
+      <h3 class="aoat-mb-0">Form elements</h3>
       <drag v-for="(element) in availableFormElements" :key="element.type" class="drag" :data="element" @cut="remove(element)">
         {{element.name}}
       </drag>
+      <h3>Builder elements</h3>
       <div>
         <drag v-for="(element) in availableBuilderElements" :key="element.type" class="drag" :data="element" @cut="remove(element)">
         {{element.name}}
@@ -42,7 +66,11 @@ export default {
       addedElements: [],
       title: "",
       formData: {},
-      form: {}
+      form: {},
+      reports: [],
+      formSettings: {
+        showPageNumbers: false
+      },
     }
   },
   computed: {
@@ -75,21 +103,28 @@ export default {
   methods: {
     loadForm() {
       if (! this.id) {
+        // let column = this.availableBuilderElements.find(element => element.type === 'column')
+        // let row = this.availableBuilderElements.find(element => element.type === 'row')
+        // let page = this.availableBuilderElements.find(element => element.type === 'page')
+        // row.items.push(column)
+        // page.items.push(row)
         this.formData = {
           key: randomValueHex(10),
           component: "Form",
           name: "Form",
           type: "form",
           items: [
-
+            // page
           ]
         }
         return;
       }
-      axios.get(aoatGetFormUrl + this.id).then((result) => {
+      axios.get(aoat_config.aoatGetFormUrl + this.id).then((result) => {
         this.form  = result.data;
-        this.formData  = result.data.form_data[0];
+        this.formData  = this.form.form_data[0];
         this.title = this.form.post_title;
+        this.formSettings = this.form.form_settings[0];
+        this.reports = this.form.reports
       })
     },
     remove(n) {
@@ -98,14 +133,15 @@ export default {
     },
     save() {
       let $this = this
-      axios.post(aoatSaveFormUrl, {
+      axios.post(aoat_config.aoatSaveFormUrl, {
         title: this.title,
         formData: this.formData,
+        formSettings: this.formSettings,
         id: this.id
       })
       .then(function (response) {
         if (!$this.id) {
-          window.location.href = aoatViewFormUrl + response.data.ID;
+          window.location.href = aoat_config.aoatViewFormUrl + response.data.ID;
         }
         console.log(response);
       })
@@ -120,8 +156,6 @@ export default {
 <style>
 
   root {
-    width: 800px;
-    padding: 50px;
   }
 
   .drag {
@@ -135,77 +169,11 @@ export default {
     transition: all 0.5s;
   }
 
-  .group {
-    display: flex;
-  }
-
-  .copy {
-    margin: 20px 10px;
-    border: 1px solid black;
-    height: 100px;
-    display: inline-block;
-    position: relative;
-    flex: 1;
-  }
-
-  .cut {
-    margin: 20px 10px;
-    border: 1px solid black;
-    height: 100px;
-    display: inline-block;
-    position: relative;
-    flex: 1;
-  }
-
-  .copy::before {
-    content: "COPY";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 25px;
-    font-weight: bold;
-  }
-
-  .cut::before {
-    content: "CUT";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: rgba(0, 0, 0, 0.4);
-    font-size: 25px;
-    font-weight: bold;
-  }
-
-  .drop-allowed {
-    background-color: rgba(0, 255, 0, 0.2);
-  }
-
-  .drop-forbidden {
-    background-color: rgba(255, 0, 0, 0.2);
-  }
-
-  .drop-in {
-    box-shadow: 0 0 5px rgba(0, 0, 255, 0.4);
-  }
-
-  .list-enter,
-  .list-leave-to {
-    opacity: 0;
-  }
-
-  .list-leave-active {
-    position: absolute;
-  }
-
   .elements {
     position: sticky;
-    top: 20px;
+    top: 50px;
     z-index: 10;
     background: #f1f1f1;
-    padding: 20px 0;
   }
 </style>
 

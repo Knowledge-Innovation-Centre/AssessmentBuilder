@@ -2,7 +2,7 @@
     <div class="flex">
         <drop-list
                 :items="items"
-                class="dl"
+                class="dl aoat-flex"
                 :style="{flexDirection: direction}"
                 @insert="onInsert"
                 @reorder="onReorder"
@@ -30,11 +30,10 @@
 
 <script>
   import { Drag, DropList } from "vue-easy-dnd";
+  import isEmpty from "lodash/isEmpty";
   import Generic from "./Generic.vue";
   import cloneDeep from 'lodash/cloneDeep'
   import randomValueHex from "../utils/helpers"
-
-
 
   export default {
     name: "Flex",
@@ -58,7 +57,14 @@
       },
       onInsert(event) {
         let element = cloneDeep(event.data)
-        element.key = randomValueHex(15)
+        let newKey = randomValueHex(15);
+console.log(this.$store.state.report);
+        if(!isEmpty(this.$store.state.report)) {
+          element.reportItemKey = element.key
+        } else {
+          element.reportItemKey = newKey
+        }
+        element.key = newKey
         this.items.splice(event.index, 0, element);
       },
       onReorder(event) {
@@ -71,10 +77,24 @@
       canAccept(n) {
         if (this.object.type === 'form') {
           return n.type === 'page';
+        }
+        if (this.object.type === 'report') {
+          return n.type === 'page';
+        }
+        if (this.object.type === 'page') {
+          return n.type === 'row';
+
+        }
+        if (this.object.type === 'row') {
+          return n.type === 'column';
+
+        }
+        if (this.object.type === 'column') {
+          return !['page','column'].includes(n.type);
 
         }
 
-        return n.type !== 'page';
+        return !['page'].includes(n.type);
       }
     }
   };
@@ -83,8 +103,6 @@
 <style scoped>
 
     .dl {
-        display: flex;
-        align-items: stretch;
         min-height: 50px;
     }
 

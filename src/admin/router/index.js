@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import FormBuilder from 'admin/pages/FormBuilder.vue'
-import Settings from 'admin/pages/Settings.vue'
+import FormBuilder from '../pages/FormBuilder.vue'
+import ReportBuilder from '../pages/ReportBuilder.vue'
+import Settings from '../pages/Settings.vue'
 
 Vue.use(Router)
 
@@ -9,13 +10,23 @@ export default new Router({
   routes: [
     {
       path: '/forms/create',
-      name: 'Home',
+      name: 'Create form',
       component: FormBuilder
     },
     {
       path: '/forms/:id',
-      name: 'Home',
+      name: 'Edit form',
       component: FormBuilder
+    },
+    {
+      path: '/reports/:formId/create',
+      name: 'Edit report',
+      component: ReportBuilder
+    },
+    {
+      path: '/reports/:formId/:reportId',
+      name: 'Edit report',
+      component: ReportBuilder
     },
     {
       path: '/settings',

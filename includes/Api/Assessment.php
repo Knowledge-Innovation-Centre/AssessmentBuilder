@@ -75,6 +75,7 @@ class Assessment extends WP_REST_Controller {
 	    	$assessmentData = $request->get_params()['assessmentData'];
 		    // insert post meta
 		    update_post_meta($post_id, 'assessment_data', $assessmentData);
+		    update_post_meta($post_id, 'form_id', $request->get_params()['formId']);
 		    foreach($assessmentData as $key => $value) {
 		        update_post_meta($post_id, 'assessment_' . $key, $value);
 		    }
@@ -105,6 +106,21 @@ class Assessment extends WP_REST_Controller {
     public function get_assessment( $request ) {
 	    $assessment= get_post($request->get_params()['id']);
 	    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+
+	    $formId = get_post_meta($assessment->ID, 'form_id');
+
+
+	    $args = array(
+		    'post_type' => 'aoat_report',
+		    'meta_key' => 'form_id',
+		    'meta_value' => $formId,
+	    );
+	    $query = get_posts($args);
+
+	    $assessment->report = $query[0] ?? null;
+	    if ($assessment->report) {
+	        $assessment->report->report_data = get_post_meta($assessment->report->ID, 'report_data');
+	    }
 
         $response = rest_ensure_response( $assessment );
 

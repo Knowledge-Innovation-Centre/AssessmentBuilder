@@ -49,6 +49,17 @@ class Admin {
         wp_enqueue_style( 'apprenticeship-online-assessment-tool-admin' );
         wp_enqueue_style( 'apprenticeship-online-assessment-tool-admin-extend' );
         wp_enqueue_script( 'apprenticeship-online-assessment-tool-admin' );
+
+
+	    $data = array(
+	    	'aoatGetFormUrl' => "/wp-json/apprenticeship-online-assessment-tool/v1/forms/",
+	    	'aoatSaveFormUrl' => "/wp-json/apprenticeship-online-assessment-tool/v1/forms/create",
+	    	'aoatViewFormUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/'),
+	        'aoatGetReportUrl' => "/wp-json/apprenticeship-online-assessment-tool/v1/reports/",
+	    	'aoatSaveReportUrl' => "/wp-json/apprenticeship-online-assessment-tool/v1/reports/create",
+	    	'aoatViewReportUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/reports/'),
+	    );
+	    wp_localize_script( 'apprenticeship-online-assessment-tool-admin', 'aoat_config', $data );
     }
 
     /**
@@ -57,12 +68,6 @@ class Admin {
      * @return void
      */
     public function plugin_page() {
-        echo '
-			<script>
-				let aoatGetFormUrl = "/wp-json/apprenticeship-online-assessment-tool/v1/forms/";
-				let aoatSaveFormUrl = "/wp-json/apprenticeship-online-assessment-tool/v1/forms/create";
-				let aoatViewFormUrl = "' . admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/') . '"
-			</script>
-			<div class="wrap"><div id="vue-admin-app"></div></div>';
+        echo '<div class="wrap"><div id="vue-admin-app"></div></div>';
     }
 }

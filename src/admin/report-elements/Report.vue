@@ -1,0 +1,34 @@
+<template>
+    <flex :items="items" :object="object" class="report" direction="column"></flex>
+</template>
+
+<script>
+  import Flex from "../components/Flex.vue";
+
+  export default {
+    name: "Report",
+    components: {
+      Flex
+    },
+    props: {
+      object: {
+        type: Object,
+        required: true
+      }
+    },
+    computed: {
+      items() {
+        if (this.object) {
+          return this.object.items
+        }
+        return null
+      }
+    }
+  };
+</script>
+
+<style scoped>
+    .report {
+        min-height: 100px;
+    }
+</style>

@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <flex :items="items" direction="column"></flex>
-  </div>
+    <flex :items="items" direction="row" element-class="aoat-p-2" ></flex>
 </template>
 
 <script>
@@ -19,7 +17,6 @@
     },
     computed: {
       items() {
-        console.log(this.object);
         if (this.object) {
           return this.object.items
         }
