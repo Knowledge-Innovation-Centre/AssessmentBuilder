@@ -27,7 +27,9 @@ import axios from 'axios'
     },
 
     computed: {
-
+      value() {
+        return this.$store.state.assessment[this.object.reportItemKey]
+      }
     },
 
     data () {
@@ -42,9 +44,11 @@ import axios from 'axios'
 
     methods: {
       getMedia() {
-        axios.get( aoat_config.aoatGetMediaUrl  + this.$store.state.assessment[this.object.reportItemKey]).then(response => {
-          this.media = response.data
-        })
+        if (this.value) {
+          axios.get(aoat_config.aoatGetMediaUrl + this.value).then(response => {
+            this.media = response.data
+          })
+        }
       }
     }
 

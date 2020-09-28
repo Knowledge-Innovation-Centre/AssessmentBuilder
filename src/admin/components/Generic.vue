@@ -6,8 +6,13 @@
     }">
 
         <legend>{{ form.name }}</legend>
+        <template v-if="isReport">
 
-        <common-options v-if="form.type !== 'form'" :object="form" />
+          <common-options-report v-if="form.type !== 'report'" :object="form" />
+        </template>
+        <template v-else>
+          <common-options v-if="form.type !== 'form'" :object="form" />
+        </template>
 
         <component :is="form.component" :object="form" class="inner"></component>
         <slot/>
@@ -15,6 +20,7 @@
 </template>
 
 <script>
+  import isEmpty from "lodash/isEmpty";
   import Row from "./Row.vue";
   import Column from "./Column.vue";
   import Page from "./Page.vue";
@@ -37,6 +43,7 @@
   import DateReportElement from "../report-elements/DateReportElement.vue";
   import FileUploadReportElement from "../report-elements/FileUploadReportElement.vue";
   import CommonOptions from "../form-elements/CommonOptions.vue";
+  import CommonOptionsReport from "../report-elements/CommonOptionsReport.vue";
 
   export default {
     name: "Generic",
@@ -69,6 +76,12 @@
       DateReportElement,
       FileUploadReportElement,
       CommonOptions,
+      CommonOptionsReport,
+    },
+    computed: {
+      isReport() {
+        return !isEmpty(this.$store.state.report)
+      }
     },
     methods: {
     }

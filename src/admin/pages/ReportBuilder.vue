@@ -11,12 +11,12 @@
     <hr>
     <div class="elements aoat-pb-5">
       <h3 class="aoat-mb-0">Form elements</h3>
-      <drag v-for="(element) in availableFormElements" :key="element.type" class="drag" :data="element" @cut="remove(element)">
+      <drag v-for="(element) in availableFormElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
         {{element.name }}
       </drag>
       <h3>Builder elements</h3>
       <div>
-        <drag v-for="(element) in availableBuilderElements" :key="element.type" class="drag" :data="element" @cut="remove(element)">
+        <drag v-for="(element) in availableBuilderElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
         {{element.name}}
         </drag>
       </div>

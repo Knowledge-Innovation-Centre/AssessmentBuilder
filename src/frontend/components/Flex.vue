@@ -3,7 +3,7 @@
         <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div class="aoat-flex-1" :class="elementClass" v-show="item.key === currentPage">
+            <div class="aoat-flex-1 page" :class="elementClass" v-show="item.key === currentPage">
               <generic :key="item.key" :form="item"></generic>
               <div class="aoat-flex aoat-flex-row aoat-justify-between">
                 <template v-if="index === 0 && getItems.length > 1">
@@ -18,11 +18,9 @@
                   <template v-if="getItems.length > 1">
                     <button @click="setPreviousPage(index)">Back</button>
                   </template>
-
                   <div v-else></div>
-                  <!--                <button v-if="isReport" @click="download()">Download</button>-->
-                  <button @click="save()">Submit</button>
-
+                  <button v-if="isReport" @click="downloadPdf()">Download PDF</button>
+                  <button v-else @click="save()">Submit</button>
                 </template>
               </div>
 
@@ -38,7 +36,7 @@
 </template>
 
 <script>
-
+  import { jsPDF } from "jspdf";
   import axios from "axios";
   import isEmpty from "lodash/isEmpty";
 
@@ -49,7 +47,7 @@
     },
     computed: {
       isReport() {
-        return isEmpty(this.$store.state.report)
+        return !isEmpty(this.$store.state.report)
       },
       getItems() {
         return this.items.filter(item => {
@@ -150,6 +148,26 @@
         return '';
       },
 
+      downloadPdf() {
+
+        let doc = new jsPDF('p', 'pt', 'a4');
+        // let elementHandler = {
+        //   '#ignorePDF': function (element, renderer) {
+        //     return true;
+        //   }
+        // };
+        // let source = window.document.getElementsByTagName("body")[0];
+        doc.html(
+            document.getElementById('vue-frontend-app'), {
+              callback: function (doc) {
+                doc.save();
+              },
+              x: 10,
+              y: 10});
+
+        // doc.output("dataurlnewwindow");
+
+      }
 
     }
   };

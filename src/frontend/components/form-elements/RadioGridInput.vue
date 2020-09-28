@@ -25,7 +25,7 @@
 
   export default {
 
-    name: 'RadioInput',
+    name: 'RadioGridInput',
 
 
     components: {

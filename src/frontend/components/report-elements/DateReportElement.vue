@@ -43,8 +43,10 @@
 
     methods: {
       setDate() {
-        let date = new Date(this.value);
-        this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join('.')
+        if (this.value) {
+          let date = new Date(this.value);
+          this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join('.')
+        }
       }
     }
   };
