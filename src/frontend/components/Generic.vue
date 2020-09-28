@@ -64,7 +64,6 @@
         return this.form.component
       },
       checkShow() {
-        console.log('not');
         if (!this.form.showIf) {
           return true
         }

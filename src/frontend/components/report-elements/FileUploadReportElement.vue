@@ -44,7 +44,6 @@ import axios from 'axios'
       getMedia() {
         axios.get( aoat_config.aoatGetMediaUrl  + this.$store.state.assessment[this.object.reportItemKey]).then(response => {
           this.media = response.data
-          console.log(this.media);
         })
       }
     }

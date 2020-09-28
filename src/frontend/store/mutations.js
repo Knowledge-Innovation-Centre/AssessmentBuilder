@@ -1,3 +1,4 @@
+import Vue from 'vue'
 
 export const mutations = {
   UPDATE_FORM_ID(state, payload) {
@@ -13,6 +14,6 @@ export const mutations = {
     state.assessment = {}
   },
   UPDATE_VALUE(state, payload) {
-    state.assessment[payload.key] = payload.value
+    Vue.set(state.assessment, payload.key, payload.value);
   },
 }

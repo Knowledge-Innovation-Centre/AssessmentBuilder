@@ -143,7 +143,6 @@ export default {
         if (!$this.id) {
           window.location.href = aoat_config.aoatViewFormUrl + response.data.ID;
         }
-        console.log(response);
       })
       .catch(function (error) {
         console.log(error);

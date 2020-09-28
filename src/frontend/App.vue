@@ -30,7 +30,6 @@ export default {
   methods: {
     loadData() {
       if(aoat_config.aoatGetFormUrl) {
-        console.log('not12');
         axios.get(aoat_config.aoatGetFormUrl).then((result) => {
           this.form  = result.data;
           this.formData  = result.data.form_data[0];
@@ -51,7 +50,7 @@ export default {
           this.$store.dispatch('updateAssessment', this.assessmentData)
         })
       }
-    }
+    },
   }
 }
 </script>

@@ -60,24 +60,13 @@
       loadChart() {
         this.chartData.labels = this.object.optionsHorizontal.map(optionHorizontal => optionHorizontal.name)
         this.chartData.datasets[0].backgroundColor = this.object.optionsHorizontal.map(optionHorizontal => optionHorizontal.color)
-        console.log(this.object.optionsHorizontal.map(optionHorizontal => optionHorizontal.color));
-        console.log(this.chartData.datasets[0].backgroundColor);
         let options = {}
         for (let option of this.object.optionsVertical) {
           options[option.id] = 0
         }
-        console.log(this.value);
         Object.keys(this.value).forEach(key => {
           options[this.value[key]]++;
         })
-        // for (let option of this.object.optionsHorizontal) {
-        //   let selectedKey = this.value[option.id]
-        //
-        //   options[selectedKey]++;
-        // }
-
-        console.log(this.value);
-        console.log(options);
 
         let preparedArray = []
 
@@ -85,9 +74,6 @@
           preparedArray.push(option)
         }
         this.chartData.datasets[0].data = preparedArray;
-
-
-        console.log(this.chartData.datasets[0].data);
       }
     }
   };

@@ -58,7 +58,7 @@
       onInsert(event) {
         let element = cloneDeep(event.data)
         let newKey = randomValueHex(15);
-console.log(this.$store.state.report);
+
         if(!isEmpty(this.$store.state.report)) {
           element.reportItemKey = element.key
         } else {
