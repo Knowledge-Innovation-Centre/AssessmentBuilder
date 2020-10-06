@@ -6,6 +6,9 @@ export const actions = {
   updateReport({ commit }, payload) {
     commit('UPDATE_REPORT', payload)
   },
+  updateSettings({ commit }, payload) {
+    commit('UPDATE_SETTINGS', payload)
+  },
   removeField({ commit }, payload) {
     commit('REMOVE_FIELD', payload)
   },

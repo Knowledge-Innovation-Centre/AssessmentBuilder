@@ -12,9 +12,15 @@
                 :column="direction === 'column'"
         >
             <template v-slot:item="{item}">
-                <drag tag="generic" :form="item" :key="key(item)" :data="item" @cut="remove(item)">
+                <drag tag="generic"
+                      :form="item"
+                      :key="key(item)"
+                      :data="item"
+                      :depth="depth+1"
+                      :handle="getHandleClass(item)"
+                      @cut="remove(item)">
                     <template v-slot:drag-image>
-                        <div class="drag-image">DRAG</div>
+                        <div class="drag-image">{{ item.name }}</div>
                     </template>
                 </drag>
             </template>
@@ -45,9 +51,30 @@
     props: {
       object: Object,
       items: null,
-      direction: String
+      direction: String,
+      depth: Number
+    },
+    computed: {
+      maxPages() {
+        return this.$store.state.settings.aoat_max_pages
+      },
+      maxQuestionsPerPage() {
+        return this.$store.state.settings.aoat_max_questions_per_page
+      }
     },
     methods: {
+      getHandleClass(item) {
+        if (item.type === 'page') {
+          return '.handle-page' + (this.depth+1)
+        }
+        if (item.type === 'column') {
+          return '.handle-column' + (this.depth+1)
+        }
+        if (item.type === 'column') {
+          return '.handle-row' + (this.depth+1)
+        }
+        return '.handle-other' + (this.depth+1)
+      },
       key(item) {
         if (typeof item === "object") {
           return item.key;
@@ -59,10 +86,12 @@
         let element = cloneDeep(event.data)
         let newKey = randomValueHex(15);
 
-        if(!isEmpty(this.$store.state.report)) {
-          element.reportItemKey = element.key
-        } else {
-          element.reportItemKey = newKey
+        if (!element.reportItemKey) {
+          if(!isEmpty(this.$store.state.report)) {
+            element.reportItemKey = element.key
+          } else {
+            element.reportItemKey = newKey
+          }
         }
         element.key = newKey
         this.items.splice(event.index, 0, element);
@@ -76,6 +105,9 @@
       },
       canAccept(n) {
         if (this.object.type === 'form') {
+          if (this.items.length >= this.maxPages) {
+            return false;
+          }
           return n.type === 'page';
         }
         if (this.object.type === 'report') {

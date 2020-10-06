@@ -9,6 +9,9 @@ export const mutations = {
   UPDATE_REPORT(state, payload) {
     state.report = payload
   },
+  UPDATE_SETTINGS(state, payload) {
+    state.settings = payload
+  },
   REMOVE_FIELD_REPORT(state, payload) {
     state.report.items = removeByKey(state.report.items, payload);
   },

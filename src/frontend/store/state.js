@@ -2,5 +2,7 @@
 export const state = () => ({
   assessment: {},
   report: {},
-  formId: {}
+  formId: {},
+  formSettings: {},
+  currentPage: 0,
 })

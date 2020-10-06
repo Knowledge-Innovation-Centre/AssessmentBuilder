@@ -1,9 +1,9 @@
 <template>
   <div>
-        <label for="label">
-            {{ object.label }} <template v-if="object.required">*</template>
-            <textarea name="label" :placeholder="object.placeholder" v-model="value" />
-        </label>
+      <label>
+          {{ object.label }} <template v-if="object.required">*</template>
+          <textarea name="label" :placeholder="object.placeholder" v-model="value" />
+      </label>
 
     </div>
 </template>

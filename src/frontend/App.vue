@@ -1,5 +1,9 @@
 <template>
   <div id="vue-frontend-app">
+    <div class="aoat-text-center">Progress</div>
+    <base-progress :percentage="percentage" class="aoat-mx-2 aoat-mb-5 aoat-h-5">
+      <span class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2">{{percentage}}%</span>
+    </base-progress>
       <generic v-if="formData.items" :form="formData" />
       <generic  v-if="reportData.items" :form="reportData" />
   </div>
@@ -8,20 +12,34 @@
 <script>
 import axios from "axios";
 import Generic from './components/Generic.vue';
+import BaseProgress from './components/BaseProgress.vue';
 
 export default {
   name: 'App',
   components: {
-    Generic
+    Generic,
+    BaseProgress
   },
   data() {
     return {
       form: {},
-      formData: {},
+      formData: {
+        items: []
+      },
       report: {},
-      reportData: {},
+      reportData: {
+        items: []
+      },
       assessment: {},
       assessmentData: {}
+    }
+  },
+  computed: {
+    currentPage() {
+      return this.$store.state.currentPage
+    },
+    percentage() {
+      return (this.currentPage / this.formData.items.length) * 100
     }
   },
   mounted() {
@@ -34,6 +52,7 @@ export default {
           this.form  = result.data;
           this.formData  = result.data.form_data[0];
           this.$store.dispatch('updateFormId', this.form.ID)
+          this.$store.dispatch('updateFormSettings', this.form.form_settings[0])
         })
       }
 

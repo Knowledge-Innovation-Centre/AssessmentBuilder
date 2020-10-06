@@ -5,15 +5,18 @@
           <thead>
           <tr>
             <th></th>
-            <th v-for="optionHorizontal in optionsHorizontal" :key="optionHorizontal.id">{{ optionHorizontal.name }}</th>
+            <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+              <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
+              <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
+            </th>
           </tr>
 
           </thead>
           <tbody>
-          <tr v-for="optionVertical in optionsVertical"  :key="optionVertical.id">
-            <td>{{ optionVertical.name }}</td>
-            <td v-for="optionHorizontal in optionsHorizontal" :key="optionHorizontal.id">
-              <input type="radio" :name="optionVertical.id" v-model="value[optionVertical.id]" :value="optionHorizontal.id"/>
+          <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
+            <td>{{ optionHorizontal.name }}</td>
+            <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+              <input type="radio" :name="optionHorizontal.id" v-model="value[optionHorizontal.id]"  :value="optionVertical.id"/>
             </td>
           </tr>
           </tbody>
@@ -44,8 +47,8 @@
       };
     },
     mounted() {
-      for (let optionVertical of this.optionsVertical) {
-        this.$set( this.value, optionVertical.id, null)
+      for (let optionHorizontal of this.optionsHorizontal) {
+        this.$set( this.value, optionHorizontal.id, null)
       }
     },
     computed: {
@@ -57,12 +60,17 @@
       }
     },
     watch: {
-      value() {
-        return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value, score: this.score})
+      value: {
+        deep: true,
+        handler() {
+          return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value, score: this.score})
+        }
       }
     },
     methods: {
-
+      // updateVuex() {
+      //   return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value, score: this.score})
+      // }
     }
   };
 </script>

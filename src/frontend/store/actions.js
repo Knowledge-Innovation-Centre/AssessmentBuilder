@@ -3,6 +3,9 @@ export const actions = {
   updateFormId({ commit }, payload) {
     commit('UPDATE_FORM_ID', payload)
   },
+  updateFormSettings({ commit }, payload) {
+    commit('UPDATE_FORM_SETTINGS', payload)
+  },
   updateAssessment({ commit }, payload) {
     commit('UPDATE_ASSESSMENT', payload)
   },
@@ -14,5 +17,8 @@ export const actions = {
   },
   updateValue({ commit }, payload) {
     commit('UPDATE_VALUE', payload)
+  },
+  updateCurrentPage({ commit }, payload) {
+    commit('UPDATE_CURRENT_PAGE', payload)
   },
 }

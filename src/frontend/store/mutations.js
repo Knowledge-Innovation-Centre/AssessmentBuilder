@@ -4,6 +4,9 @@ export const mutations = {
   UPDATE_FORM_ID(state, payload) {
     state.formId = payload
   },
+  UPDATE_FORM_SETTINGS(state, payload) {
+    state.formSettings = payload
+  },
   UPDATE_ASSESSMENT(state, payload) {
     state.assessment = payload
   },
@@ -15,5 +18,8 @@ export const mutations = {
   },
   UPDATE_VALUE(state, payload) {
     Vue.set(state.assessment, payload.key, payload.value);
+  },
+  UPDATE_CURRENT_PAGE(state, payload) {
+    state.currentPage = payload
   },
 }

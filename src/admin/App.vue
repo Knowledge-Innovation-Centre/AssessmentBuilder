@@ -1,5 +1,6 @@
 <template>
   <div id="vue-backend-app">
+    <notifications position="bottom right" />
     <router-view />
   </div>
 </template>

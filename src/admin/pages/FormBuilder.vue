@@ -1,49 +1,86 @@
 <template>
-  <div class="home">
-    <h2 v-if="id">Editing form: {{title}}</h2>
-    <h2 v-else>Creating new form</h2>
+  <div class="aoat-bg-white aoat-rounded aoat-p-6 aoat-container">
     <div class="aoat-flex">
-      <label class="aoat-flex-1">
-        Enter title here:
-        <input v-model="title" type="text">
-      </label>
-      <div  class="aoat-flex-1">
-        Short code: [aoat-form id="{{ form.ID }}"]
+      <div class="aoat-flex-grow aoat-pr-6">
+        <div class="aoat-bg-white aoat-grid aoat-grid-cols-2 aoat-gap-10 aoat-mb-5">
+          <div>
+            <h2 class="aoat-mt-0 aoat-text-gray-700" v-if="id">Editing form: {{title}}</h2>
+            <h2 class="aoat-mt-0 aoat-text-gray-700" v-else>Creating new form</h2>
+            <label class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2">
+              Title
+            </label>
+            <input v-model="title"
+                   type="text"
+                   class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white">
+            <label class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold">
+                <input v-model="formSettings.showPageNumbers" type="checkbox">
+                  Show page numbers
+                </label>
+          </div>
+          <div>
+            <template v-if="id">
+              <h2 class="aoat-mt-0 aoat-text-gray-700 aoat-flex aoat-flex-row aoat-justify-between">
+                Reports
+                <router-link  :to="'/reports/' + id + '/create'"
+                              class="aoat-no-underline aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+                +</router-link>
+              </h2>
+              <div :key="report.ID" class="aoat-flex aoat-flex-row aoat-justify-between" v-for="report in reports">
+                <router-link :to="'/reports/' + id + '/' + report.ID"
+                             class="aoat-text-gray-800 aoat-font-semibold">
+
+                  {{ report.post_title }}
+                </router-link>
+                <button @click="removeReport(report.ID)"
+                        class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+                  <span class="dashicons dashicons-trash"></span>
+                </button>
+              </div>
+
+            </template>
+          </div>
+        </div>
+        <div class="aoat-text-center aoat-my-3">
+          <code>[aoat-form id="{{ form.ID }}"]</code>
+        </div>
+        <generic :depth="0" :form="formData" class="root"></generic>
+        <div class="aoat-text-center aoat-mt-5">
+          <button @click="save()"
+                  class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+            Save
+          </button>
+        </div>
       </div>
-    </div>
-    <hr>
-    <template  v-if="id">
-      <h2>Reports</h2>
-      <template v-for="report in reports">
-        <router-link :key="report.id" :to="'/reports/' + id + '/' + report.ID">{{ report.post_title }}</router-link><br>
-      </template>
-      <router-link  :to="'/reports/' + id + '/create'">Create new</router-link>
-      <hr>
-    </template>
-    <h2>Form settings</h2>
-    <table class="table">
-      <tbody>
-      <tr>
-        <th>Show page numbers:</th>
-        <td><input v-model="formSettings.showPageNumbers" type="checkbox"></td>
-      </tr>
-      </tbody>
-    </table>
-    <hr>
-    <div class="elements aoat-pb-5">
-      <h3 class="aoat-mb-0">Form elements</h3>
-      <drag v-for="(element) in availableFormElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
-        {{element.name}}
-      </drag>
-      <h3>Builder elements</h3>
-      <div>
-        <drag v-for="(element) in availableBuilderElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
-        {{element.name}}
+      <div class="aoat-h-full aoat-bg-gray-300 aoat-w-48 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
+        <div class="aoat-text-center aoat-mb-6">
+
+          <button @click="save()"
+                  class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+            Save
+          </button>
+        </div>
+        <h2 class="aoat-mt-0">Builder elements</h2>
+        <div>
+          <drag
+              v-for="(element) in availableBuilderElements"
+              :key="element.key"
+              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              :data="element"
+              @cut="remove(element)">
+            {{element.name}}
+          </drag>
+        </div>
+        <h2 class="aoat-mt-6">Form elements</h2>
+        <drag v-for="(element) in availableFormElements"
+              :key="element.key"
+              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              :data="element"
+              @cut="remove(element)">
+          {{element.name}}
         </drag>
       </div>
     </div>
-    <generic :form="formData" class="root"></generic>
-    <button @click="save()">Save</button>
+
   </div>
 </template>
 
@@ -113,6 +150,7 @@ export default {
           component: "Form",
           name: "Form",
           type: "form",
+          conditions: [],
           items: [
             // page
           ]
@@ -125,11 +163,22 @@ export default {
         this.title = this.form.post_title;
         this.formSettings = this.form.form_settings[0];
         this.reports = this.form.reports
+        this.$store.dispatch('updateSettings', this.form.settings)
       })
     },
     remove(n) {
       let index = this.addedElements.indexOf(n);
       this.addedElements.splice(index, 1);
+    },
+    removeReport(reportId) {
+      axios.delete(aoat_config.aoatDeleteReportUrl + reportId).then((result) => {
+        this.reports = this.reports.filter(report => report.ID !== reportId)
+
+        this.$notify({
+          title: 'Report deleted',
+          type: 'success',
+        })
+      })
     },
     save() {
       let $this = this
@@ -143,6 +192,11 @@ export default {
         if (!$this.id) {
           window.location.href = aoat_config.aoatViewFormUrl + response.data.ID;
         }
+
+        $this.$notify({
+          title: 'Form saved',
+          type: 'success',
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -154,25 +208,5 @@ export default {
 
 <style>
 
-  root {
-  }
-
-  .drag {
-    border: solid 1px #ccc;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 10px 0 0;
-    padding: 10px ;
-    font-size: 20px;
-    transition: all 0.5s;
-  }
-
-  .elements {
-    position: sticky;
-    top: 50px;
-    z-index: 10;
-    background: #f1f1f1;
-  }
 </style>
 

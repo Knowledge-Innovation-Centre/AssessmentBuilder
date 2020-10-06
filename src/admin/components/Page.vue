@@ -1,6 +1,6 @@
 <template>
-    <div class="background-grey">
-        <flex :items="object.items" :object="object" class="row" direction="column"></flex>
+    <div>
+        <flex :depth="depth" :items="object.items" :object="object" class="row" direction="column"></flex>
     </div>
 </template>
 
@@ -18,6 +18,10 @@
       object: {
         type: Object,
         required: true,
+      },
+      depth: {
+        type: Number,
+        required: true
       }
     },
 
@@ -30,7 +34,4 @@
   };
 </script>
 <style scoped>
-    .background-grey {
-        background: #eee;
-    }
 </style>

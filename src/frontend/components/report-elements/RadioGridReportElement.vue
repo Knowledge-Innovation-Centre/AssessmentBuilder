@@ -1,9 +1,13 @@
 <template>
   <div>
-      <h5>{{ object.label }}</h5>
-    <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
-    <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
-    </div>
+    <h5>{{ object.label }}</h5>
+    <template v-if="showPieGraph">
+      <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+    </template>
+    <template v-if="showRadarGraph">
+      <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -30,6 +34,15 @@
     computed: {
       value() {
           return this.$store.state.assessment[this.object.reportItemKey] ?? {}
+      },
+      showPieGraph() {
+        return this.object.selectedGraph === 'pie' || this.isBothSelected
+      },
+      showRadarGraph() {
+        return this.object.selectedGraph === 'radar' || this.isBothSelected
+      },
+      isBothSelected() {
+        return this.object.selectedGraph === 'both'
       }
     },
 
@@ -47,7 +60,8 @@
         },
         chartOptions: {
           responsive: true,
-          maintainAspectRatio: false
+          maintainAspectRatio: false,
+          backgroundColor: '#ffffff'
         }
       };
     },
@@ -58,10 +72,10 @@
 
     methods: {
       loadChart() {
-        this.chartData.labels = this.object.optionsHorizontal.map(optionHorizontal => optionHorizontal.name)
-        this.chartData.datasets[0].backgroundColor = this.object.optionsHorizontal.map(optionHorizontal => optionHorizontal.color)
+        this.chartData.labels = this.object.optionsVertical.map(optionVertical => optionVertical.name)
+        this.chartData.datasets[0].backgroundColor = this.object.optionsVertical.map(optionVertical => optionVertical.color)
         let options = {}
-        for (let option of this.object.optionsVertical) {
+        for (let option of this.object.optionsHorizontal) {
           options[option.id] = 0
         }
         Object.keys(this.value).forEach(key => {

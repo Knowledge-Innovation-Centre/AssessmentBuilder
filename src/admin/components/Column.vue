@@ -1,6 +1,6 @@
 <template>
   <div>
-    <flex :items="items" :object="object" direction="row"></flex>
+    <flex :depth="depth" :items="items" :object="object" direction="row"></flex>
   </div>
 </template>
 
@@ -15,6 +15,10 @@
     props: {
       object: {
         type: Object,
+        required: true
+      },
+      depth: {
+        type: Number,
         required: true
       }
     },

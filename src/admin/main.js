@@ -6,16 +6,18 @@ import App from './App.vue'
 import router from './router'
 import menuFix from './utils/admin-menu-fix'
 import Generic from "./components/Generic.vue";
-// import VueTippy, { TippyComponent } from "vue-tippy";
+import VueTippy, { TippyComponent } from "vue-tippy";
 import Vuex from 'vuex'
 import store from './store'
+import Notifications from 'vue-notification'
 
 
   Vue.config.productionTip = false
 
+  Vue.use(Notifications)
   Vue.use(Vuex)
-  // Vue.use(VueTippy);
-  // Vue.component("tippy", TippyComponent);
+  Vue.use(VueTippy);
+  Vue.component("tippy", TippyComponent);
   Vue.component("generic", Generic);
 
 

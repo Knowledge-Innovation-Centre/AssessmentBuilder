@@ -4,29 +4,43 @@
     <input class="aoat-w-full aoat-m-1" placeholder="Enter question here" v-model="object.label" type="text" >
     <strong class="aoat-m-1">Options vertical:</strong>
 
-    <table>
+    <table class="aoat-w-full">
       <thead>
       <tr>
         <th>Unique ID</th>
         <th>Value</th>
         <th>Score</th>
         <th>Color</th>
+        <th>Icon</th>
         <th>Actions</th>
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(option, index) in object.optionsHorizontal">
-        <td  class="aoat-w-32"><input type="text" v-model="option.id"></td>
-        <td><input type="text" class="aoat-w-full" v-model="option.name"></td>
-        <td class="aoat-w-12"><input type="number" v-model="option.score"></td>
-        <td class="aoat-w-12">    <v-swatches v-model="option.color"></v-swatches></td>
-        <td class="aoat-w-12"><button class="aoat-h-6" @click="removeHorizontalOption(index)">X</button></td>
+      <tr v-for="(option, index) in  object.optionsVertical">
+        <td><input type="text" v-model="option.id"></td>
+        <td><input type="text" v-model="option.name"></td>
+        <td><input type="number" v-model="option.score"></td>
+        <td><v-swatches :swatches="swatches"
+                        v-model="option.color"></v-swatches></td>
+        <td><multiselect
+            v-model="option.icon"
+            placeholder=""
+            :show-labels="false"
+            :options="dashicons">
+          <template slot="singleLabel" slot-scope="props">
+            <span :class="props.option" class="dashicons"></span>
+          </template>
+          <template slot="option" slot-scope="props">
+            <span :class="props.option" class="dashicons"></span>
+          </template>
+        </multiselect></td>
+        <td><button class="aoat-h-6" @click="removeVerticalOption(index)">X</button></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td colspan="2" style="text-align: center">
-          <button @click="addOptionHorizontal()">+</button>
+          <button @click="addOptionVertical()">+</button>
         </td>
       </tr>
       </tfoot>
@@ -42,16 +56,16 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(option, index) in object.optionsVertical">
+      <tr v-for="(option, index) in object.optionsHorizontal">
         <td class="aoat-w-32"><input type="text" v-model="option.id"></td>
         <td><input type="text" class="aoat-w-full" v-model="option.name"></td>
-        <td class="aoat-w-12"><button class="aoat-h-6" @click="removeVerticalOption(index)">X</button></td>
+        <td class="aoat-w-12"><button class="aoat-h-6" @click="removeHorizontalOption(index)">X</button></td>
       </tr>
       </tbody>
       <tfoot>
       <tr>
         <td colspan="2" style="text-align: center">
-          <button @click="addOptionVertical()">+</button>
+          <button @click="addOptionHorizontal()">+</button>
         </td>
       </tr>
       </tfoot>
@@ -62,6 +76,8 @@
 
 <script>
 import VSwatches from 'vue-swatches'
+import {Multiselect} from "vue-multiselect";
+import dashicons from "../utils/dashicons";
 
 // Import the styles too, globally
 import "vue-swatches/dist/vue-swatches.css"
@@ -69,7 +85,8 @@ import "vue-swatches/dist/vue-swatches.css"
     name: 'RadioGridInput',
 
     components: {
-      VSwatches
+      VSwatches,
+      Multiselect
     },
 
     props: {
@@ -82,21 +99,41 @@ import "vue-swatches/dist/vue-swatches.css"
     data () {
       return {
         show: false,
+        dashicons: dashicons,
+        swatches: [
+          "#1FBC9C",
+          "#1CA085",
+          "#2ECC70",
+          "#27AF60",
+          "#3398DB",
+          "#2980B9",
+          "#A463BF",
+          "#8E43AD",
+          "#F2C511",
+          "#F39C19",
+          "#E84B3C",
+          "#C0382B",
+          "#DDE6E8",
+          "#BDC3C8",
+          "#3D556E",
+          "",
+        ],
       };
     },
     methods: {
-      addOptionVertical() {
-        this.object.optionsVertical.push({
+      addOptionHorizontal() {
+        this.object.optionsHorizontal.push({
           id: "",
           name: ""
         })
       },
-      addOptionHorizontal() {
-        this.object.optionsHorizontal.push({
+      addOptionVertical() {
+        this.object.optionsVertical.push({
           id: "",
           name: "",
           score: 1,
-          color: '#E84B3C',
+          color: '',
+          icon: null,
         })
       },
 
@@ -118,5 +155,8 @@ import "vue-swatches/dist/vue-swatches.css"
 }
 .table > tbody > tr > th {
   text-align: right;
+}
+/deep/ .multiselect__input {
+  opacity: 0;
 }
 </style>

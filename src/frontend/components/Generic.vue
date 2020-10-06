@@ -1,5 +1,5 @@
 <template>
-    <div v-if="checkShow"  class="generic aoat-flex-1" :class="form.class">
+    <div class="generic aoat-flex-1" :class="form.class">
         <component :is="getComponent" :object="form"></component>
         <slot/>
     </div>
@@ -23,7 +23,7 @@
   import RadioGridReportElement from "./report-elements/RadioGridReportElement.vue";
   import RadioReportElement from "./report-elements/RadioReportElement.vue";
   import TextReportElement from "./report-elements/TextReportElement.vue";
-  import TextAreaReportElement from "./report-elements/TextAreaReportElement.vue";
+  import TextareaReportElement from "./report-elements/TextareaReportElement.vue";
   import DateReportElement from "./report-elements/DateReportElement.vue";
   import FileUploadReportElement from "./report-elements/FileUploadReportElement.vue";
   import FileUpload from "./form-elements/FileUpload.vue";
@@ -54,7 +54,7 @@
       RadioGridReportElement,
       RadioReportElement,
       TextReportElement,
-      TextAreaReportElement,
+      TextareaReportElement,
       DateReportElement,
       FileUploadReportElement,
       FileUpload,
@@ -63,22 +63,11 @@
       getComponent() {
         return this.form.component
       },
-      checkShow() {
-        if (!this.form.showIf) {
-          return true
-        }
-        if (!this.form.showIf.field) {
-          return true
-        }
-        let field = this.form.showIf.field;
-        let value = this.form.showIf.value;
-        let assessment = this.$store.state.assessment;
-        if (!assessment[field]) {
-          return false
-        }
-
-        return assessment[field] === value
-      }
+      assessment() {
+        return this.$store.state.assessment
+      },
+    },
+    methods: {
     }
   };
 </script>

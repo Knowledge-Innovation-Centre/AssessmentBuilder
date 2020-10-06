@@ -1,17 +1,20 @@
 <template>
-    <div>
-      <div class="more-options-button">
-        <button @click="show=!show">
-          <span class="dashicons dashicons-arrow-down-alt2"></span>
-        </button>
-        <button class="remove-button" @click="remove()">
-          <span class="dashicons dashicons-trash"></span>
-        </button>
-      </div>
+  <div>
 
-      <transition>
-        <div v-if="show">
-          <div class="background-info">
+    <div class="more-options-button">
+      <tippy arrow
+             :interactive="true"
+             theme="light"
+             :max-width="800"
+             class="aoat-inline-block"
+             trigger="click">
+        <template v-slot:trigger>
+          <button>
+            <span class="dashicons dashicons-arrow-down-alt2"></span>
+          </button>
+        </template>
+
+        <div class="aoat-text-left">
           <table class="table aoat-w-full">
             <tbody>
             <tr>
@@ -41,25 +44,60 @@
             <tr>
               <th>Show if:</th>
               <td>
-                <select v-model="object.showIf.field">
-                  <option v-for="fieldInForm in fieldsInForm" :key="fieldInForm.key" :value="fieldInForm.key">
-                    {{fieldInForm.name}}
-                  </option>
-                </select>
+                  <table class="">
+                  <tr v-for="(condition, index) in object.conditions">
+
+                    <td>
+                      <select v-model="condition.field">
+                        <option v-for="fieldInForm in fieldsInForm" :key="fieldInForm.key" :value="fieldInForm.key">
+                          {{fieldInForm.name}}
+                        </option>
+                      </select>
+                    </td>
+                    <template v-if="condition.field">
+                      <td v-if="isSelect(getFieldByKey(condition.field))">
+                        <select multiple v-model="condition.selectedOptions">
+                          <option v-for="option in getFieldByKey(condition.field).options" :key="option.id" :value="option.id">
+                            {{option.name}}
+                          </option>
+                        </select>
+                      </td>
+                      <td v-if="isRadioGrid(getFieldByKey(condition.field))">
+                        <select v-model="condition.question">
+                          <option v-for="option in getFieldByKey(condition.field).optionsHorizontal"
+                                  :key="option.id"
+                                  :value="option.id">
+                            {{option.name}}
+                          </option>
+                        </select>
+
+                      </td>
+                      <td v-else>
+                        <input v-model="condition.value" type="text" >
+                      </td>
+                      <td v-if="condition.question">
+                        <multiselect
+                            v-model="condition.selectedOptions"
+                            :multiple="true"
+                            label="name"
+                            placeholder="Select one"
+                            track-by="id"
+                            :options="getFieldByKey(condition.field).optionsVertical">
+                        </multiselect>
+
+                      </td>
+
+                      <button  @click="removeCondition(index)">X</button>
+                    </template>
+                  </tr>
+                  </table>
+
               </td>
-              <th v-if="object.showIf.field">is:</th>
-              <td v-if="object.showIf.field">
-                  <div v-if="isSelect(getFieldByKey(object.showIf.field))">
-                    <select v-model="object.showIf.value">
-                      <option v-for="option in getFieldByKey(object.showIf.field).options" :key="option.id" :value="option.id">
-                        {{option.name}}
-                      </option>
-                    </select>
-                  </div>
-                  <div v-else>
-                    <input v-model="object.showIf.value" type="text" >
-                  </div>
-              </td>
+            </tr>
+
+            <tr>
+              <td></td>
+              <td><button @click="addCondition()">+</button></td>
             </tr>
             <tr>
               <th>Classes:</th>
@@ -67,16 +105,23 @@
             </tr>
             </tbody>
           </table>
-          </div>
-        <hr>
         </div>
-      </transition>
+      </tippy>
+      <button class="remove-button" @click="remove()">
+        <span class="dashicons dashicons-trash"></span>
+      </button>
+
     </div>
+    <span class="handle dashicons dashicons-move" :class="getHandleClass()"></span>
+  </div>
 </template>
 
 <script>
   import {Multiselect} from "vue-multiselect";
   import isEmpty from "lodash/isEmpty";
+
+  import "tippy.js/themes/light.css";
+  import "tippy.js/themes/light-border.css";
 
   export default {
 
@@ -90,6 +135,10 @@
       object: {
         type: Object,
         required: true,
+      },
+      depth: {
+        type: Number,
+        required: true
       }
     },
 
@@ -122,7 +171,13 @@
         return this.fieldsInForm.find(fieldInForm => fieldInForm.key === key)
       },
       isSelect(field) {
-        return field.type === 'select'
+        return field.type === 'select' || field.type === 'radio'
+      },
+      isRadioGrid(field) {
+        return field.type === 'radio_grid'
+      },
+      getRadioGridQuestions(field) {
+        return field.type === 'radio_grid'
       },
       remove() {
 
@@ -131,10 +186,35 @@
         } else {
           this.$store.dispatch('removeField', this.object.key);
         }
-      }
+      },
+      addCondition() {
+        this.object.conditions.push({
+          field: null,
+          question: null,
+          selectedOptions: [],
+          value: null,
+        })
+      },
+      removeCondition(index) {
+        this.object.conditions.splice(index, 1);
+      },
+
+      getHandleClass() {
+        if (this.object.type === 'page') {
+          return 'handle-page' + this.depth
+        }
+        if (this.object.type === 'column') {
+          return 'handle-column' + this.depth
+        }
+        if (this.object.type === 'column') {
+          return 'handle-row' + this.depth
+        }
+        return 'handle-other' + this.depth
+      },
     }
   };
 </script>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 <style scoped>
 
   .table > tbody > tr > th, .table > tbody > tr > td {
@@ -143,8 +223,13 @@
   .table > tbody > tr > th {
     text-align: right;
   }
-  .background-info {
-    background: lightgrey;
-    padding: 5px 10px;
+  /deep/ .multiselect__input {
+    display: none;
+  }
+  .handle {
+    position: absolute;
+    left: -10px;
+    top: -20px;
+    cursor: grab;
   }
 </style>

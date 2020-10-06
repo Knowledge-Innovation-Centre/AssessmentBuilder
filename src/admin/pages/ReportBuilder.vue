@@ -1,28 +1,60 @@
 <template>
-  <div class="home">
-    <h2 v-if="reportId">Editing report: {{title}} of form: {{ formTitle }}</h2>
-    <h2 v-else>Creating new report of form: {{ formTitle }}</h2>
+  <div class="aoat-bg-white aoat-rounded aoat-p-6 aoat-container">
     <div class="aoat-flex">
-      <label>
-        Enter title here:
-        <input v-model="title" type="text">
-      </label>
-    </div>
-    <hr>
-    <div class="elements aoat-pb-5">
-      <h3 class="aoat-mb-0">Form elements</h3>
-      <drag v-for="(element) in availableFormElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
-        {{element.name }}
-      </drag>
-      <h3>Builder elements</h3>
-      <div>
-        <drag v-for="(element) in availableBuilderElements" :key="element.key" class="drag" :data="element" @cut="remove(element)">
-        {{element.name}}
+      <div class="aoat-flex-grow aoat-pr-6">
+        <div class="aoat-bg-white aoat-grid aoat-grid-cols-2 aoat-gap-10 aoat-mb-5">
+          <div>
+            <h2 class="aoat-mt-0 aoat-text-gray-700" v-if="reportId">
+              Editing report: {{title}} of form: {{ formTitle }}
+            </h2>
+            <h2 class="aoat-mt-0 aoat-text-gray-700" v-else>
+              Creating new report of form: {{ formTitle }}
+            </h2>
+            <label class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2">
+              Title
+            </label>
+            <input v-model="title"
+                   type="text"
+                   class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white">
+          </div>
+        </div>
+        <generic :depth="0" :form="reportData" class="root"></generic>
+        <div class="aoat-text-center aoat-mt-5">
+          <button @click="save()"
+                  class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+            Save
+          </button>
+        </div>
+      </div>
+      <div class="aoat-h-full aoat-bg-gray-300 aoat-w-48 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
+        <div class="aoat-text-center aoat-mb-6">
+          <button @click="save()"
+                  class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+            Save
+          </button>
+        </div>
+        <h2 class="aoat-mt-0">Builder elements</h2>
+        <div>
+          <drag
+              v-for="(element) in availableBuilderElements"
+              :key="element.key"
+              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              :data="element"
+              @cut="remove(element)">
+            {{element.name}}
+          </drag>
+        </div>
+        <h2 class="aoat-mt-6">Form elements</h2>
+        <drag v-for="(element) in availableFormElements"
+              :key="element.key"
+              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              :data="element"
+              @cut="remove(element)">
+          {{element.name}}
         </drag>
       </div>
     </div>
-    <generic :form="reportData" class="root"></generic>
-    <button @click="save()">Save</button>
+
   </div>
 </template>
 
@@ -171,8 +203,13 @@ export default {
       })
       .then(function (response) {
         if (!$this.reportId) {
-          window.location.href = aoatViewReportUrl + $this.formId + '/' + response.data.ID;
+          window.location.href = aoat_config.aoatViewReportUrl + $this.formId + '/' + response.data.ID;
         }
+
+        $this.$notify({
+          title: 'Report saved',
+          type: 'success',
+        })
       })
       .catch(function (error) {
         console.log(error);

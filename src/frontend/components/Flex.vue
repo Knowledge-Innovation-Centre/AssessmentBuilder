@@ -3,7 +3,7 @@
         <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div class="aoat-flex-1 page" :class="elementClass" v-show="item.key === currentPage">
+            <div class="aoat-flex-1 page" :class="elementClass" v-show="index === currentPage">
               <generic :key="item.key" :form="item"></generic>
               <div class="aoat-flex aoat-flex-row aoat-justify-between">
                 <template v-if="index === 0 && getItems.length > 1">
@@ -23,7 +23,7 @@
                   <button v-else @click="save()">Submit</button>
                 </template>
               </div>
-
+              <div class="aoat-text-center" v-if="showPageNumbers">{{ getPageNumberText(index) }}</div>
             </div>
             </transition>
           </template>
@@ -31,7 +31,7 @@
             <generic :key="item.key" :class="elementClass" :form="item"></generic>
           </template>
         </template>
-            <p class="message" v-if="message">{{ message }}</p>
+      <p class="message" v-if="message">{{ message }}</p>
     </div>
 </template>
 
@@ -51,20 +51,30 @@
       },
       getItems() {
         return this.items.filter(item => {
-          if (!item.showIf) {
+          if (!item.conditions.length) {
             return true
           }
-          if (!item.showIf.field) {
-            return true
-          }
-          let field = item.showIf.field;
-          let value = item.showIf.value;
-          let assessment = this.$store.state.assessment;
-          if (!assessment[field]) {
-            return false
-          }
+          for (let condition of item.conditions) {
+            let field = condition.field;
+            let question = condition.question;
+            let selectedOptions = condition.selectedOptions;
+            let assessment = this.$store.state.assessment;
+            if (!assessment[field]) {
+              return false
+            }
+            if (selectedOptions) {
+              if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessment[field][question])) {
+                return false
+              }
+            }
 
-          return assessment[field] === value
+            let value = condition.value;
+
+            if (!assessment[field] === value) {
+              return  false
+            }
+          }
+          return true
         })
       },
       classes() {
@@ -76,6 +86,9 @@
         }
         classes.push('aoat-flex')
         return classes;
+      },
+      showPageNumbers() {
+        return this.$store.state.formSettings.showPageNumbers
       }
     },
     props: {
@@ -85,7 +98,7 @@
     },
     data() {
       return {
-        currentPage: null,
+        currentPage: 0,
         title: "",
         message: null,
       }
@@ -93,12 +106,20 @@
     mounted() {
       if (this.items.length) {
         if (this.items[0].type === 'page') {
-          this.currentPage = this.items[0].key
+          this.currentPage = 0
         }
       }
     },
+    watch: {
+      currentPage() {
+        console.log(this.currentPage);
+        this.$store.dispatch('updateCurrentPage', this.currentPage)
+      }
+    },
     methods: {
-
+      getPageNumberText(index) {
+        return 'Page ' + (index+1)
+      },
       save() {
         let $this = this
         this.setTitle(this.items);
@@ -109,23 +130,24 @@
           formId: this.$store.state.formId,
         })
             .then(function (response) {
-              $this.$store.dispatch('clearAssessment');
-
               $this.message = 'Assessment successfully submitted!'
 
-              $this.currentPage = $this.items[0].key
-
+              window.location.href = response.data.guid;
             })
             .catch(function (error) {
               console.log(error);
             });
       },
       setPreviousPage(currentIndex) {
-        this.currentPage = this.items[currentIndex-1].key
+        this.currentPage = currentIndex-1
       },
 
       setNextPage(currentIndex) {
-        this.currentPage = this.items[currentIndex+1].key
+        // console.log(this.checkValidation(this.items));
+        // if (!this.checkValidation(this.items)) {
+        //   return false;
+        // }
+        this.currentPage = currentIndex+1
       },
 
       setTitle(items) {
@@ -146,6 +168,24 @@
         }
 
         return '';
+      },
+
+      checkValidation(items) {
+        for (let item of items) {
+
+          if (item.items) {
+            return this.checkValidation(item.items)
+          }
+          console.log(item);
+          console.log(item.type);
+          console.log(item.required);
+          let value = this.$store.state.assessment[item.key]
+          console.log(value);
+          if (item.required && (!value || value === '')) {
+            return false
+          }
+        }
+        return true
       },
 
       downloadPdf() {

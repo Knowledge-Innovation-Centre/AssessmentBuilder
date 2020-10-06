@@ -45,6 +45,18 @@ class Report extends WP_REST_Controller {
                 )
             )
         );
+        register_rest_route(
+            $this->namespace,
+            '/reports/(?P<id>\d+)',
+            array(
+                array(
+                    'methods'             => \WP_REST_Server::DELETABLE,
+                    'callback'            => array( $this, 'delete_report' ),
+                    'permission_callback' => array( $this, 'delete_report_permissions_check' ),
+                    'args'                => $this->get_collection_params(),
+                )
+            )
+        );
     }
 
     /**
@@ -119,6 +131,27 @@ class Report extends WP_REST_Controller {
      * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
      */
     public function get_report_permissions_check( $request ) {
+        return true;
+    }
+    /**
+     * Retrieves a collection of items.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+     */
+    public function delete_report( $request ) {
+        return wp_delete_post($request->get_params()['id']);
+    }
+
+    /**
+     * Checks if a given request has access to read the items.
+     *
+     * @param  WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+     */
+    public function delete_report_permissions_check( $request ) {
         return true;
     }
 
