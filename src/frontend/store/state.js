@@ -5,4 +5,6 @@ export const state = () => ({
   formId: {},
   formSettings: {},
   currentPage: 0,
+  user: null,
+  errors: [],
 })

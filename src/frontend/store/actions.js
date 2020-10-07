@@ -21,4 +21,13 @@ export const actions = {
   updateCurrentPage({ commit }, payload) {
     commit('UPDATE_CURRENT_PAGE', payload)
   },
+  updateUser({ commit }, payload) {
+    commit('UPDATE_USER', payload)
+  },
+  addError({ commit }, payload) {
+    commit('ADD_ERROR', payload)
+  },
+  clearErrors({ commit }) {
+    commit('CLEAR_ERRORS')
+  },
 }

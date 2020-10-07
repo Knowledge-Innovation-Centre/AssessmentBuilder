@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Api from '../../Api'
 
   export default {
 
@@ -45,7 +45,7 @@ import axios from 'axios'
     methods: {
       getMedia() {
         if (this.value) {
-          axios.get(aoat_config.aoatGetMediaUrl + this.value).then(response => {
+          Api.get(aoat_config.aoatGetMediaUrl + this.value).then(response => {
             this.media = response.data
           })
         }

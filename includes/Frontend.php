@@ -13,6 +13,15 @@ class Frontend {
 
 		add_action('wp_ajax_aoat_upload_file', [ $this, 'aoat_upload_file']);
 		add_action('wp_ajax_nopriv_aoat_upload_file', [ $this, 'aoat_upload_file']);
+
+		add_action('rest_prepare_user', [ $this, 'rest_prepare_user'], 10, 3 );
+	}
+
+	public function rest_prepare_user( $response, $user, $request ) {
+		$response->data[ 'first_name' ] = get_user_meta( $user->ID, 'first_name', true );
+		$response->data[ 'last_name' ] = get_user_meta( $user->ID, 'last_name', true );
+
+		return $response;
 	}
 
 	/**
@@ -29,9 +38,10 @@ class Frontend {
 		$data = array(
 			'upload_url' => admin_url('async-upload.php'),
 			'ajax_url'   => admin_url('admin-ajax.php'),
-			'nonce'      => wp_create_nonce('media-form'),
-			'aoatGetFormUrl' => '/wp-json/apprenticeship-online-assessment-tool/v1/forms/' . ($atts['id'] ?: null),
-			'aoatSaveAssessmentUrl' => '/wp-json/apprenticeship-online-assessment-tool/v1/assessment/create'
+			'nonce'      => wp_create_nonce('wp_rest'),
+			'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/" . ($atts['id'] ?: null)),
+			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
+			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
 		);
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 
@@ -48,10 +58,12 @@ class Frontend {
 		global $post;
 
 		$data = array(
-			'aoatSaveAssessmentUrl' => '/wp-json/apprenticeship-online-assessment-tool/v1/assessment/create',
+			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
 			'aoatGetFormUrl' => null,
-			'aoatGetAssessmentUrl' => '/wp-json/apprenticeship-online-assessment-tool/v1/assessments/' . ($post->ID ?: null),
-			'aoatGetMediaUrl' => '/wp-json/wp/v2/media/',
+			'aoatGetAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/" . ($post->ID ?: null)),
+			'aoatGetMediaUrl' => get_rest_url(null, "/wp/v2/media/"),
+			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
+			'nonce'      => wp_create_nonce('wp_rest'),
 		);
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 

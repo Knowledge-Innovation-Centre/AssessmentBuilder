@@ -1,7 +1,7 @@
 <template>
   <div class="aoat-bg-white aoat-rounded aoat-p-6 aoat-container">
     <div class="aoat-flex">
-      <div class="aoat-flex-grow aoat-pr-6">
+      <div class="aoat-pr-6 aoat-flex-1">
         <div class="aoat-bg-white aoat-grid aoat-grid-cols-2 aoat-gap-10 aoat-mb-5">
           <div>
             <h2 class="aoat-mt-0 aoat-text-gray-700" v-if="id">Editing form: {{title}}</h2>
@@ -51,7 +51,7 @@
           </button>
         </div>
       </div>
-      <div class="aoat-h-full aoat-bg-gray-300 aoat-w-48 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
+      <div class="aoat-h-full aoat-bg-gray-300 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
         <div class="aoat-text-center aoat-mb-6">
 
           <button @click="save()"

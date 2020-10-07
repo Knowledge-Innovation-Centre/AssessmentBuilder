@@ -5,22 +5,22 @@
             <transition name="slide-fade" mode="out-in">
             <div class="aoat-flex-1 page" :class="elementClass" v-show="index === currentPage">
               <generic :key="item.key" :form="item"></generic>
-              <div class="aoat-flex aoat-flex-row aoat-justify-between">
+              <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
                 <template v-if="index === 0 && getItems.length > 1">
                   <div></div>
-                  <button @click="setNextPage(index)">Next</button>
+                  <button @click="setNextPage(index,item)">Next</button>
                 </template>
                 <template v-else-if="index < getItems.length -1 && getItems.length > 1">
                   <button @click="setPreviousPage(index)">Back</button>
-                  <button @click="setNextPage(index)">Next</button>
+                  <button @click="setNextPage(index,item)">Next</button>
                 </template>
                 <template v-else>
                   <template v-if="getItems.length > 1">
-                    <button @click="setPreviousPage(index)">Back</button>
+                    <button id="prevButton" @click="setPreviousPage(index)">Back</button>
                   </template>
                   <div v-else></div>
-                  <button v-if="isReport" @click="downloadPdf()">Download PDF</button>
-                  <button v-else @click="save()">Submit</button>
+                  <button v-if="isReport" id="generatePdfButton" @click="downloadPdf()">Download PDF</button>
+                  <button v-else @click="save(item)">Submit</button>
                 </template>
               </div>
               <div class="aoat-text-center" v-if="showPageNumbers">{{ getPageNumberText(index) }}</div>
@@ -37,7 +37,7 @@
 
 <script>
   import { jsPDF } from "jspdf";
-  import axios from "axios";
+  import Api from "../Api";
   import isEmpty from "lodash/isEmpty";
 
   export default {
@@ -101,6 +101,7 @@
         currentPage: 0,
         title: "",
         message: null,
+        errors: [],
       }
     },
     mounted() {
@@ -112,7 +113,6 @@
     },
     watch: {
       currentPage() {
-        console.log(this.currentPage);
         this.$store.dispatch('updateCurrentPage', this.currentPage)
       }
     },
@@ -120,11 +120,19 @@
       getPageNumberText(index) {
         return 'Page ' + (index+1)
       },
-      save() {
+      save(item) {
+
+        this.$store.dispatch('clearErrors')
+        this.checkValidation(item.items)
+
+        if (this.$store.state.errors.length) {
+          return false;
+        }
+
         let $this = this
         this.setTitle(this.items);
         let assessmentData = this.$store.state.assessment
-        axios.post(aoat_config.aoatSaveAssessmentUrl, {
+        Api.post(aoat_config.aoatSaveAssessmentUrl, {
           title: this.title,
           assessmentData: assessmentData,
           formId: this.$store.state.formId,
@@ -142,11 +150,13 @@
         this.currentPage = currentIndex-1
       },
 
-      setNextPage(currentIndex) {
-        // console.log(this.checkValidation(this.items));
-        // if (!this.checkValidation(this.items)) {
-        //   return false;
-        // }
+      setNextPage(currentIndex, item) {
+        this.$store.dispatch('clearErrors')
+        this.checkValidation(item.items)
+
+        if (this.$store.state.errors.length) {
+          return false;
+        }
         this.currentPage = currentIndex+1
       },
 
@@ -174,38 +184,55 @@
         for (let item of items) {
 
           if (item.items) {
-            return this.checkValidation(item.items)
+            this.checkValidation(item.items)
+            continue;
           }
-          console.log(item);
-          console.log(item.type);
-          console.log(item.required);
+
           let value = this.$store.state.assessment[item.key]
-          console.log(value);
-          if (item.required && (!value || value === '')) {
-            return false
+
+          if (item.type === 'radio_grid') {
+            for (let option of item.optionsHorizontal) {
+              if (!value[option.id]) {
+                this.$store.dispatch('addError', item.key);
+              }
+            }
+
+          } else {
+            if (item.required && (!value || value === '')) {
+              this.$store.dispatch('addError', item.key);
+            }
           }
         }
         return true
       },
 
-      downloadPdf() {
+      async downloadPdf() {
 
         let doc = new jsPDF('p', 'pt', 'a4');
-        // let elementHandler = {
-        //   '#ignorePDF': function (element, renderer) {
-        //     return true;
-        //   }
-        // };
-        // let source = window.document.getElementsByTagName("body")[0];
-        doc.html(
+
+
+        let pdfButton = document.getElementById("generatePdfButton");
+        let prevButton = document.getElementById("prevButton");
+
+        pdfButton.style.display = "none";
+        if (prevButton) {
+          prevButton.style.display = "none";
+        }
+        await doc.html(
             document.getElementById('vue-frontend-app'), {
               callback: function (doc) {
                 doc.save();
               },
               x: 10,
-              y: 10});
+              y: 10
+            }
+        );
 
-        // doc.output("dataurlnewwindow");
+        pdfButton.style.display = "block";
+
+        if (prevButton) {
+          prevButton.style.display = "block";
+        }
 
       }
 

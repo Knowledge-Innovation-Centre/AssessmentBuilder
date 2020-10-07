@@ -1,7 +1,7 @@
 <template>
   <div class="aoat-bg-white aoat-rounded aoat-p-6 aoat-container">
     <div class="aoat-flex">
-      <div class="aoat-flex-grow aoat-pr-6">
+      <div class="aoat-flex-1 aoat-pr-6">
         <div class="aoat-bg-white aoat-grid aoat-grid-cols-2 aoat-gap-10 aoat-mb-5">
           <div>
             <h2 class="aoat-mt-0 aoat-text-gray-700" v-if="reportId">
@@ -26,7 +26,7 @@
           </button>
         </div>
       </div>
-      <div class="aoat-h-full aoat-bg-gray-300 aoat-w-48 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
+      <div class="aoat-h-full aoat-bg-gray-300 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
         <div class="aoat-text-center aoat-mb-6">
           <button @click="save()"
                   class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">

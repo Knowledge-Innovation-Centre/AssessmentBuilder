@@ -26,6 +26,9 @@
     },
 
     computed: {
+      user() {
+        return this.$store.state.user
+      },
       value: {
         get () {
           return this.$store.state.assessment[this.object.key]
@@ -40,8 +43,23 @@
       return {
       };
     },
+    watch: {
+      user() {
+          this.setInitialData();
+      }
+    },
 
     methods: {
+      setInitialData() {
+        if (this.object.type === 'first_last_name') {
+          if (this.user) {
+            this.$store.dispatch('updateValue', {
+              key: this.object.key,
+              value: this.user.first_name + ' ' + this.user.last_name
+            })
+          }
+        }
+      }
     }
   };
 </script>

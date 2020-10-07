@@ -1,6 +1,9 @@
 <template>
     <div class="generic aoat-flex-1" :class="form.class">
         <component :is="getComponent" :object="form"></component>
+        <span class="error" v-if="hasError">
+          This is required field
+        </span>
         <slot/>
     </div>
 </template>
@@ -66,6 +69,9 @@
       assessment() {
         return this.$store.state.assessment
       },
+      hasError() {
+        return this.$store.state.errors.includes(this.form.key)
+      }
     },
     methods: {
     }

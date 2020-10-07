@@ -112,6 +112,7 @@ class Form extends WP_REST_Controller {
 
 	    $form->reports = $query;
 	    $form->settings = [];
+
 	    foreach (Setting::$available_settings as $setting) {
 	    	$form->settings[$setting['key']] = (int)get_option($setting['key'], $setting['value']);
 	    }

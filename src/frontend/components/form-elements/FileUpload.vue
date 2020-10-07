@@ -19,7 +19,7 @@
 <script>
 // Import Vue FilePond
 import vueFilePond from 'vue-filepond';
-import axios from 'axios';
+import Api from '../../Api';
 
 
 // Import image preview plugin styles
@@ -57,12 +57,9 @@ const FilePond = vueFilePond();
             formData.append(fieldName, file, file.name);
             formData.append('action', 'aoat_upload_file');
 
-            axios.post(aoat_config.ajax_url, formData, {
+            Api.post(aoat_config.ajax_url, formData, {
               processData: false,
               contentType: false,
-              beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-WP-Nonce', aoat_config.nonce);
-              },
             }).then((response) => {
               this.$store.dispatch('updateValue', { key: this.object.key, value: response.data})
               load(response);

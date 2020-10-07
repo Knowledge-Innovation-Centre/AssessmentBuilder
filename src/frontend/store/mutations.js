@@ -22,4 +22,13 @@ export const mutations = {
   UPDATE_CURRENT_PAGE(state, payload) {
     state.currentPage = payload
   },
+  UPDATE_USER(state, payload) {
+    Vue.set(state, 'user', payload);
+  },
+  ADD_ERROR(state, payload) {
+    state.errors.push(payload)
+  },
+  CLEAR_ERRORS(state) {
+    state.errors = []
+  },
 }
