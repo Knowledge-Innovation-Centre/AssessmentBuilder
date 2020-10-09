@@ -14,11 +14,11 @@
           </button>
         </template>
 
-        <div class="aoat-text-left">
+        <div class="aoat-text-left w-800">
           <table class="table aoat-w-full">
             <tbody>
             <tr>
-              <th>Name:</th>
+              <th style="width: 100px;">Name:</th>
               <td><input v-model="object.name" class="aoat-w-full" type="text"></td>
             </tr>
             <tr v-if="typeof object.placeholder !== 'undefined'">
@@ -44,9 +44,8 @@
             <tr>
               <th>Show if:</th>
               <td>
-                  <table class="">
+                  <table class="aoat-w-full">
                   <tr v-for="(condition, index) in object.conditions">
-
                     <td>
                       <select v-model="condition.field">
                         <option v-for="fieldInForm in fieldsInForm" :key="fieldInForm.key" :value="fieldInForm.key">
@@ -56,38 +55,44 @@
                     </td>
                     <template v-if="condition.field">
                       <td v-if="isSelect(getFieldByKey(condition.field))">
-                        <select multiple v-model="condition.selectedOptions">
-                          <option v-for="option in getFieldByKey(condition.field).options" :key="option.id" :value="option.id">
-                            {{option.name}}
-                          </option>
-                        </select>
-                      </td>
-                      <td v-if="isRadioGrid(getFieldByKey(condition.field))">
-                        <select v-model="condition.question">
-                          <option v-for="option in getFieldByKey(condition.field).optionsHorizontal"
-                                  :key="option.id"
-                                  :value="option.id">
-                            {{option.name}}
-                          </option>
-                        </select>
-
-                      </td>
-                      <td v-else>
-                        <input v-model="condition.value" type="text" >
-                      </td>
-                      <td v-if="condition.question">
                         <multiselect
                             v-model="condition.selectedOptions"
                             :multiple="true"
                             label="name"
                             placeholder="Select one"
+                            class="aoat-w-full"
                             track-by="id"
-                            :options="getFieldByKey(condition.field).optionsVertical">
+                            :options="getFieldByKey(condition.field).options">
                         </multiselect>
-
                       </td>
+                      <template v-else-if="isRadioGrid(getFieldByKey(condition.field))">
 
-                      <button  @click="removeCondition(index)">X</button>
+                        <td>
+                          <select v-model="condition.question">
+                            <option v-for="option in getFieldByKey(condition.field).optionsHorizontal"
+                                    :key="option.id"
+                                    :value="option.id">
+                              {{option.name}}
+                            </option>
+                          </select>
+                        </td>
+                        <td v-if="condition.question">
+                          <multiselect
+                              v-model="condition.selectedOptions"
+                              :multiple="true"
+                              label="name"
+                              placeholder="Select one"
+                              track-by="id"
+                              :options="getFieldByKey(condition.field).optionsVertical">
+                          </multiselect>
+                        </td>
+                      </template>
+                      <td v-else>
+                        <input v-model="condition.value" type="text" >
+                      </td>
+                      <td style="width: 50px;">
+                        <button @click="removeCondition(index)">X</button>
+                      </td>
                     </template>
                   </tr>
                   </table>
@@ -231,5 +236,8 @@
     left: -10px;
     top: -20px;
     cursor: grab;
+  }
+  .w-800 {
+    width: 800px;
   }
 </style>

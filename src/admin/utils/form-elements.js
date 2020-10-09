@@ -1,4 +1,5 @@
 import randomValueHex from "./helpers"
+import countryList from "./countries"
 
 export default  [
     {
@@ -60,6 +61,24 @@ export default  [
       canRemove: true,
       component: 'SelectInput',
       options: [],
+      hidden: false,
+      class: '',
+      placeholder: '',
+      includeInAssessmentTitle: false,
+      multiple: false
+    },
+    {
+      key: randomValueHex(15),
+      reportItemKey: "",
+      name: 'Countries',
+      type: 'select',
+      defaultValue: null,
+      label: 'Select country',
+      conditions: [],
+      required: false,
+      canRemove: true,
+      component: 'CountryInput',
+      options: countryList,
       hidden: false,
       class: '',
       placeholder: '',

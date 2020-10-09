@@ -35,14 +35,14 @@ class Frontend {
 	public function render_frontend( $atts, $content = '' ) {
 		wp_enqueue_style( 'apprenticeship-online-assessment-tool-frontend' );
 		wp_enqueue_script( 'apprenticeship-online-assessment-tool-frontend' );
-		$data = array(
+		$data = [
 			'upload_url' => admin_url('async-upload.php'),
 			'ajax_url'   => admin_url('admin-ajax.php'),
 			'nonce'      => wp_create_nonce('wp_rest'),
 			'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/" . ($atts['id'] ?: null)),
 			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
 			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
-		);
+		];
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 
 		$content .= '<div id="vue-frontend-app"></div>';
@@ -57,14 +57,14 @@ class Frontend {
 
 		global $post;
 
-		$data = array(
+		$data = [
 			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
 			'aoatGetFormUrl' => null,
 			'aoatGetAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/" . ($post->ID ?: null)),
 			'aoatGetMediaUrl' => get_rest_url(null, "/wp/v2/media/"),
 			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
 			'nonce'      => wp_create_nonce('wp_rest'),
-		);
+		];
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 
 		/* Checks for single template by post type */

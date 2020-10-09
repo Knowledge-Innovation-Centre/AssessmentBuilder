@@ -17,12 +17,14 @@
   import DateInput from "./form-elements/DateInput.vue";
   import TextareaInput from "./form-elements/TextareaInput.vue";
   import SelectInput from "./form-elements/SelectInput.vue";
+  import CountryInput from "./form-elements/CountryInput.vue";
   import RadioGridInput from "./form-elements/RadioGridInput.vue";
   import RadioInput from "./form-elements/RadioInput.vue";
   import Form from "./form-elements/Form.vue";
   import Report from "./report-elements/Report.vue";
   import DefaultReportElement from "./report-elements/DefaultReportElement.vue";
   import SelectReportElement from "./report-elements/SelectReportElement.vue";
+  import CountryReportElement from "./report-elements/CountryReportElement.vue";
   import RadioGridReportElement from "./report-elements/RadioGridReportElement.vue";
   import RadioReportElement from "./report-elements/RadioReportElement.vue";
   import TextReportElement from "./report-elements/TextReportElement.vue";
@@ -45,6 +47,7 @@
       Page,
       Paragraph,
       SelectInput,
+      CountryInput,
       TextareaInput,
       TextInput,
       RadioInput,
@@ -54,6 +57,7 @@
       Report,
       DefaultReportElement,
       SelectReportElement,
+      CountryReportElement,
       RadioGridReportElement,
       RadioReportElement,
       TextReportElement,
@@ -64,6 +68,7 @@
     },
     computed: {
       getComponent() {
+        console.log(this.form.component);
         return this.form.component
       },
       assessment() {

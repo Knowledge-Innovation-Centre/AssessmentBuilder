@@ -31,10 +31,17 @@
 
                   {{ report.post_title }}
                 </router-link>
+                <div>
+
+                <button @click="duplicateReport(report.ID)"
+                        class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+                  <span class="dashicons dashicons-admin-page"></span>
+                </button>
                 <button @click="removeReport(report.ID)"
                         class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
                   <span class="dashicons dashicons-trash"></span>
                 </button>
+                </div>
               </div>
 
             </template>
@@ -176,6 +183,17 @@ export default {
 
         this.$notify({
           title: 'Report deleted',
+          type: 'success',
+        })
+      })
+    },
+    duplicateReport(reportId) {
+      axios.post(aoat_config.aoatDuplicateReportUrl, {
+        id: reportId
+      }).then((result) => {
+        this.reports.push(result.data)
+        this.$notify({
+          title: 'Report duplicated',
           type: 'success',
         })
       })

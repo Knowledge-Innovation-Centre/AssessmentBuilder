@@ -5,7 +5,7 @@
             <transition name="slide-fade" mode="out-in">
             <div class="aoat-flex-1 page" :class="elementClass" v-show="index === currentPage">
               <generic :key="item.key" :form="item"></generic>
-              <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
+              <div v-if="showButtons" class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
                 <template v-if="index === 0 && getItems.length > 1">
                   <div></div>
                   <button @click="setNextPage(index,item)">Next</button>
@@ -62,15 +62,17 @@
             if (!assessment[field]) {
               return false
             }
+            let assessmentValue = assessment[field];
             if (selectedOptions) {
-              if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessment[field][question])) {
+              if (question) {
+                assessmentValue = assessment[field][question]
+              }
+              if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessmentValue)) {
                 return false
               }
             }
 
-            let value = condition.value;
-
-            if (!assessment[field] === value) {
+            if (!assessmentValue === condition.value) {
               return  false
             }
           }
@@ -102,6 +104,7 @@
         title: "",
         message: null,
         errors: [],
+        showButtons: true,
       }
     },
     mounted() {
@@ -210,14 +213,8 @@
 
         let doc = new jsPDF('p', 'pt', 'a4');
 
+        this.showButtons = false;
 
-        let pdfButton = document.getElementById("generatePdfButton");
-        let prevButton = document.getElementById("prevButton");
-
-        pdfButton.style.display = "none";
-        if (prevButton) {
-          prevButton.style.display = "none";
-        }
         await doc.html(
             document.getElementById('vue-frontend-app'), {
               callback: function (doc) {
@@ -227,12 +224,7 @@
               y: 10
             }
         );
-
-        pdfButton.style.display = "block";
-
-        if (prevButton) {
-          prevButton.style.display = "block";
-        }
+        this.showButtons = true;
 
       }
 

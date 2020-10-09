@@ -41,7 +41,7 @@ export default {
       return this.$store.state.currentPage
     },
     percentage() {
-      return (this.currentPage / this.formData.items.length) * 100
+      return (this.currentPage / this.getItems().length) * 100
     }
   },
   mounted() {
@@ -77,6 +77,36 @@ export default {
           this.$store.dispatch('updateAssessment', this.assessmentData)
         })
       }
+    },
+    getItems() {
+      return this.formData.items.filter(item => {
+        if (!item.conditions.length) {
+          return true
+        }
+        for (let condition of item.conditions) {
+          let field = condition.field;
+          let question = condition.question;
+          let selectedOptions = condition.selectedOptions;
+          let assessment = this.$store.state.assessment;
+          if (!assessment[field]) {
+            return false
+          }
+          let assessmentValue = assessment[field];
+          if (selectedOptions) {
+            if (question) {
+              assessmentValue = assessment[field][question]
+            }
+            if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessmentValue)) {
+              return false
+            }
+          }
+
+          if (!assessmentValue === condition.value) {
+            return  false
+          }
+        }
+        return true
+      })
     },
   }
 }

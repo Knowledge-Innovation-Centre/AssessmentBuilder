@@ -203,6 +203,7 @@ final class Apprenticeship_Online_Assessment_Tool {
         add_action( 'init', array( $this, 'init_classes' ) );
 
         add_action( 'init', array( $this, 'register_post_types' ) );
+	    //add_action( 'pre_get_posts', array( $this, 'archive_meta_query'), 1 );
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
@@ -268,7 +269,14 @@ final class Apprenticeship_Online_Assessment_Tool {
 			return $link;
 		}
 	}
-
+	function archive_meta_query( $query ) {
+    	var_dump($query->is_archive);
+    	//die();
+		if ( $query->is_archive){
+			$query->query_vars["meta_key"] = 'wolf';
+			$query->query_vars["meta_value"] = 'boltz';
+		}
+	}
 
     /**
      * Instantiate the required classes

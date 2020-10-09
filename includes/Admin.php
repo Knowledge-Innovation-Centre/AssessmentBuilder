@@ -24,8 +24,8 @@ class Admin {
         $hook = add_menu_page( __( 'Assessment Tool', 'apprenticeship-online-assessment-tool' ), __( 'Assessment Tool', 'apprenticeship-online-assessment-tool' ), $capability, $slug, [ $this, 'plugin_page' ], 'dashicons-text' );
 
         if ( current_user_can( $capability ) ) {
-            $submenu[ $slug ][] = array( __( 'Add form', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/forms/create' );
-            $submenu[ $slug ][] = array( __( 'Settings', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/settings' );
+            $submenu[ $slug ][] = [ __( 'Add form', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/forms/create' ];
+            $submenu[ $slug ][] = [ __( 'Settings', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
         }
 
         add_action( 'load-' . $hook, [ $this, 'init_hooks'] );
@@ -51,7 +51,7 @@ class Admin {
         wp_enqueue_script( 'apprenticeship-online-assessment-tool-admin' );
 
 
-	    $data = array(
+	    $data = [
 	    	'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/"),
 	    	'aoatSaveFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/create"),
 	    	'aoatViewFormUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/'),
@@ -59,9 +59,10 @@ class Admin {
 	    	'aoatSaveReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/create"),
 	    	'aoatViewReportUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/reports/'),
 	    	'aoatDeleteReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/"),
+	    	'aoatDuplicateReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/duplicate/"),
 	    	'aoatSaveSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings/save"),
 	    	'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
-	    );
+	    ];
 	    wp_localize_script( 'apprenticeship-online-assessment-tool-admin', 'aoat_config', $data );
     }
 

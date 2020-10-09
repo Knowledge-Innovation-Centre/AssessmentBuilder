@@ -104,7 +104,9 @@ export default {
       usedFormElements = usedFormElements.map(element => {
         if (element.component === 'SelectInput') {
           element.component = 'SelectReportElement'
-        } else if (element.component === 'RadioGridInput') {
+        } else if (element.component === 'CountryInput') {
+          element.component = 'CountryReportElement'
+        }  else if (element.component === 'RadioGridInput') {
           element.component = 'RadioGridReportElement'
         }  else if (element.component === 'TextInput') {
           element.component = 'TextReportElement'
