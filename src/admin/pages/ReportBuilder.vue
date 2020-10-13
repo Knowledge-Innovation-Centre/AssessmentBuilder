@@ -32,6 +32,7 @@
                   class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
             Save
           </button>
+          <router-link :to="'/forms/' + formId">Back to form</router-link>
         </div>
         <h2 class="aoat-mt-0">Builder elements</h2>
         <div>

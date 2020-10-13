@@ -1,9 +1,9 @@
 <template>
     <div class="generic aoat-flex-1" :class="form.class">
-        <component :is="getComponent" :object="form"></component>
-        <span class="error" v-if="hasError">
+        <component :has-error="hasError" :is="getComponent" :object="form"></component>
+        <small class="error aoat-text-red-400" v-if="hasError">
           This is required field
-        </span>
+        </small>
         <slot/>
     </div>
 </template>
@@ -68,7 +68,6 @@
     },
     computed: {
       getComponent() {
-        console.log(this.form.component);
         return this.form.component
       },
       assessment() {

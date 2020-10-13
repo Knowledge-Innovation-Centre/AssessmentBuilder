@@ -1,12 +1,14 @@
 <template>
   <div>
-        <label>
-            {{ object.label }} <template v-if="object.required">*</template><br>
-            <select v-model="value">
-              <option :value="null" disabled hidden>{{ object.placeholder }}</option>
-                <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
-            </select>
-        </label>
+    <label>
+        {{ object.label }} <template v-if="object.required">*</template>
+    </label>
+    <select class="aoat-w-full"
+            :class="hasError ? 'aoat-border-red-400' : ''"
+            v-model="value">
+      <option :value="null" disabled hidden>{{ object.placeholder }}</option>
+      <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
+    </select>
     </div>
 </template>
 
@@ -24,6 +26,11 @@
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

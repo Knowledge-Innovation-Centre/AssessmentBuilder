@@ -27,13 +27,15 @@
           <tr v-if="object.type === 'radio_grid'">
             <th>Select graph</th>
             <td>
-              <select v-model="object.selectedGraph">
-                <option v-for="availableGraph in availableGraphs"
-                        :key="availableGraph.key"
-                        :value="availableGraph.key">
-                  {{ availableGraph.label }}
-                </option>
-              </select>
+                <multiselect
+                    v-model="object.selectedGraph"
+                    :multiple="true"
+                    label="label"
+                    track-by="key"
+                    :allow-empty="false"
+                    class="aoat-w-full"
+                    :options="availableGraphs">
+                </multiselect>
             </td>
           </tr>
           </tbody>
@@ -50,11 +52,14 @@
 
 <script>
 
+  import {Multiselect} from "vue-multiselect";
+
   export default {
 
     name: 'CommonOptionsReport',
 
     components: {
+      Multiselect
     },
 
     props: {
@@ -84,8 +89,8 @@
             key: 'radar'
           },
           {
-            label: 'Both',
-            key: 'both'
+            label: 'Grid',
+            key: 'grid'
           }
         ]
       };

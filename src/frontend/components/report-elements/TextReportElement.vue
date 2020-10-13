@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h5>{{ object.label }}</h5>
+    <div class="aoat-font-bold">{{ object.label }}</div>
     {{ value }}
   </div>
 </template>

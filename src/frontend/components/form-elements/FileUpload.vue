@@ -1,18 +1,20 @@
 <template>
   <div>
-    <label for="label">
+    <label>
       {{ object.label }} <template v-if="object.required">*</template>
-      <file-pond
-          name="test"
-          ref="pond"
-          v-bind:allow-replace="true"
-          v-bind:instant-upload="true"
-          label-idle="Drop files here..."
-          v-bind:allow-multiple="false"
-          :server="server"
-          v-bind:files="myFiles"
-          v-on:init="handleFilePondInit"/>
     </label>
+    <file-pond
+        name="test"
+        class="aoat-w-full"
+        ref="pond"
+        v-bind:allow-replace="true"
+        v-bind:instant-upload="true"
+        label-idle="Drop files here..."
+        v-bind:allow-multiple="false"
+        :server="server"
+        v-bind:files="myFiles"
+        :class="hasError ? 'aoat-border-red-400' : ''"
+        v-on:init="handleFilePondInit"/>
   </div>
 </template>
 
@@ -41,6 +43,11 @@ const FilePond = vueFilePond();
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

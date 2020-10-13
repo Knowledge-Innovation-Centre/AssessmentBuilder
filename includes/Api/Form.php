@@ -109,6 +109,7 @@ class Form extends WP_REST_Controller {
 	    $args = [
 		    'post_type' => 'aoat_report',
 		    'meta_key' => 'form_id',
+		    'post_status' => 'any',
 		    'meta_value' => $form->ID,
 	    ];
 	    $query = get_posts($args);

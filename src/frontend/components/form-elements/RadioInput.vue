@@ -1,10 +1,12 @@
 <template>
   <div>
-    {{ object.label }} <template v-if="object.required">*</template><br>
-        <label v-for="option in options" :key="option.id">
-          <input type="radio" :name="object.key" v-model="value" :value="option.id" />
-            {{ option.name }}
-        </label>
+    {{ object.label }} <template v-if="object.required">*</template>
+    <label class="aoat-w-full" v-for="option in options" :key="option.id">
+      <input type="radio"
+             :class="hasError ? 'aoat-border-red-400' : ''"
+             :name="object.key" v-model="value" :value="option.id" />
+      {{ option.name }}
+    </label>
     </div>
 </template>
 
@@ -22,6 +24,11 @@
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

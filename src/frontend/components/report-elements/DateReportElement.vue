@@ -1,8 +1,7 @@
 <template>
   <div>
-          <h5>{{ object.label }}</h5>
-          {{ date }}
-
+    <div class="aoat-font-bold">{{ object.label }}</div>
+    {{ date }}
     </div>
 </template>
 

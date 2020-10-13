@@ -23,6 +23,11 @@ class Setting extends WP_REST_Controller {
             'key'=> 'aoat_max_questions_per_page',
             'value'=> 10,
 		],
+		[
+			'label'=> 'Max items per column:',
+            'key'=> 'aoat_max_items_per_column',
+            'value'=> 4,
+		],
 	];
 
     /**

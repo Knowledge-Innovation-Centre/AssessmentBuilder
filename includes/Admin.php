@@ -60,6 +60,7 @@ class Admin {
 	    	'aoatViewReportUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/reports/'),
 	    	'aoatDeleteReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/"),
 	    	'aoatDuplicateReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/duplicate/"),
+	    	'aoatActivateReportUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports/activate/"),
 	    	'aoatSaveSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings/save"),
 	    	'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
 	    ];

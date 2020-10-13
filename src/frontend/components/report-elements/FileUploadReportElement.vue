@@ -1,11 +1,10 @@
 <template>
   <div>
-    <h5>{{ object.label }}</h5>
+    <div class="aoat-font-bold">{{ object.label }}</div>
     <template v-if="media">
       <a :href="media.source_url" target="_blank">{{ media.title.rendered }}</a>
     </template>
-
-    </div>
+  </div>
 </template>
 
 <script>

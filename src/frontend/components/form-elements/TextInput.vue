@@ -1,11 +1,13 @@
 <template>
   <div>
-        <label for="label">
-          {{ object.label }} <template v-if="object.required">*</template>
-            <input id="label" v-model="value" :placeholder="object.placeholder" type="text" >
-        </label>
-
-    </div>
+    <label>
+      {{ object.label }} <template v-if="object.required">*</template>
+    </label>
+    <input class="aoat-w-full"
+           :class="hasError ? 'aoat-border-red-400' : ''"
+           v-model="value" :placeholder="object.placeholder"
+           type="text" >
+  </div>
 </template>
 
 <script>
@@ -22,6 +24,11 @@
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

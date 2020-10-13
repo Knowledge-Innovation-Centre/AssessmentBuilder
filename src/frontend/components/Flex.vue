@@ -184,6 +184,9 @@
       },
 
       checkValidation(items) {
+        if (this.isReport) {
+          return true;
+        }
         for (let item of items) {
 
           if (item.items) {

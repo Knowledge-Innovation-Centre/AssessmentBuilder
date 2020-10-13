@@ -60,6 +60,9 @@
       },
       maxQuestionsPerPage() {
         return this.$store.state.settings.aoat_max_questions_per_page
+      },
+      maxItemsPerColumn() {
+        return this.$store.state.settings.aoat_max_items_per_column
       }
     },
     methods: {
@@ -114,6 +117,9 @@
           return n.type === 'page';
         }
         if (this.object.type === 'page') {
+          if (this.items.length >= this.maxQuestionsPerPage) {
+            return false;
+          }
           return n.type === 'row';
 
         }
@@ -122,6 +128,10 @@
 
         }
         if (this.object.type === 'column') {
+
+          if (this.items.length >= this.maxItemsPerColumn) {
+            return false;
+          }
           return !['page','column'].includes(n.type);
 
         }

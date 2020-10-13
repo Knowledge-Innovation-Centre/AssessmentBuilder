@@ -1,11 +1,13 @@
 <template>
   <div>
-      <label>
-          {{ object.label }} <template v-if="object.required">*</template>
-          <textarea name="label" :placeholder="object.placeholder" v-model="value" />
-      </label>
-
-    </div>
+    <label>
+        {{ object.label }} <template v-if="object.required">*</template>
+    </label>
+    <textarea class="aoat-w-full"
+              :class="hasError ? 'aoat-border-red-400' : ''"
+              :placeholder="object.placeholder"
+              v-model="value" />
+  </div>
 </template>
 
 <script>
@@ -20,6 +22,11 @@
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

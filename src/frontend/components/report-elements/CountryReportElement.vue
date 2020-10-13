@@ -1,9 +1,8 @@
 <template>
   <div>
-          <h5>{{ object.label }}</h5>
-          {{ value }}
-
-    </div>
+    <div class="aoat-font-bold">{{ object.label }}</div>
+    {{ value }}
+  </div>
 </template>
 
 <script>
@@ -26,7 +25,9 @@
     computed: {
       value() {
         let key =  this.$store.state.assessment[this.object.reportItemKey]
-
+        if (!key) {
+          return '/';
+        }
         return this.object.options.find(option => option.id === key).name
       }
     },

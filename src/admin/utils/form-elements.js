@@ -134,7 +134,10 @@ export default  [
       optionsVertical: [],
       hidden: false,
       class: '',
-      selectedGraph: 'pie',
+      selectedGraph: [{
+        label: "Pie",
+        key: "pie",
+      }],
     },
     {
       key: randomValueHex(15),
@@ -178,7 +181,7 @@ export default  [
     {
       key: randomValueHex(15),
       reportItemKey: "",
-      name: 'Column',
+      name: 'Items holder',
       type: 'column',
       conditions: [],
       component: 'Column',

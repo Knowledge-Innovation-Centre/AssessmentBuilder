@@ -1,10 +1,13 @@
 <template>
   <div>
-        <label for="label">
-          {{ object.label }} <template v-if="object.required">*</template>
-          <date-picker v-model="localDate"  :placeholder="object.placeholder"></date-picker>
-        </label>
-    </div>
+    <label>
+      {{ object.label }} <template v-if="object.required">*</template>
+    </label>
+    <date-picker
+        :class="hasError ? 'aoat-border-red-400' : ''"
+        v-model="localDate"
+        :placeholder="object.placeholder"></date-picker>
+  </div>
 </template>
 
 <script>
@@ -24,6 +27,11 @@ import 'vue2-datepicker/index.css';
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

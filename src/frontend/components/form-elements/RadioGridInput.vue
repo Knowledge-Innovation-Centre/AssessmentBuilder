@@ -1,27 +1,31 @@
 <template>
   <div>
     {{ object.label }}
-        <table>
-          <thead>
-          <tr>
-            <th></th>
-            <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
-              <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
-              <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
-            </th>
-          </tr>
+    <table class="aoat-w-full"
+           :class="hasError ? 'aoat-border-red-400' : ''">
+      <thead>
+      <tr>
+        <th></th>
+        <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+          <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
+          <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
+        </th>
+      </tr>
 
-          </thead>
-          <tbody>
-          <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
-            <td>{{ optionHorizontal.name }}</td>
-            <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
-              <input type="radio" :name="optionHorizontal.id" v-model="value[optionHorizontal.id]"  :value="optionVertical.id"/>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-    </div>
+      </thead>
+      <tbody>
+      <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
+        <td>{{ optionHorizontal.name }}</td>
+        <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+          <input type="radio"
+                 :name="optionHorizontal.id"
+                 v-model="value[optionHorizontal.id]"
+                 :value="optionVertical.id"/>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
@@ -38,6 +42,11 @@
       object: {
         type: Object,
         required: true,
+      },
+      hasError: {
+        type: Boolean,
+        required: false,
+        default: false,
       }
     },
 

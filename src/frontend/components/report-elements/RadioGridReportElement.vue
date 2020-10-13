@@ -1,11 +1,33 @@
 <template>
   <div>
-    <h5>{{ object.label }}</h5>
+    <div class="aoat-font-bold">{{ object.label }}</div>
     <template v-if="showPieGraph">
       <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
     </template>
     <template v-if="showRadarGraph">
       <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+    </template>
+    <template v-if="showGrid">
+      <table class="aoat-w-full">
+        <thead>
+        <tr>
+          <th></th>
+          <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+            <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
+            <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
+          </th>
+        </tr>
+
+        </thead>
+        <tbody>
+        <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
+          <td>{{ optionHorizontal.name }}</td>
+          <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+            <span v-if="value[optionHorizontal.id]" class="dashicons dashicons-yes"></span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </template>
   </div>
 </template>
@@ -36,14 +58,20 @@
           return this.$store.state.assessment[this.object.reportItemKey] ?? {}
       },
       showPieGraph() {
-        return this.object.selectedGraph === 'pie' || this.isBothSelected
+        return !!this.object.selectedGraph.find(graph => graph.key === 'pie')
       },
       showRadarGraph() {
-        return this.object.selectedGraph === 'radar' || this.isBothSelected
+        return !!this.object.selectedGraph.find(graph => graph.key === 'radar')
       },
-      isBothSelected() {
-        return this.object.selectedGraph === 'both'
-      }
+      showGrid() {
+        return !!this.object.selectedGraph.find(graph => graph.key === 'grid')
+      },
+      optionsHorizontal() {
+        return this.object.optionsHorizontal
+      },
+      optionsVertical() {
+        return this.object.optionsVertical
+      },
     },
 
     data () {
