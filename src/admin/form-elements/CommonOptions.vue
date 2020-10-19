@@ -6,6 +6,7 @@
              :interactive="true"
              theme="light"
              :max-width="800"
+             placement="left"
              class="aoat-inline-block"
              trigger="click">
         <template v-slot:trigger>
@@ -14,7 +15,7 @@
           </button>
         </template>
 
-        <div class="aoat-text-left w-800">
+        <div class="aoat-text-left w-800 aoat-py-4">
           <table class="table aoat-w-full">
             <tbody>
             <tr>
@@ -108,6 +109,32 @@
               <th>Classes:</th>
               <td><input v-model="object.class" type="text"></td>
             </tr>
+            <tr>
+              <th>Max width:</th>
+              <td><input v-model="object.maxWidth" type="number"></td>
+              <td><select v-model="object.maxWidthUnit">
+                <option value="px">px</option>
+                <option value="%">%</option>
+              </select></td>
+            </tr>
+            <tr v-if="typeof object.maxSize !== 'undefined'">
+              <th>Max size (MB):</th>
+              <td><input v-model="object.maxSize" type="number"></td>
+            </tr>
+            <tr v-if="typeof object.maxFiles !== 'undefined'">
+              <th>Max files:</th>
+              <td><input v-model="object.maxFiles" type="number"></td>
+            </tr>
+            <tr v-if="typeof object.acceptedFileTypes !== 'undefined'">
+              <th>Accepted file types:</th>
+              <td><multiselect
+                  v-model="object.acceptedFileTypes"
+                  :multiple="true"
+                  placeholder="Select one"
+                  :close-on-select="false"
+                  :options="fileTypes">
+              </multiselect></td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -160,6 +187,21 @@
     data () {
       return {
         show: false,
+        fileTypes: [
+          'application/pdf',
+          'image/jpeg',
+          'image/png',
+          'application/vnd.ms-excel',
+          'application/xml',
+          'text/xml',
+          'text/plain',
+          'audio/webm',
+          'video/webm',
+          'audio/mpeg',
+          'video/mpeg',
+          'text/csv',
+          'application/zip',
+        ],
       };
     },
 

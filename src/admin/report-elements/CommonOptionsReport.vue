@@ -6,6 +6,7 @@
              :interactive="true"
              theme="light"
              :max-width="800"
+             placement="left"
              class="aoat-inline-block"
              trigger="click">
         <template v-slot:trigger>
@@ -13,33 +14,37 @@
             <span class="dashicons dashicons-arrow-down-alt2"></span>
           </button>
         </template>
-        <div class="aoat-text-left">
-        <table class="table aoat-w-full">
-          <tbody>
-          <tr v-if="typeof object.hidden !== 'undefined'">
-            <th>Hidden:</th>
-            <td><input  v-model="object.hidden" type="checkbox"></td>
-          </tr>
-          <tr>
-            <th>Classes:</th>
-            <td><input v-model="object.class" type="text"></td>
-          </tr>
-          <tr v-if="object.type === 'radio_grid'">
-            <th>Select graph</th>
-            <td>
-                <multiselect
-                    v-model="object.selectedGraph"
-                    :multiple="true"
-                    label="label"
-                    track-by="key"
-                    :allow-empty="false"
-                    class="aoat-w-full"
-                    :options="availableGraphs">
-                </multiselect>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="aoat-text-left w-800 aoat-py-4">
+          <table class="table aoat-w-full">
+            <tbody>
+            <tr>
+              <th>Label:</th>
+              <td><input  v-model="object.reportLabel" type="text"></td>
+            </tr>
+            <tr v-if="typeof object.hidden !== 'undefined'">
+              <th>Hidden:</th>
+              <td><input  v-model="object.hidden" type="checkbox"></td>
+            </tr>
+            <tr>
+              <th>Classes:</th>
+              <td><input v-model="object.class" type="text"></td>
+            </tr>
+            <tr v-if="object.type === 'radio_grid'">
+              <th>Select graph</th>
+              <td>
+                  <multiselect
+                      v-model="object.selectedGraph"
+                      :multiple="true"
+                      label="label"
+                      track-by="key"
+                      :allow-empty="false"
+                      class="aoat-w-full"
+                      :options="availableGraphs">
+                  </multiselect>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </tippy>
       <button class="remove-button" @click="remove()">

@@ -1,6 +1,8 @@
 <?php
 namespace ApprenticeshipOnlineAssessmentTool;
 
+use WP_Query;
+
 /**
  * Frontend Pages Handler
  */
@@ -8,6 +10,7 @@ class Frontend {
 
 	public function __construct() {
 		add_shortcode( 'aoat-form', [ $this, 'render_frontend' ] );
+		add_shortcode( 'aoat-assessment-list', [ $this, 'render_assessment_list' ] );
 		add_filter('the_content', [ $this, 'aoat_custom_template']);
 
 
@@ -40,14 +43,63 @@ class Frontend {
 			'ajax_url'   => admin_url('admin-ajax.php'),
 			'nonce'      => wp_create_nonce('wp_rest'),
 			'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/" . ($atts['id'] ?: null)),
-			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
+			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
 			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
+			'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
 		];
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 
 		$content .= '<div id="vue-frontend-app"></div>';
 
 		return $content;
+	}
+
+	public function render_assessment_list( $atts, $content = '' ) {
+		$form = get_post($atts['id']);
+		$user = get_current_user();
+
+		if (!is_user_logged_in()) {
+			return rest_ensure_response( [] );
+		}
+
+		$args = [
+			'post_type' => 'aoat_assessment',
+			'meta_key' => 'form_id',
+			'post_status' => 'any',
+			'meta_value' => $form->ID,
+			'post_author' => $user->ID,
+		];
+		$assessments = new WP_Query($args);
+
+		$content = '';
+		// Add content if we found posts via our query
+		if ( $assessments->have_posts() ) {
+
+			// Open div wrapper around loop
+			$content .= '<div class="aoat-assessment-list">';
+
+			// Loop through posts
+			while ( $assessments->have_posts() ) {
+
+				// Sets up post data so you can use functions like get_the_title(), get_permalink(), etc
+				$assessments->the_post();
+
+				// This is the output for your entry so what you want to do for each post.
+				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></div>';
+
+			}
+
+			// Close div wrapper around loop
+			$content .= '</div>';
+
+			// Restore data
+			wp_reset_postdata();
+
+		}
+
+		// Return your shortcode output
+		return $content;
+
 	}
 
 	function aoat_custom_template($content) {
@@ -58,7 +110,7 @@ class Frontend {
 		global $post;
 
 		$data = [
-			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessment/create"),
+			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
 			'aoatGetFormUrl' => null,
 			'aoatGetAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/" . ($post->ID ?: null)),
 			'aoatGetMediaUrl' => get_rest_url(null, "/wp/v2/media/"),
@@ -77,11 +129,13 @@ class Frontend {
 	}
 
 	function aoat_upload_file(){
-		$uploadedFile = null;
+		$uploadedFileId = null;
 		foreach ($_FILES as $file => $array) {
-			$uploadedFile = $this->insert_attachment($file,null);
+			$uploadedFileId = $this->insert_attachment($file,null);
 		}
-		echo $uploadedFile;
+		echo $uploadedFileId;
+		wp_die();
+		echo json_encode(rest_ensure_response( get_post($uploadedFileId) ));
 		wp_die();
 	}
 

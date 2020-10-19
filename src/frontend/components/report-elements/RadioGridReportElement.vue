@@ -1,33 +1,50 @@
 <template>
   <div>
-    <div class="aoat-font-bold">{{ object.label }}</div>
-    <template v-if="showPieGraph">
-      <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
-    </template>
-    <template v-if="showRadarGraph">
-      <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
-    </template>
-    <template v-if="showGrid">
-      <table class="aoat-w-full">
-        <thead>
-        <tr>
-          <th></th>
-          <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
-            <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
-            <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
-          </th>
-        </tr>
+    <div class="aoat-font-bold">{{ getLabel }}</div>
+    <template v-for="graphType in object.selectedGraph">
+      <div :key="graphType.key">
 
-        </thead>
-        <tbody>
-        <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
-          <td>{{ optionHorizontal.name }}</td>
-          <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
-            <span v-if="value[optionHorizontal.id]" class="dashicons dashicons-yes"></span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+        <template v-if="graphType.key === 'pie'">
+          <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+        </template>
+        <template v-if="graphType.key === 'radar'">
+          <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+        </template>
+        <template v-if="graphType.key === 'grid'">
+          <table class="aoat-w-full">
+            <thead>
+            <tr>
+              <th></th>
+              <th v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+                <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
+                <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
+              </th>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr v-for="optionHorizontal in optionsHorizontal"  :key="optionHorizontal.id">
+              <td>{{ optionHorizontal.name }}</td>
+              <td v-for="optionVertical in optionsVertical" :key="optionVertical.id">
+                <template v-if="$store.state.exportEnabled">
+                  <template v-if="value[optionHorizontal.id] === optionVertical.id">
+                <span class="checkmark">
+                    <div class="checkmark_stem"></div>
+                    <div class="checkmark_kick"></div>
+                </span>
+
+                  </template>
+                </template>
+                <template v-else>
+                  <span v-if="value[optionHorizontal.id] === optionVertical.id" class="dashicons dashicons-yes"></span>
+                </template>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </template>
+      </div>
+
     </template>
   </div>
 </template>
@@ -36,6 +53,7 @@
 
   import PieChart from "./PieChart";
   import RadarChart from "./RadarChart";
+  import labelMixin from "./mixins/labelMixin";
 
   export default {
 
@@ -74,6 +92,10 @@
       },
     },
 
+    mixins: [
+      labelMixin
+    ],
+
     data () {
       return {
         chartData: {
@@ -87,6 +109,9 @@
           ]
         },
         chartOptions: {
+          animation: {
+            duration: 500,
+          },
           responsive: true,
           maintainAspectRatio: false,
           backgroundColor: '#ffffff'
@@ -120,3 +145,31 @@
     }
   };
 </script>
+<style scoped>
+.checkmark {
+  display:inline-block;
+  width: 22px;
+  height:22px;
+  -ms-transform: rotate(45deg); /* IE 9 */
+  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+  transform: rotate(45deg);
+}
+
+.checkmark_stem {
+  position: absolute;
+  width:3px;
+  height:9px;
+  background-color:#ccc;
+  left:11px;
+  top:6px;
+}
+
+.checkmark_kick {
+  position: absolute;
+  width:3px;
+  height:3px;
+  background-color:#ccc;
+  left:8px;
+  top:12px;
+}
+</style>

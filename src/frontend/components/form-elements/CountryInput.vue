@@ -5,6 +5,7 @@
     </label>
     <select class="aoat-w-full"
             :class="hasError ? 'aoat-border-red-400' : ''"
+            :style="getWidthStyle"
             v-model="value">
       <option :value="null" disabled hidden>{{ object.placeholder }}</option>
       <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
@@ -50,6 +51,11 @@
       },
       options() {
         return this.object.options
+      },
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
+        }
       }
     },
     methods: {

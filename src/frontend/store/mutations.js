@@ -31,4 +31,13 @@ export const mutations = {
   CLEAR_ERRORS(state) {
     state.errors = []
   },
+  ENABLE_EXPORT(state) {
+    state.exportEnabled = true
+  },
+  DISABLE_EXPORT(state) {
+    state.exportEnabled = false
+  },
+  UPDATE_SETTINGS(state, payload) {
+    state.settings = payload
+  },
 }

@@ -4,6 +4,7 @@
         {{ object.label }} <template v-if="object.required">*</template>
     </label>
     <select class="aoat-w-full"
+            :style="getWidthStyle"
             :class="hasError ? 'aoat-border-red-400' : ''"
             v-model="value">
       <option :value="null" disabled hidden>{{ object.placeholder }}</option>
@@ -50,6 +51,11 @@
       },
       options() {
         return this.object.options
+      },
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
+        }
       }
     },
     methods: {

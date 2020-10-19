@@ -68,24 +68,24 @@ class Assets {
         $scripts = [
             'apprenticeship-online-assessment-tool-runtime' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/runtime.js',
-                'version'   => '0.6.0',
+                'version'   => '0.8.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-vendor' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/vendors.js',
-                'version'   => '0.6.0',
+                'version'   => '0.8.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-frontend' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/frontend.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => '0.6.0',
+                'version'   => '0.8.0',
                 'in_footer' => true
             ],
             'apprenticeship-online-assessment-tool-admin' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/admin.js',
                 'deps'      => [ 'jquery' ],
-                'version'   => '0.6.0',
+                'version'   => '0.8.0',
                 'in_footer' => true
             ],
             //'apprenticeship-online-assessment-tool-frontend' => [

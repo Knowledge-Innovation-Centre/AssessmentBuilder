@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div class="aoat-font-bold">{{ object.label }}</div>
+    <div class="aoat-font-bold">{{ getLabel }}</div>
     {{ value }}
   </div>
 </template>
 
 <script>
+
+  import labelMixin from "./mixins/labelMixin";
 
   export default {
 
@@ -14,6 +16,10 @@
     components: {
 
     },
+
+    mixins: [
+      labelMixin
+    ],
 
     props: {
       object: {

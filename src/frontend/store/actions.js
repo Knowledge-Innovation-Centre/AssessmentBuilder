@@ -30,4 +30,13 @@ export const actions = {
   clearErrors({ commit }) {
     commit('CLEAR_ERRORS')
   },
+  enableExport({ commit }) {
+    commit('ENABLE_EXPORT')
+  },
+  disableExport({ commit }) {
+    commit('DISABLE_EXPORT')
+  },
+  updateSettings({ commit }, payload) {
+    commit('UPDATE_SETTINGS', payload)
+  },
 }

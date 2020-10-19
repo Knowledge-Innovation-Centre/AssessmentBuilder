@@ -27,7 +27,7 @@ class Assessment extends WP_REST_Controller {
     public function register_routes() {
         register_rest_route(
             $this->namespace,
-            '/assessment/create',
+            '/assessments/create',
             [
                 [
                     'methods'             => WP_REST_Server::CREATABLE,

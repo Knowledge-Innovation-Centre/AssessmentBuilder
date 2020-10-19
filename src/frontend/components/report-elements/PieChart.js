@@ -15,7 +15,7 @@ export default {
 
   mounted () {
     this.addPlugin({
-      id: 'background white',
+      id: 'background_white',
       beforeDraw: function(chartInstance) {
         let ctx = chartInstance.chart.ctx;
         ctx.fillStyle = "white";

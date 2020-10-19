@@ -2,6 +2,7 @@
   <div>
     {{ object.label }}
     <table class="aoat-w-full"
+           :style="getWidthStyle"
            :class="hasError ? 'aoat-border-red-400' : ''">
       <thead>
       <tr>
@@ -66,6 +67,11 @@
       },
       optionsVertical() {
         return this.object.optionsVertical
+      },
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
+        }
       }
     },
     watch: {

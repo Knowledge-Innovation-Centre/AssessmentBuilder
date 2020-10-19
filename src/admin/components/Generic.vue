@@ -21,7 +21,6 @@
 </template>
 
 <script>
-  import isEmpty from "lodash/isEmpty";
   import Row from "./Row.vue";
   import Column from "./Column.vue";
   import Page from "./Page.vue";
@@ -88,9 +87,6 @@
       CommonOptionsReport,
     },
     computed: {
-      isReport() {
-        return !isEmpty(this.$store.state.report)
-      }
     },
     methods: {
     }

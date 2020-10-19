@@ -6,6 +6,7 @@
     <date-picker
         :class="hasError ? 'aoat-border-red-400' : ''"
         v-model="localDate"
+        :style="getWidthStyle"
         :placeholder="object.placeholder"></date-picker>
   </div>
 </template>
@@ -42,7 +43,11 @@ import 'vue2-datepicker/index.css';
     },
 
     computed: {
-
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
+        }
+      }
     },
 
     watch: {

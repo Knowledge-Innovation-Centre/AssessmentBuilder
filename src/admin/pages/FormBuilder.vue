@@ -55,6 +55,7 @@
         </div>
         <div class="aoat-text-center aoat-my-3">
           <code>[aoat-form id="{{ form.ID }}"]</code>
+          <code>[aoat-assessment-list id="{{ form.ID }}"]</code>
         </div>
         <generic :depth="0" :form="formData" class="root"></generic>
         <div class="aoat-text-center aoat-mt-5">
@@ -144,6 +145,8 @@ export default {
       deep: true,
       handler() {
         this.$store.dispatch('updateForm', this.formData);
+
+        this.$store.dispatch('updateReport', {});
       }
     },
     id() {

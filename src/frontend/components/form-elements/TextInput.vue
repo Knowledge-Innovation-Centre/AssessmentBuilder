@@ -4,6 +4,7 @@
       {{ object.label }} <template v-if="object.required">*</template>
     </label>
     <input class="aoat-w-full"
+           :style="getWidthStyle"
            :class="hasError ? 'aoat-border-red-400' : ''"
            v-model="value" :placeholder="object.placeholder"
            type="text" >
@@ -42,6 +43,11 @@
         },
         set (newValue) {
           return this.$store.dispatch('updateValue', { key: this.object.key, value: newValue})
+        }
+      },
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
         }
       }
     },

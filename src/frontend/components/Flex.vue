@@ -3,9 +3,9 @@
         <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div class="aoat-flex-1 page" :class="elementClass" v-show="index === currentPage">
+            <div class="aoat-flex-1 page html2pdf__page-break" :class="elementClass" v-if="index === currentPage || exportEnabled">
               <generic :key="item.key" :form="item"></generic>
-              <div v-if="showButtons" class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
+              <div v-if="!exportEnabled" class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
                 <template v-if="index === 0 && getItems.length > 1">
                   <div></div>
                   <button @click="setNextPage(index,item)">Next</button>
@@ -46,8 +46,14 @@
       Generic: () => import('./Generic.vue'),
     },
     computed: {
-      isReport() {
-        return !isEmpty(this.$store.state.report)
+      user() {
+        return this.$store.state.user
+      },
+      settings() {
+        return this.$store.state.settings
+      },
+      exportEnabled() {
+        return this.$store.state.exportEnabled
       },
       getItems() {
         return this.items.filter(item => {
@@ -134,6 +140,9 @@
 
         let $this = this
         this.setTitle(this.items);
+        if (this.title === '') {
+          this.title = 'Assessment ' + new Date().toDateString()
+        }
         let assessmentData = this.$store.state.assessment
         Api.post(aoat_config.aoatSaveAssessmentUrl, {
           title: this.title,
@@ -142,7 +151,11 @@
         })
             .then(function (response) {
               $this.message = 'Assessment successfully submitted!'
+              if ($this.user && $this.settings.aoat_page_for_assessments) {
 
+                window.location.href = $this.settings.aoat_page_for_assessments.guid;
+                return;
+              }
               window.location.href = response.data.guid;
             })
             .catch(function (error) {
@@ -216,18 +229,34 @@
 
         let doc = new jsPDF('p', 'pt', 'a4');
 
-        this.showButtons = false;
+        await this.$store.dispatch('enableExport');
 
-        await doc.html(
-            document.getElementById('vue-frontend-app'), {
-              callback: function (doc) {
-                doc.save();
-              },
-              x: 10,
-              y: 10
-            }
-        );
-        this.showButtons = true;
+        let legend = document.getElementById('vue-frontend-app');
+
+        setTimeout(async () => {
+          await doc.html(
+              legend, {
+                callback: function () {
+                  doc.save('report12354.pdf');
+                },
+                html2canvas: {
+                  // insert html2canvas options here, e.g.
+                  logging: true,
+                  scale: 0.8,
+                  bottom: 20
+                },
+                margin: [20, 50, 100, 120],
+                width: 300,
+                image: {type: 'jpeg',quality: 0.98},
+
+                pagebreak: { mode: ['css']},
+              }
+          );
+          this.showButtons = true;
+
+          await this.$store.dispatch('disableExport');
+        }, 500)
+
 
       }
 

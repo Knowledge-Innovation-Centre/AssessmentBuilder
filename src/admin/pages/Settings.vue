@@ -5,7 +5,22 @@
       <tbody>
       <tr v-for="setting in settings" :key="setting.key">
         <th class="aoat-text-right">{{ setting.label }}</th>
-        <td><input type="text" v-model="setting.value" /></td>
+        <td>
+          <template v-if="setting.key === 'aoat_page_for_assessments'">
+            <multiselect
+                v-model="setting.value"
+                :multiple="false"
+                label="post_title"
+                placeholder="Select one"
+                class="aoat-w-full"
+                track-by="ID"
+                :options="pages">
+            </multiselect>
+          </template>
+          <template v-else>
+            <input type="text" v-model="setting.value" />
+          </template>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -19,16 +34,20 @@
 
 <script>
 import axios from "axios";
+import {Multiselect} from "vue-multiselect";
 
 export default {
 
   name: 'Settings',
 
+  components: {
+    Multiselect
+  },
+
   data () {
     return {
-      settings:
-        [
-        ]
+      settings: [],
+      pages: []
     };
   },
 
@@ -40,6 +59,9 @@ export default {
     loadData() {
       axios.get(aoat_config.aoatGetSettingsUrl).then((result) => {
         this.settings = result.data
+      })
+      axios.get(aoat_config.aoatGetPagesUrl).then((result) => {
+        this.pages = result.data
       })
     },
     saveSettings() {

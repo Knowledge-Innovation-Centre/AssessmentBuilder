@@ -15,6 +15,7 @@
 import Api from "./Api";
 import Generic from './components/Generic.vue';
 import BaseProgress from './components/BaseProgress.vue';
+import axios from "axios";
 
 export default {
   name: 'App',
@@ -77,6 +78,13 @@ export default {
           this.$store.dispatch('updateAssessment', this.assessmentData)
         })
       }
+      axios.get(aoat_config.aoatGetSettingsUrl).then((result) => {
+        let settings = {}
+        for (let setting of result.data) {
+          settings[setting.key] = setting.value
+        }
+        this.$store.dispatch('updateSettings', settings)
+      })
     },
     getItems() {
       return this.formData.items.filter(item => {

@@ -28,6 +28,11 @@ class Setting extends WP_REST_Controller {
             'key'=> 'aoat_max_items_per_column',
             'value'=> 4,
 		],
+		[
+			'label'=> 'Page for assessments:',
+            'key'=> 'aoat_page_for_assessments',
+            'value'=> 4,
+		],
 	];
 
     /**
@@ -63,6 +68,18 @@ class Setting extends WP_REST_Controller {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
+        register_rest_route(
+            $this->namespace,
+            '/settings/pages',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_pages' ],
+                    'permission_callback' => [ $this, 'get_pages_permissions_check' ],
                     'args'                => $this->get_collection_params(),
                 ]
             ]
@@ -128,6 +145,27 @@ class Setting extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_settings_permissions_check( WP_REST_Request $request ) {
+        return true;
+    }
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+    public function get_pages( WP_REST_Request $request ) {
+        return rest_ensure_response( get_pages() );
+    }
+
+	/**
+	 * Checks if a given request has access to read the items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+	 */
+    public function get_pages_permissions_check( WP_REST_Request $request ) {
         return true;
     }
 

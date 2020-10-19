@@ -1,14 +1,22 @@
 <template>
   <div>
-    <div class="aoat-font-bold">{{ object.label }}</div>
-    <template v-if="media">
-      <a :href="media.source_url" target="_blank">{{ media.title.rendered }}</a>
+    <div class="aoat-font-bold">{{ getLabel }}</div>
+    <template v-if="files.length">
+      <a class="" :key="media.ID" v-for="media in files" :href="media.source_url" target="_blank">
+        {{ media.title.rendered }}
+      </a>
     </template>
+
+    <template v-else>
+      <span>No files</span>
+    </template>
+
   </div>
 </template>
 
 <script>
 import Api from '../../Api'
+import labelMixin from "./mixins/labelMixin";
 
   export default {
 
@@ -18,6 +26,10 @@ import Api from '../../Api'
 
     },
 
+    mixins: [
+      labelMixin
+    ],
+
     props: {
       object: {
         type: Object,
@@ -25,16 +37,16 @@ import Api from '../../Api'
       }
     },
 
-    computed: {
-      value() {
-        return this.$store.state.assessment[this.object.reportItemKey]
+    data() {
+      return {
+        files: []
       }
     },
 
-    data () {
-      return {
-        media: null
-      };
+    computed: {
+      value() {
+        return this.$store.state.assessment[this.object.reportItemKey]
+      },
     },
 
     mounted() {
@@ -43,10 +55,13 @@ import Api from '../../Api'
 
     methods: {
       getMedia() {
+        console.log(this.value);
         if (this.value) {
-          Api.get(aoat_config.aoatGetMediaUrl + this.value).then(response => {
-            this.media = response.data
-          })
+          for (let value of this.value) {
+            Api.get(aoat_config.aoatGetMediaUrl + value).then(response => {
+              this.files.push( response.data)
+            })
+          }
         }
       }
     }

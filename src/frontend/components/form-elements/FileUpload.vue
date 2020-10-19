@@ -7,14 +7,21 @@
         name="test"
         class="aoat-w-full"
         ref="pond"
-        v-bind:allow-replace="true"
-        v-bind:instant-upload="true"
+        :allow-replace="true"
+        :instant-upload="true"
         label-idle="Drop files here..."
-        v-bind:allow-multiple="false"
+        :allow-multiple="true"
         :server="server"
-        v-bind:files="myFiles"
+        :allow-file-type-validation="allowFileTypeValidation"
+        :accepted-file-types="acceptedFileTypes"
+        :files="files"
+        :max-files="maxFiles"
+        :max-file-size="maxSize"
+        :style="getWidthStyle"
         :class="hasError ? 'aoat-border-red-400' : ''"
-        v-on:init="handleFilePondInit"/>
+        v-on:init="handleFilePondInit"
+        v-on:processfile="updateValue()"
+        v-on:removefile="updateValue()"/>
   </div>
 </template>
 
@@ -23,15 +30,15 @@
 import vueFilePond from 'vue-filepond';
 import Api from '../../Api';
 
-
-// Import image preview plugin styles
-// import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
-
+// Import the plugin code
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+// Import the plugin code
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 
 // Import FilePond styles
 import 'filepond/dist/filepond.min.css';
 
-const FilePond = vueFilePond();
+const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginFileValidateSize);
   export default {
 
     name: 'FileUpload',
@@ -51,10 +58,40 @@ const FilePond = vueFilePond();
       }
     },
 
+    computed: {
+      acceptedFileTypes() {
+        if (!this.object.acceptedFileTypes) {
+          return [];
+        }
+        return this.object.acceptedFileTypes
+      },
+      allowFileTypeValidation() {
+        return !!this.acceptedFileTypes.length
+      },
+      maxFiles() {
+        if (!this.object.maxFiles) {
+          return 1;
+        }
+        return this.object.maxFiles
+      },
+      maxSize() {
+        if (!this.object.maxSize) {
+          return null;
+        }
+        return this.object.maxSize + 'MB';
+      },
+      getWidthStyle() {
+        if (this.object.maxWidth) {
+          return "max-width:" + this.object.maxWidth + this.object.maxWidthUnit + ';'
+        }
+      }
+    },
+
     data () {
       return {
         show: false,
-        myFiles: [],
+        files: [],
+        fileIds: [],
         server: {
           process: (fieldName, file, metadata, load, error, progress, abort) => {
 
@@ -68,10 +105,10 @@ const FilePond = vueFilePond();
               processData: false,
               contentType: false,
             }).then((response) => {
-              this.$store.dispatch('updateValue', { key: this.object.key, value: response.data})
-              load(response);
+              load(response.data);
             }).catch((response) => {
               console.log('error');
+              console.log(response);
               error(response); // not sure if that contains the response message
             });
 
@@ -94,6 +131,14 @@ const FilePond = vueFilePond();
         console.log('FilePond has initialized');
 
         // FilePond instance methods are available on `this.$refs.pond`
+      },
+      handleFileRemoveFile: function() {
+        this.updateValue();
+      },
+      updateValue() {
+        let fileIds = this.$refs.pond.getFiles().map(pondFile => parseInt(pondFile.serverId));
+
+        this.$store.dispatch('updateValue', { key: this.object.key, value: fileIds})
       }
     }
   };

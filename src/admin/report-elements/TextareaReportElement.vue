@@ -1,10 +1,12 @@
 <template>
     <div>
-      {{ object.label }}
+      {{ getLabel }}
     </div>
 </template>
 
 <script>
+
+  import labelMixin from "./mixins/labelMixin";
 
   export default {
 
@@ -12,6 +14,9 @@
 
     components: {
     },
+    mixins: [
+      labelMixin
+    ],
 
     props: {
       object: {

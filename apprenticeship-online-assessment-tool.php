@@ -203,7 +203,7 @@ final class Apprenticeship_Online_Assessment_Tool {
         add_action( 'init', array( $this, 'init_classes' ) );
 
         add_action( 'init', array( $this, 'register_post_types' ) );
-	    //add_action( 'pre_get_posts', array( $this, 'archive_meta_query'), 1 );
+	    add_action( 'pre_get_posts', array( $this, 'archive_meta_query'), 1 );
 
         // Localize our plugin
         add_action( 'init', array( $this, 'localization_setup' ) );
@@ -270,12 +270,20 @@ final class Apprenticeship_Online_Assessment_Tool {
 		}
 	}
 	function archive_meta_query( $query ) {
-    	var_dump($query->is_archive);
-    	//die();
-		if ( $query->is_archive){
-			$query->query_vars["meta_key"] = 'wolf';
-			$query->query_vars["meta_value"] = 'boltz';
+
+		$user = wp_get_current_user();
+
+		if (!is_admin() && is_post_type_archive('aoat_assessment')){
+
+			if ( is_user_logged_in()) {
+				$query->set( 'author', $user->ID );
+			} else {
+				// do not show anything
+				$query->set( 'author', 99999999 );
+			}
 		}
+
+		return $query;
 	}
 
     /**

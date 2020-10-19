@@ -247,6 +247,8 @@ class Report extends WP_REST_Controller {
 		    'meta_key' => 'form_id',
 		    'post_status' => 'any',
 		    'meta_value' => $formId,
+		    'orderby' => 'ID',
+		    'order' => 'ASC',
 	    ];
 	    $posts = get_posts($args);
 
