@@ -63,6 +63,7 @@
                             placeholder="Select one"
                             class="aoat-w-full"
                             track-by="id"
+                            :allow-empty="false"
                             :options="getFieldByKey(condition.field).options">
                         </multiselect>
                       </td>
@@ -84,6 +85,7 @@
                               label="name"
                               placeholder="Select one"
                               track-by="id"
+                              :allow-empty="false"
                               :options="getFieldByKey(condition.field).optionsVertical">
                           </multiselect>
                         </td>
@@ -134,6 +136,22 @@
                   :close-on-select="false"
                   :options="fileTypes">
               </multiselect></td>
+            </tr>
+            <tr v-if="typeof object.labelParts !== 'undefined'">
+              <th>Build label:</th>
+              <td><multiselect
+                  v-model="object.labelParts"
+                  :multiple="true"
+                  placeholder="Select one"
+                  label="name"
+                  track-by="key"
+                  :allow-empty="false"
+                  :options="countryLabelParts">
+              </multiselect></td>
+            </tr>
+            <tr v-if="typeof object.labelPartsSeperator !== 'undefined'">
+              <th>Label seperator:</th>
+              <td><input v-model="object.labelPartsSeperator" type="text"></td>
             </tr>
             </tbody>
           </table>
@@ -201,6 +219,16 @@
           'video/mpeg',
           'text/csv',
           'application/zip',
+        ],
+        countryLabelParts: [
+          {
+            name: 'Country name',
+            key: 'name',
+          },
+          {
+            name: 'Country code',
+            key: 'id',
+          }
         ],
       };
     },

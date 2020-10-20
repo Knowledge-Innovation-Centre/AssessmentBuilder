@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!admin.js
+!adminStyle.js
+!frontend.js
+!frontendStyle.js

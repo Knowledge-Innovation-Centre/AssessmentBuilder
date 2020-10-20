@@ -8,7 +8,7 @@
             :style="getWidthStyle"
             v-model="value">
       <option :value="null" disabled hidden>{{ object.placeholder }}</option>
-      <option v-for="option in options" :key="option.id" :value="option.id">{{ option.name }}</option>
+      <option v-for="option in options" :key="option.id" :value="option.id">{{ getOptionName(option) }}</option>
     </select>
     </div>
 </template>
@@ -59,7 +59,18 @@
       }
     },
     methods: {
-
+      getOptionName(option) {
+        if (!this.object.labelParts) {
+          return option.name
+        }
+        let labels = [];
+        for (let labelPart of this.object.labelParts) {
+          labels.push(option[labelPart.key])
+        }
+        console.log(option);
+        console.log(this.object.labelParts);
+        return labels.join(' ' + this.object.labelPartsSeperator + ' ')
+      }
     }
   };
 </script>

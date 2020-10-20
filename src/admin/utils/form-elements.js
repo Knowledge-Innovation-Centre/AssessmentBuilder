@@ -98,7 +98,14 @@ export default  [
       maxWidth: null,
       maxWidthUnit: 'px',
       includeInAssessmentTitle: false,
-      multiple: false
+      multiple: false,
+      labelParts: [
+        {
+          name: 'Country name',
+          key: 'name',
+        }
+        ],
+      labelPartsSeperator: '-'
     },
   {
     key: randomValueHex(15),
