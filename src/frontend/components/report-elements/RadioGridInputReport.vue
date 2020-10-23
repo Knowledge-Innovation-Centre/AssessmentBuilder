@@ -19,6 +19,7 @@
                 <span :style="'color: ' + optionVertical.color">{{ optionVertical.name }}</span>
                 <span v-if="optionVertical.icon" class="dashicons" :class="optionVertical.icon"></span>
               </th>
+              <th>Score</th>
             </tr>
 
             </thead>
@@ -39,6 +40,7 @@
                   <span v-if="value[optionHorizontal.id] === optionVertical.id" class="dashicons dashicons-yes"></span>
                 </template>
               </td>
+              <td>{{ value[optionHorizontal.id] }}</td>
             </tr>
             </tbody>
           </table>

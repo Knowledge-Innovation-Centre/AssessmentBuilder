@@ -254,7 +254,7 @@ export default  [
       reportLabel: '',
       conditions: [],
       component: 'Paragraph',
-      reportComponent: 'ParagraphReport',
+      reportComponent: 'Paragraph',
       canRemove: true,
       hidden: false,
       class: '',

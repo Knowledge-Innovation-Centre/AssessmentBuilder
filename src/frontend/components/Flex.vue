@@ -3,7 +3,7 @@
         <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div class="aoat-flex-1 page page-break" :class="elementClass" >
+            <div class="aoat-flex-1 page page-break" :class="elementClass" v-if="index === currentPage || exportEnabled" >
               <generic :key="item.key" :form="item"></generic>
               <div v-if="!exportEnabled" class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
                 <template v-if="index === 0 && getItems.length > 1">
