@@ -10,8 +10,8 @@
              class="aoat-inline-block"
              trigger="click">
         <template v-slot:trigger>
-          <button>
-            <span class="dashicons dashicons-arrow-down-alt2"></span>
+          <button class="aoat-px-0 aoat-cursor-pointer">
+            <span class="dashicons dashicons-admin-generic"></span>
           </button>
         </template>
         <div class="aoat-text-left w-800 aoat-py-4">
@@ -43,11 +43,29 @@
                   </multiselect>
               </td>
             </tr>
+            <tr v-if="typeof object.selectedResultType !== 'undefined'">
+              <th>Select type</th>
+              <td>
+                  <multiselect
+                      v-model="object.selectedResultType"
+                      :multiple="true"
+                      label="label"
+                      track-by="key"
+                      :allow-empty="false"
+                      class="aoat-w-full"
+                      :options="availableResultTypes">
+                  </multiselect>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
       </tippy>
-      <button class="remove-button" @click="remove()">
+      <button class="aoat-px-0 aoat-cursor-pointer" @click="toggleShow()">
+        <span v-if="show" class="dashicons dashicons-hidden"></span>
+        <span v-else class="dashicons aoat-text-orange-600 dashicons-visibility"></span>
+      </button>
+      <button class="aoat-px-0 aoat-cursor-pointer" @click="remove()">
         <span class="dashicons dashicons-trash"></span>
       </button>
     </div>
@@ -83,7 +101,7 @@
 
     data () {
       return {
-        show: false,
+        show: true,
         availableGraphs: [
           {
             label: "Pie",
@@ -97,6 +115,20 @@
             label: 'Grid',
             key: 'grid'
           }
+        ],
+        availableResultTypes: [
+          {
+            label: 'Score',
+            key: 'score'
+          },
+          {
+            label: "Pie",
+            key: "pie",
+          },
+          {
+            label: 'Radar',
+            key: 'radar'
+          },
         ]
       };
     },
@@ -117,6 +149,10 @@
         }
         return 'handle-other' + this.depth
       },
+      toggleShow() {
+        this.show = !this.show
+        this.$emit('toggleShow')
+      }
     }
   };
 </script>

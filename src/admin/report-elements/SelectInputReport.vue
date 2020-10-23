@@ -10,7 +10,7 @@
 
   export default {
 
-    name: 'DefaultReportElement',
+    name: 'SelectInputReport',
 
     components: {
     },

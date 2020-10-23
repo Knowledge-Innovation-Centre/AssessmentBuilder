@@ -5,30 +5,30 @@
 </template>
 
 <script>
-
   import labelMixin from "./mixins/labelMixin";
 
   export default {
 
-    name: 'FileUploadReportElement',
-
+    name: 'PartScoreReport',
     components: {
     },
     mixins: [
       labelMixin
     ],
 
-
     props: {
       object: {
         type: Object,
         required: true,
+      },
+      depth: {
+        type: Number,
+        required: true
       }
     },
 
     data () {
       return {
-        show: false,
       };
     },
     methods: {
@@ -36,5 +36,4 @@
   };
 </script>
 <style scoped>
-
 </style>

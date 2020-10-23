@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ value }}
-  </div>
+    <div>
+      {{ getLabel }}
+    </div>
 </template>
 
 <script>
@@ -11,12 +10,10 @@
 
   export default {
 
-    name: 'TextareaReportElement',
+    name: 'TextInputReport',
 
     components: {
-
     },
-
     mixins: [
       labelMixin
     ],
@@ -28,14 +25,9 @@
       }
     },
 
-    computed: {
-      value() {
-          return this.$store.state.assessment[this.object.reportItemKey]
-      }
-    },
-
     data () {
       return {
+        show: false,
       };
     },
 
@@ -43,3 +35,6 @@
     }
   };
 </script>
+<style scoped>
+
+</style>

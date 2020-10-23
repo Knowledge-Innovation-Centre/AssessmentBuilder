@@ -3,7 +3,7 @@
         <template v-for="(item, index) in getItems">
           <template v-if="item.type === 'page'">
             <transition name="slide-fade" mode="out-in">
-            <div class="aoat-flex-1 page html2pdf__page-break" :class="elementClass" v-if="index === currentPage || exportEnabled">
+            <div class="aoat-flex-1 page page-break" :class="elementClass" >
               <generic :key="item.key" :form="item"></generic>
               <div v-if="!exportEnabled" class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
                 <template v-if="index === 0 && getItems.length > 1">
@@ -110,7 +110,6 @@
         title: "",
         message: null,
         errors: [],
-        showButtons: true,
       }
     },
     mounted() {
@@ -227,15 +226,15 @@
 
       async downloadPdf() {
 
-        let doc = new jsPDF('p', 'pt', 'a4');
+        let doc = new jsPDF('p', 'px', 'a4');
 
         await this.$store.dispatch('enableExport');
 
-        let legend = document.getElementById('vue-frontend-app');
-
         setTimeout(async () => {
+          let element = document.getElementById('vue-frontend-app');
+
           await doc.html(
-              legend, {
+              element, {
                 callback: function () {
                   doc.save('report12354.pdf');
                 },
@@ -243,19 +242,17 @@
                   // insert html2canvas options here, e.g.
                   logging: true,
                   scale: 0.8,
-                  bottom: 20
+                  bottom: 20,
                 },
                 margin: [20, 50, 100, 120],
-                width: 300,
                 image: {type: 'jpeg',quality: 0.98},
 
-                pagebreak: { mode: ['css']},
+                width: 300,
               }
           );
-          this.showButtons = true;
 
           await this.$store.dispatch('disableExport');
-        }, 500)
+        }, 1000)
 
 
       }
@@ -264,7 +261,7 @@
   };
 </script>
 
-<style scoped>
+<style>
 .slide-fade-enter,
 .slide-fade-leave-to {
   visibility: hidden;
@@ -280,5 +277,11 @@
   /* .slide-fade-leave-active below version 2.1.8 */ {
 
   opacity: 0;
+}
+@media print {
+  /*.page-break {*/
+  /*  page-break-after: always;*/
+  /*}*/
+  /*body *:not(#vue-frontend-app *) {display:none;}*/
 }
 </style>

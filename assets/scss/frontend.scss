@@ -6,3 +6,10 @@ $default-color: #555;
 $primary-color: #1284e7;
 
 @import '~vue2-datepicker/scss/index.scss';
+
+//@media print {
+    /*.page-break {*/
+    /*  page-break-after: always;*/
+    /*}*/
+    //body *:not(#vue-frontend-app *) {display:none;}
+//}

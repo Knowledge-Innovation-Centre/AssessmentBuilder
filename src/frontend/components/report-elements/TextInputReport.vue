@@ -11,7 +11,7 @@
 
   export default {
 
-    name: 'TextReportElement',
+    name: 'TextInputReport',
 
     components: {
 

@@ -22,15 +22,16 @@
   import RadioInput from "./form-elements/RadioInput.vue";
   import Form from "./form-elements/Form.vue";
   import Report from "./report-elements/Report.vue";
-  import DefaultReportElement from "./report-elements/DefaultReportElement.vue";
-  import SelectReportElement from "./report-elements/SelectReportElement.vue";
-  import CountryReportElement from "./report-elements/CountryReportElement.vue";
-  import RadioGridReportElement from "./report-elements/RadioGridReportElement.vue";
-  import RadioReportElement from "./report-elements/RadioReportElement.vue";
-  import TextReportElement from "./report-elements/TextReportElement.vue";
-  import TextareaReportElement from "./report-elements/TextareaReportElement.vue";
-  import DateReportElement from "./report-elements/DateReportElement.vue";
-  import FileUploadReportElement from "./report-elements/FileUploadReportElement.vue";
+  import SelectInputReport from "./report-elements/SelectInputReport.vue";
+  import CountryInputReport from "./report-elements/CountryInputReport.vue";
+  import RadioGridInputReport from "./report-elements/RadioGridInputReport.vue";
+  import RadioInputReport from "./report-elements/RadioInputReport.vue";
+  import TextInputReport from "./report-elements/TextInputReport.vue";
+  import TextareaInputReport from "./report-elements/TextareaInputReport.vue";
+  import DateInputReport from "./report-elements/DateInputReport.vue";
+  import FileUploadReport from "./report-elements/FileUploadReport.vue";
+  import PartScoreReport from "./report-elements/PartScoreReport.vue";
+  import TotalScoreReport from "./report-elements/TotalScoreReport.vue";
   import FileUpload from "./form-elements/FileUpload.vue";
 
   export default {
@@ -55,19 +56,24 @@
       RadioGridInput,
       Form,
       Report,
-      DefaultReportElement,
-      SelectReportElement,
-      CountryReportElement,
-      RadioGridReportElement,
-      RadioReportElement,
-      TextReportElement,
-      TextareaReportElement,
-      DateReportElement,
-      FileUploadReportElement,
+      SelectInputReport,
+      CountryInputReport,
+      RadioGridInputReport,
+      RadioInputReport,
+      TextInputReport,
+      TextareaInputReport,
+      DateInputReport,
+      FileUploadReport,
+      PartScoreReport,
+      TotalScoreReport,
       FileUpload,
     },
     computed: {
       getComponent() {
+        if (this.isReport) {
+
+        return this.form.reportComponent
+        }
         return this.form.component
       },
       assessment() {

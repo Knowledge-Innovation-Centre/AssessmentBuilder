@@ -20,7 +20,7 @@ import labelMixin from "./mixins/labelMixin";
 
   export default {
 
-    name: 'TextReportElement',
+    name: 'TextInputReport',
 
     components: {
 
@@ -55,7 +55,6 @@ import labelMixin from "./mixins/labelMixin";
 
     methods: {
       getMedia() {
-        console.log(this.value);
         if (this.value) {
           for (let value of this.value) {
             Api.get(aoat_config.aoatGetMediaUrl + value).then(response => {

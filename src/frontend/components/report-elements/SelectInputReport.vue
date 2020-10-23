@@ -11,7 +11,7 @@
 
   export default {
 
-    name: 'CountryReportElement',
+    name: 'SelectInputReport',
 
     components: {
 
@@ -31,11 +31,13 @@
     computed: {
       value() {
         let key =  this.$store.state.assessment[this.object.reportItemKey]
+
         if (!key) {
           return '/';
         }
+
         return this.object.options.find(option => option.id === key).name
-      },
+      }
     },
 
     data () {

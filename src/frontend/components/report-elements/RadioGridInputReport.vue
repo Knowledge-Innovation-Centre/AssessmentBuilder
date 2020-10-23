@@ -57,7 +57,7 @@
 
   export default {
 
-    name: 'RadioGridReportElement',
+    name: 'RadioGridInputReport',
 
     components: {
       PieChart,
@@ -74,15 +74,6 @@
     computed: {
       value() {
           return this.$store.state.assessment[this.object.reportItemKey] ?? {}
-      },
-      showPieGraph() {
-        return !!this.object.selectedGraph.find(graph => graph.key === 'pie')
-      },
-      showRadarGraph() {
-        return !!this.object.selectedGraph.find(graph => graph.key === 'radar')
-      },
-      showGrid() {
-        return !!this.object.selectedGraph.find(graph => graph.key === 'grid')
       },
       optionsHorizontal() {
         return this.object.optionsHorizontal

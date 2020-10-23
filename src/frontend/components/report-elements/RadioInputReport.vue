@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ date }}
-    </div>
+    {{ value }}
+  </div>
 </template>
 
 <script>
@@ -11,7 +11,7 @@
 
   export default {
 
-    name: 'DateReportElement',
+    name: 'RadioInputReport',
 
     components: {
 
@@ -36,21 +36,10 @@
 
     data () {
       return {
-        date: ""
       };
     },
 
-    mounted() {
-      this.setDate()
-    },
-
     methods: {
-      setDate() {
-        if (this.value) {
-          let date = new Date(this.value);
-          this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join('.')
-        }
-      }
     }
   };
 </script>

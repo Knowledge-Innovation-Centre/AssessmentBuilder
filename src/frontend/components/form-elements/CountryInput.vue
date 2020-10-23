@@ -67,8 +67,6 @@
         for (let labelPart of this.object.labelParts) {
           labels.push(option[labelPart.key])
         }
-        console.log(option);
-        console.log(this.object.labelParts);
         return labels.join(' ' + this.object.labelPartsSeperator + ' ')
       }
     }

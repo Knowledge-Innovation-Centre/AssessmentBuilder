@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ value }}
-  </div>
+    <div>
+      {{ getLabel }}
+    </div>
 </template>
 
 <script>
@@ -11,15 +10,14 @@
 
   export default {
 
-    name: 'DefaultReportElement',
+    name: 'FileUploadReport',
 
     components: {
-
     },
-
     mixins: [
       labelMixin
     ],
+
 
     props: {
       object: {
@@ -28,18 +26,15 @@
       }
     },
 
-    computed: {
-      value() {
-          return this.$store.state.assessment[this.object.reportItemKey]
-      }
-    },
-
     data () {
       return {
+        show: false,
       };
     },
-
     methods: {
     }
   };
 </script>
+<style scoped>
+
+</style>

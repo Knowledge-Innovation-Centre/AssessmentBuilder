@@ -10,7 +10,7 @@
 
   export default {
 
-    name: 'DateReportElement',
+    name: 'RadioGridInputReport',
 
     components: {
     },

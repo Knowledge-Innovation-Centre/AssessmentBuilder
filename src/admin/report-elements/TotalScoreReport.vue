@@ -5,13 +5,11 @@
 </template>
 
 <script>
-
   import labelMixin from "./mixins/labelMixin";
 
   export default {
 
-    name: 'TextReportElement',
-
+    name: 'TotalScoreReport',
     components: {
     },
     mixins: [
@@ -22,19 +20,20 @@
       object: {
         type: Object,
         required: true,
+      },
+      depth: {
+        type: Number,
+        required: true
       }
     },
 
     data () {
       return {
-        show: false,
       };
     },
-
     methods: {
     }
   };
 </script>
 <style scoped>
-
 </style>

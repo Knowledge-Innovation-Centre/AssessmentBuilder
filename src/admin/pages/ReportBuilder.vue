@@ -101,34 +101,18 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items)
-      usedFormElements = usedFormElements.filter(element => !['column','row','page','paragraph'].includes(element.type))
-      usedFormElements = usedFormElements.map(element => {
-        if (element.component === 'SelectInput') {
-          element.component = 'SelectReportElement'
-        } else if (element.component === 'CountryInput') {
-          element.component = 'CountryReportElement'
-        }  else if (element.component === 'RadioGridInput') {
-          element.component = 'RadioGridReportElement'
-        }  else if (element.component === 'TextInput') {
-          element.component = 'TextReportElement'
-        }  else if (element.component === 'TextareaInput') {
-          element.component = 'TextareaReportElement'
-        }  else if (element.component === 'DateInput') {
-          element.component = 'DateReportElement'
-        } else if (element.component === 'RadioInput') {
-          element.component = 'RadioReportElement'
-        } else if (element.component === 'FileUpload') {
-          element.component = 'FileUploadReportElement'
-        } else {
-          element.component = 'DefaultReportElement'
-        }
-          return element;
-        }
-      )
       return usedFormElements.filter(element => !['column','row','page','paragraph'].includes(element.type))
     },
     availableBuilderElements() {
-      return formElements.filter(element => ['column','row','page','paragraph'].includes(element.type))
+      return formElements.filter(element => [
+        'column',
+        'row',
+        'page',
+        'paragraph',
+        'part_score',
+        'total_score',
+        'total_score_graph'
+      ].includes(element.type))
     }
   },
   mounted() {
@@ -166,6 +150,7 @@ export default {
         this.reportData = {
           key: randomValueHex(10),
           component: "Report",
+          reportComponent: "Report",
           name: "Report",
           type: "report",
           items: [

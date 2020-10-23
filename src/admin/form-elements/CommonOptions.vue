@@ -10,8 +10,8 @@
              class="aoat-inline-block"
              trigger="click">
         <template v-slot:trigger>
-          <button>
-            <span class="dashicons dashicons-arrow-down-alt2"></span>
+          <button class=" aoat-px-0 aoat-cursor-pointer">
+            <span class="dashicons dashicons-admin-generic"></span>
           </button>
         </template>
 
@@ -157,7 +157,11 @@
           </table>
         </div>
       </tippy>
-      <button class="remove-button" @click="remove()">
+      <button class="aoat-px-0 aoat-cursor-pointer" @click="toggleShow()">
+        <span v-if="show" class="dashicons dashicons-hidden"></span>
+        <span v-else class="dashicons aoat-text-orange-600 dashicons-visibility"></span>
+      </button>
+      <button class="aoat-px-0 aoat-cursor-pointer" @click="remove()">
         <span class="dashicons dashicons-trash"></span>
       </button>
 
@@ -204,7 +208,7 @@
 
     data () {
       return {
-        show: false,
+        show: true,
         fileTypes: [
           'application/pdf',
           'image/jpeg',
@@ -286,6 +290,10 @@
         }
         return 'handle-other' + this.depth
       },
+      toggleShow() {
+        this.show = !this.show
+        this.$emit('toggleShow')
+      }
     }
   };
 </script>

@@ -129,10 +129,12 @@ export default {
       return this.$route.params.id
     },
     availableFormElements() {
-      return formElements.filter(element => !['column','row','page','paragraph'].includes(element.type))
+      let filteredFormElements = formElements.filter(element => !['part_score','total_score','total_score_graph'].includes(element.type))
+      return filteredFormElements.filter(element => !['column','row','page','paragraph'].includes(element.type))
     },
     availableBuilderElements() {
-      return formElements.filter(element => ['column','row','page','paragraph'].includes(element.type))
+      let filteredFormElements = formElements.filter(element => !['part_score','total_score','total_score_graph'].includes(element.type))
+      return filteredFormElements.filter(element => ['column','row','page','paragraph'].includes(element.type))
     }
   },
   mounted() {

@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ value }}
-  </div>
+    {{ date }}
+    </div>
 </template>
 
 <script>
@@ -11,7 +11,7 @@
 
   export default {
 
-    name: 'SelectReportElement',
+    name: 'DateInputReport',
 
     components: {
 
@@ -30,22 +30,27 @@
 
     computed: {
       value() {
-        let key =  this.$store.state.assessment[this.object.reportItemKey]
-
-        if (!key) {
-          return '/';
-        }
-
-        return this.object.options.find(option => option.id === key).name
+          return this.$store.state.assessment[this.object.reportItemKey]
       }
     },
 
     data () {
       return {
+        date: ""
       };
     },
 
+    mounted() {
+      this.setDate()
+    },
+
     methods: {
+      setDate() {
+        if (this.value) {
+          let date = new Date(this.value);
+          this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join('.')
+        }
+      }
     }
   };
 </script>
