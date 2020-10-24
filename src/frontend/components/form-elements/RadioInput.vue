@@ -1,7 +1,7 @@
 <template>
   <div>
     {{ object.label }} <template v-if="object.required">*</template>
-    <label class="aoat-w-full" v-for="option in options" :key="option.id">
+    <label class="aoat-w-full aoat-block" v-for="option in options" :key="option.id">
       <input type="radio"
              :class="hasError ? 'aoat-border-red-400' : ''"
              :name="object.key" v-model="value" :value="option.id" />

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import Api from "../Api";
 import {Multiselect} from "vue-multiselect";
 
 export default {
@@ -56,18 +56,48 @@ export default {
   },
 
   methods: {
-    loadData() {
-      axios.get(aoat_config.aoatGetSettingsUrl).then((result) => {
-        this.settings = result.data
-      })
-      axios.get(aoat_config.aoatGetPagesUrl).then((result) => {
+    async loadData() {
+      await Api.get(aoat_config.aoatGetPagesUrl).then((result) => {
         this.pages = result.data
       })
+      await Api.get(aoat_config.aoatGetSettingsUrl).then((result) => {
+        this.fillSettings(result.data)
+      })
+    },
+    fillSettings(responseData) {
+      this.settings = [];
+      for (let setting of responseData) {
+        if (setting.key === 'aoat_page_for_assessments') {
+          if (typeof setting.value !== 'object') {
+            setting.value = this.pages.find(page => page.guid === setting.value)
+          }
+          this.settings.push(setting)
+        } else {
+          this.settings.push(setting)
+        }
+      }
+    },
+    prepareSettings() {
+      let settings = [];
+      for (let setting of this.settings) {
+        if (setting.key === 'aoat_page_for_assessments') {
+          let newSetting = JSON.parse(JSON.stringify(setting));
+          if (setting.value) {
+            newSetting.value = setting.value.guid
+          } else {
+            newSetting.value = null
+          }
+          settings.push(newSetting)
+        } else {
+          settings.push(setting)
+        }
+      }
+      return settings;
     },
     saveSettings() {
       let $this = this
-      axios.post(aoat_config.aoatSaveSettingsUrl, {
-        settings: this.settings
+      Api.post(aoat_config.aoatSaveSettingsUrl, {
+        settings: this.prepareSettings()
       })
       .then(() => {
         $this.$notify({
@@ -76,7 +106,6 @@ export default {
         })
       })
       .catch(function (error) {
-
         $this.$notify({
           title: 'Something went wrong',
           type: 'error',

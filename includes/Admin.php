@@ -1,6 +1,8 @@
 <?php
 namespace ApprenticeshipOnlineAssessmentTool;
 
+require_once __DIR__ . '/Helper.php';
+
 /**
  * Admin Pages Handler
  */
@@ -8,6 +10,10 @@ class Admin {
 
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+
+
+	    add_action( 'admin_action_aoat_duplicate_form', [ $this, 'duplicate_form'] );
+	    add_filter( 'post_row_actions', [ $this, 'duplicate_form_link'], 10, 2 );
     }
 
     /**
@@ -52,6 +58,8 @@ class Admin {
 
 
 	    $data = [
+		    'ajax_url'   => admin_url('admin-ajax.php'),
+		    'nonce'      => wp_create_nonce('wp_rest'),
 	    	'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/"),
 	    	'aoatSaveFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/create"),
 	    	'aoatViewFormUrl' => admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/'),
@@ -76,4 +84,39 @@ class Admin {
     public function plugin_page() {
         echo '<div class="wrap"><div id="vue-admin-app"></div></div>';
     }
+
+	function duplicate_form(){
+		if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'aoat_duplicate_form' == $_REQUEST['action'] ) ) ) {
+			wp_die('No post to duplicate has been supplied!');
+		}
+
+		/*
+		 * Nonce verification
+		 */
+		if ( !isset( $_GET['duplicate_nonce'] ) || !wp_verify_nonce( $_GET['duplicate_nonce'], basename( __FILE__ ) ) )
+			return;
+
+		/*
+		 * get the original post id
+		 */
+		$post_id = (isset($_GET['post']) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
+
+		$new_post = Helper::duplicate_post($post_id);
+
+		/*
+		 * finally, redirect to the edit post screen for the new draft
+		 */
+		wp_redirect( admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/' . $new_post->ID) );
+		exit;
+	}
+
+	/*
+	 * Add the duplicate link to action list for post_row_actions
+	 */
+	function duplicate_form_link( $actions, $post ) {
+		if (current_user_can('editor') || current_user_can('administrator')) {
+			$actions['duplicate'] = '<a href="' . wp_nonce_url('admin.php?action=aoat_duplicate_form&post=' . $post->ID, basename(__FILE__), 'duplicate_nonce' ) . '" title="Duplicate this item" rel="permalink">Duplicate</a>';
+		}
+		return $actions;
+	}
 }

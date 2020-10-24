@@ -49,6 +49,18 @@ class Assessment extends WP_REST_Controller {
                 ]
             ]
         );
+        register_rest_route(
+            $this->namespace,
+            '/assessments/(?P<id>\d+)',
+            [
+                [
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => [ $this, 'delete_assessment' ],
+                    'permission_callback' => [ $this, 'delete_assessment_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
     }
 
 	/**
@@ -96,7 +108,18 @@ class Assessment extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function create_or_update_assessment_permissions_check( WP_REST_Request $request ) {
-        return true;
+
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+	    if (!is_user_logged_in()) {
+		    return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
+	    }
+
+	    return true;
     }
 
 	/**
@@ -136,10 +159,55 @@ class Assessment extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_assessment_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+	    if (!is_user_logged_in()) {
+		    return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
+	    }
+	    $post = get_post($request->get_params()['id']);
+
+	    return $post->post_author == get_current_user_id();
     }
 
-    /**
+
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array|false|WP_Error|\WP_Post|WP_REST_Response
+	 */
+	public function delete_assessment( WP_REST_Request $request ) {
+		return wp_delete_post($request->get_params()['id']);
+	}
+
+	/**
+	 * Checks if a given request has access to read the items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+	 */
+	public function delete_assessment_permissions_check( WP_REST_Request $request ) {
+		if(current_user_can('administrator')) {
+			return true;
+		}
+		if(current_user_can('editor')) {
+			return true;
+		}
+		if (!is_user_logged_in()) {
+			return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
+		}
+		$post = get_post($request->get_params()['id']);
+
+		return $post->post_author == get_current_user_id();
+	}
+
+	/**
      * Retrieves the query params for the items collection.
      *
      * @return array Collection parameters.

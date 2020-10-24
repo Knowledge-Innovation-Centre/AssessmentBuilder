@@ -1,11 +1,13 @@
 import PieChart from "../PieChart";
 import RadarChart from "../RadarChart";
+import BarChart from "../BarChart";
 
 export default {
 
   components: {
     PieChart,
-    RadarChart
+    RadarChart,
+    BarChart
   },
 
 
@@ -15,7 +17,7 @@ export default {
         labels: [],
         datasets: [
           {
-            label: 'Data One',
+            label: '',
             backgroundColor: [],
             data: [],
             fill: false
@@ -43,7 +45,23 @@ export default {
           }
         }
       },
+      barOptionsOptions: {
+        animation: {
+          duration: 500,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: '#ffffff',
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      },
       graphArray: [],
+      colors: [],
       score: 0,
       totalScore: 0,
     };
@@ -95,6 +113,7 @@ export default {
               localScore += parseInt(verticalOption.score)
             }
           }
+          this.colors.push(this.getScoreGraphColor(item))
           this.graphArray.push(localScore)
 
         } else if(item.options) {
@@ -117,6 +136,9 @@ export default {
             localScore += parseInt(verticalOption.score)
           }
 
+
+
+          this.colors.push(this.getScoreGraphColor(item))
           this.graphArray.push(localScore)
 
         }

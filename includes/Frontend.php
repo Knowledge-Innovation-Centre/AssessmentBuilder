@@ -56,7 +56,7 @@ class Frontend {
 
 	public function render_assessment_list( $atts, $content = '' ) {
 		$form = get_post($atts['id']);
-		$user = get_current_user();
+		$user = wp_get_current_user();
 
 		if (!is_user_logged_in()) {
 			return rest_ensure_response( [] );
@@ -85,7 +85,7 @@ class Frontend {
 				$assessments->the_post();
 
 				// This is the output for your entry so what you want to do for each post.
-				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a></div>';
+				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a> - <a href="' . get_delete_post_link() . '">Delete</a> </div>';
 
 			}
 
@@ -95,6 +95,8 @@ class Frontend {
 			// Restore data
 			wp_reset_postdata();
 
+		} else {
+			$content .= 'No assessments yet.';
 		}
 
 		// Return your shortcode output

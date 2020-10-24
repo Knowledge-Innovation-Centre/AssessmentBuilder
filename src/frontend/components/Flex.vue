@@ -140,7 +140,7 @@
         let $this = this
         this.setTitle(this.items);
         if (this.title === '') {
-          this.title = 'Assessment ' + new Date().toDateString()
+          this.title = 'Assessment ' + new Date().toLocaleString()
         }
         let assessmentData = this.$store.state.assessment
         Api.post(aoat_config.aoatSaveAssessmentUrl, {
@@ -152,7 +152,7 @@
               $this.message = 'Assessment successfully submitted!'
               if ($this.user && $this.settings.aoat_page_for_assessments) {
 
-                window.location.href = $this.settings.aoat_page_for_assessments.guid;
+                window.location.href = $this.settings.aoat_page_for_assessments;
                 return;
               }
               window.location.href = response.data.guid;

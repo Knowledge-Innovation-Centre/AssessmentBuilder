@@ -92,7 +92,14 @@ class Form extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function create_or_update_form_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -134,7 +141,11 @@ class Form extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_form_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(is_user_logged_in()) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
     /**

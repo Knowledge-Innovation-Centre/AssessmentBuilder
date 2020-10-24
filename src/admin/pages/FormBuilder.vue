@@ -100,7 +100,7 @@
 
 <script>
   import { Drag } from "vue-easy-dnd";
-  import axios from "axios";
+  import Api from "../Api";
   import formElements from "../utils/form-elements"
   import randomValueHex from "../utils/helpers"
   import Generic from "../components/Generic.vue";
@@ -175,7 +175,7 @@ export default {
         }
         return;
       }
-      axios.get(aoat_config.aoatGetFormUrl + this.id).then((result) => {
+      Api.get(aoat_config.aoatGetFormUrl + this.id).then((result) => {
         this.form  = result.data;
         this.formData  = this.form.form_data[0];
         this.title = this.form.post_title;
@@ -189,7 +189,7 @@ export default {
       this.addedElements.splice(index, 1);
     },
     removeReport(reportId) {
-      axios.delete(aoat_config.aoatDeleteReportUrl + reportId).then((result) => {
+      Api.delete(aoat_config.aoatDeleteReportUrl + reportId).then((result) => {
         this.reports = this.reports.filter(report => report.ID !== reportId)
 
         this.$notify({
@@ -199,7 +199,7 @@ export default {
       })
     },
     duplicateReport(reportId) {
-      axios.post(aoat_config.aoatDuplicateReportUrl, {
+      Api.post(aoat_config.aoatDuplicateReportUrl, {
         id: reportId
       }).then((result) => {
         this.reports.push(result.data)
@@ -210,7 +210,7 @@ export default {
       })
     },
     activateReport(reportId) {
-      axios.post(aoat_config.aoatActivateReportUrl, {
+      Api.post(aoat_config.aoatActivateReportUrl, {
         id: reportId
       }).then((result) => {
         this.reports = result.data
@@ -222,7 +222,7 @@ export default {
     },
     save() {
       let $this = this
-      axios.post(aoat_config.aoatSaveFormUrl, {
+      Api.post(aoat_config.aoatSaveFormUrl, {
         title: this.title,
         formData: this.formData,
         formSettings: this.formSettings,

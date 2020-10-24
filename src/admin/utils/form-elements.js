@@ -81,7 +81,8 @@ export default  [
       maxWidth: null,
       maxWidthUnit: 'px',
       includeInAssessmentTitle: false,
-      multiple: false
+      multiple: false,
+      scoreGraphColor: "",
     },
     {
       key: randomValueHex(15),
@@ -153,6 +154,7 @@ export default  [
       includeInAssessmentTitle: false,
       maxWidth: null,
       maxWidthUnit: 'px',
+      scoreGraphColor: null,
     },
     {
       key: randomValueHex(15),
@@ -177,6 +179,7 @@ export default  [
       }],
       maxWidth: null,
       maxWidthUnit: 'px',
+      scoreGraphColor: null,
     },
     {
       key: randomValueHex(15),

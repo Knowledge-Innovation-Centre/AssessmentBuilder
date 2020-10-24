@@ -1,7 +1,7 @@
-import { Radar } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 
 export default {
-  extends: Radar,
+  extends: Bar,
   props: {
     chartData: {
       type: Object,

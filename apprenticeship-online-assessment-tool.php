@@ -263,7 +263,7 @@ final class Apprenticeship_Online_Assessment_Tool {
 	function get_edit_post_link_178416($link, $post_id, $context) {
 		global $current_screen;
 
-		if ($current_screen->id == 'edit-aoat_form' && $context == 'display') {
+		if (isset($current_screen) && $current_screen->id == 'edit-aoat_form' && $context == 'display') {
 			return admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/' . $post_id);
 		} else {
 			return $link;
@@ -273,8 +273,7 @@ final class Apprenticeship_Online_Assessment_Tool {
 
 		$user = wp_get_current_user();
 
-		if (!is_admin() && is_post_type_archive('aoat_assessment')){
-
+		if (!is_admin() && isset($query->query['post_type']) && $query->query['post_type'] == 'aoat_assessment'){
 			if ( is_user_logged_in()) {
 				$query->set( 'author', $user->ID );
 			} else {

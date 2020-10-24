@@ -8,6 +8,7 @@
              :max-width="800"
              placement="left"
              class="aoat-inline-block"
+             @show="checkKeys()"
              trigger="click">
         <template v-slot:trigger>
           <button class=" aoat-px-0 aoat-cursor-pointer">
@@ -176,6 +177,7 @@
 
   import "tippy.js/themes/light.css";
   import "tippy.js/themes/light-border.css";
+  import formElements from "../utils/form-elements";
 
   export default {
 
@@ -293,6 +295,15 @@
       toggleShow() {
         this.show = !this.show
         this.$emit('toggleShow')
+      },
+      checkKeys() {
+        let element = formElements.find(el => el.type === this.object.type)
+
+        Object.keys(element).forEach(key => {
+          if (typeof this.object[key] === 'undefined') {
+            this.$set(this.object, key, element[key]);
+          }
+        })
       }
     }
   };

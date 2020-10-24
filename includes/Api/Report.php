@@ -1,6 +1,8 @@
 <?php
 namespace ApprenticeshipOnlineAssessmentTool\Api;
 
+
+use ApprenticeshipOnlineAssessmentTool\Helper;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
@@ -98,6 +100,7 @@ class Report extends WP_REST_Controller {
     public function create_or_update_report( WP_REST_Request $request ) {
 
     	$id = $request->get_params()['id'];
+    	$formId = $request->get_params()['formId'];
 
     	$data = [
 		    'post_type' => 'aoat_report',
@@ -111,7 +114,23 @@ class Report extends WP_REST_Controller {
     		$data['ID'] = $id;
 		    $post_id = wp_update_post($data);
 	    } else {
-		    $data['post_status'] = 'draft';
+
+		    $args = array(
+			    'post_type' => 'aoat_report',
+			    'meta_query' => array(
+				    array(
+					    'key' => 'form_id',
+					    'value' => $formId,
+				    )
+			    )
+		    );
+		    $otherReports = new WP_Query($args);
+    		if ($otherReports->post_count) {
+		        $data['post_status'] = 'draft';
+		    } else {
+		        $data['post_status'] = 'publish';
+		    }
+
 		    $post_id = wp_insert_post($data);
 	    }
 
@@ -119,7 +138,7 @@ class Report extends WP_REST_Controller {
 		    // insert post meta
 		    update_post_meta($post_id, 'report_data', $request->get_params()['reportData']);
 		    update_post_meta($post_id, 'report_settings', $request->get_params()['reportSettings']);
-		    update_post_meta($post_id, 'form_id', $request->get_params()['formId']);
+		    update_post_meta($post_id, 'form_id', $formId);
 	    }
 
         return rest_ensure_response( get_post($post_id) );
@@ -133,7 +152,14 @@ class Report extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function create_or_update_report_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -160,7 +186,11 @@ class Report extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_report_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(is_user_logged_in()) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -172,32 +202,10 @@ class Report extends WP_REST_Controller {
 	 */
     public function duplicate_report( WP_REST_Request $request ) {
 	    $post_id = $request->get_params()['id'];
-	    $title   = get_the_title($post_id);
-	    $old_post = get_post($post_id);
-	    $post    = [
-		    'post_title' => $title . ' copy',
-		    'post_status' => 'draft',
-		    'post_type' => $old_post->post_type,
-		    'post_author' => $old_post->post_author,
-		    'comment_status' => 'closed',   // if you prefer
-		    'ping_status' => 'closed',      // if you prefer
-	    ];
-	    $new_post_id = wp_insert_post($post);
-		global $wpdb;
-	    $post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
-	    if (count($post_meta_infos)!=0) {
-		    $sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-		    foreach ($post_meta_infos as $meta_info) {
-			    $meta_key = $meta_info->meta_key;
-			    if( $meta_key == '_wp_old_slug' ) continue;
-			    $meta_value = addslashes($meta_info->meta_value);
-			    $sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
-		    }
-		    $sql_query.= implode(" UNION ALL ", $sql_query_sel);
-		    $wpdb->query($sql_query);
-	    }
 
-	    return rest_ensure_response( get_post($new_post_id) );
+	    $new_post = Helper::duplicate_post($post_id, 'draft');
+
+	    return rest_ensure_response( $new_post );
     }
 
 	/**
@@ -208,7 +216,14 @@ class Report extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function duplicate_report_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -263,7 +278,14 @@ class Report extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function activate_report_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -285,7 +307,14 @@ class Report extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function delete_report_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+	    if(current_user_can('editor')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
     /**

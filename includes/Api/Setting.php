@@ -115,7 +115,11 @@ class Setting extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function save_setting_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
 	/**
@@ -145,7 +149,11 @@ class Setting extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_settings_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(is_user_logged_in()) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 	/**
 	 * Retrieves a collection of items.
@@ -166,7 +174,11 @@ class Setting extends WP_REST_Controller {
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
 	 */
     public function get_pages_permissions_check( WP_REST_Request $request ) {
-        return true;
+	    if(current_user_can('administrator')) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
     }
 
     /**

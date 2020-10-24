@@ -8,6 +8,7 @@
              :max-width="800"
              placement="left"
              class="aoat-inline-block"
+             @show="checkKeys()"
              trigger="click">
         <template v-slot:trigger>
           <button class="aoat-px-0 aoat-cursor-pointer">
@@ -57,6 +58,13 @@
                   </multiselect>
               </td>
             </tr>
+            <tr v-if="typeof object.scoreGraphColor !== 'undefined'">
+              <th>Select score graph color</th>
+              <td>
+                <v-swatches :swatches="swatches"
+                            v-model="object.scoreGraphColor"></v-swatches>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
@@ -76,13 +84,17 @@
 <script>
 
   import {Multiselect} from "vue-multiselect";
+  import formElements from '../utils/form-elements.js'
+import VSwatches from 'vue-swatches'
+  import "vue-swatches/dist/vue-swatches.css"
 
   export default {
 
     name: 'CommonOptionsReport',
 
     components: {
-      Multiselect
+      Multiselect,
+      VSwatches
     },
 
     props: {
@@ -102,6 +114,24 @@
     data () {
       return {
         show: true,
+        swatches: [
+          "#1FBC9C",
+          "#1CA085",
+          "#2ECC70",
+          "#27AF60",
+          "#3398DB",
+          "#2980B9",
+          "#A463BF",
+          "#8E43AD",
+          "#F2C511",
+          "#F39C19",
+          "#E84B3C",
+          "#C0382B",
+          "#DDE6E8",
+          "#BDC3C8",
+          "#3D556E",
+          "",
+        ],
         availableGraphs: [
           {
             label: "Pie",
@@ -129,6 +159,10 @@
             label: 'Radar',
             key: 'radar'
           },
+          {
+            label: 'Bar',
+            key: 'bar'
+          },
         ]
       };
     },
@@ -152,6 +186,15 @@
       toggleShow() {
         this.show = !this.show
         this.$emit('toggleShow')
+      },
+      checkKeys() {
+        let element = formElements.find(el => el.type === this.object.type)
+
+        Object.keys(element).forEach(key => {
+          if (typeof this.object[key] === 'undefined') {
+            this.$set(this.object, key, element[key]);
+          }
+        })
       }
     }
   };

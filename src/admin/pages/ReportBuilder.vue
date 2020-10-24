@@ -61,7 +61,7 @@
 
 <script>
   import { Drag } from "vue-easy-dnd";
-  import axios from "axios";
+  import Api from "../Api";
   import formElements from "../utils/form-elements"
   import randomValueHex from "../utils/helpers"
   import Generic from "../components/Generic.vue";
@@ -134,7 +134,7 @@ export default {
   methods: {
     loadForm() {
 
-      axios.get(aoat_config.aoatGetFormUrl + this.formId).then((result) => {
+      Api.get(aoat_config.aoatGetFormUrl + this.formId).then((result) => {
         this.form  = result.data;
         this.formData  = result.data.form_data[0];
         this.formTitle = this.form.post_title;
@@ -160,7 +160,7 @@ export default {
 
         return;
       }
-      axios.get(aoat_config.aoatGetReportUrl + this.reportId).then((result) => {
+      Api.get(aoat_config.aoatGetReportUrl + this.reportId).then((result) => {
         this.report  = result.data;
         this.reportData  = result.data.report_data[0];
         this.title = this.report.post_title;
@@ -182,7 +182,7 @@ export default {
     },
     save() {
       let $this = this
-      axios.post(aoat_config.aoatSaveReportUrl, {
+      Api.post(aoat_config.aoatSaveReportUrl, {
         title: this.title,
         reportData: this.reportData,
         reportSettings: this.reportSettings,

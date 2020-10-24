@@ -40,7 +40,7 @@
                   <span v-if="value[optionHorizontal.id] === optionVertical.id" class="dashicons dashicons-yes"></span>
                 </template>
               </td>
-              <td>{{ value[optionHorizontal.id] }}</td>
+              <td>{{ optionsVertical.find(optionVertical => optionVertical.id === value[optionHorizontal.id]).score }}</td>
             </tr>
             </tbody>
           </table>
