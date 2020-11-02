@@ -95,9 +95,10 @@
           labels: [],
           datasets: [
             {
-              label: 'Data One',
+              label: '',
               backgroundColor: [],
-              data: []
+              data: [],
+              fill: false
             }
           ]
         },
@@ -107,8 +108,8 @@
           },
           responsive: true,
           maintainAspectRatio: false,
-          backgroundColor: '#ffffff'
-        }
+          backgroundColor: '#ffffff',
+        },
       };
     },
 
@@ -121,7 +122,7 @@
         this.chartData.labels = this.object.optionsVertical.map(optionVertical => optionVertical.name)
         this.chartData.datasets[0].backgroundColor = this.object.optionsVertical.map(optionVertical => optionVertical.color)
         let options = {}
-        for (let option of this.object.optionsHorizontal) {
+        for (let option of this.object.optionsVertical) {
           options[option.id] = 0
         }
         Object.keys(this.value).forEach(key => {

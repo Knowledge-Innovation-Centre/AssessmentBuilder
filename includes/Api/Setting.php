@@ -97,11 +97,7 @@ class Setting extends WP_REST_Controller {
 
     	$settings = $request->get_params()['settings'];
     	foreach ($settings as $setting) {
-    		if (get_option($setting['key'])) {
-				update_option($setting['key'], $setting['value']);
-				continue;
-		    }
-    		add_option($setting['key'], $setting['value']);
+    		update_option($setting['key'], $setting['value']);
 	    }
 
         return rest_ensure_response( true );
