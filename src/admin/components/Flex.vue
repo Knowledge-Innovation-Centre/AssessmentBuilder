@@ -89,6 +89,10 @@
         let element = cloneDeep(event.data)
         let newKey = randomValueHex(15);
 
+        if (element.type === 'page') {
+          element.items = [];
+        }
+
         if (!element.reportItemKey) {
           if(!isEmpty(this.$store.state.report)) {
             element.reportItemKey = element.key

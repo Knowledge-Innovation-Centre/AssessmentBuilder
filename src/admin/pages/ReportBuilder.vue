@@ -101,7 +101,7 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items)
-      return usedFormElements.filter(element => !['column','row','page','paragraph'].includes(element.type))
+      return usedFormElements.filter(element => !['column','row','paragraph'].includes(element.type))
     },
     availableBuilderElements() {
       return formElements.filter(element => [
