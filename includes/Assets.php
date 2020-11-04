@@ -88,6 +88,12 @@ class Assets {
                 'version'   => '0.8.0',
                 'in_footer' => true
             ],
+            'apprenticeship-online-assessment-tool-frontend-pdf' => [
+                'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/html2pdf.bundle.min.js',
+                'deps'      => [ 'jquery' ],
+                'version'   => '0.8.0',
+                'in_footer' => true
+            ],
             //'apprenticeship-online-assessment-tool-frontend' => [
             //    'src'       => 'http://localhost:8080/frontend.js',
             //    'deps'      => [ 'jquery' ],

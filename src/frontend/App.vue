@@ -1,13 +1,15 @@
 <template>
   <div id="vue-frontend-app">
-    <template v-if="formData.items.length" >
-      <div class="aoat-text-center">Progress</div>
-      <base-progress :percentage="percentage" class="aoat-mx-2 aoat-mb-5 aoat-h-5">
-        <span class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2">{{percentage}}%</span>
-      </base-progress>
-    </template>
-    <generic v-if="formData.items.length" :form="formData" />
-    <generic  v-if="reportData.items.length" :form="reportData" />
+    <div :class="reportData.items.length ? 'max-width-for-print' : ''">
+      <template v-if="formData.items.length" >
+        <div class="aoat-text-center">Progress</div>
+        <base-progress :percentage="percentage" class="aoat-mx-2 aoat-mb-5 aoat-h-5">
+          <span class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2">{{percentage}}%</span>
+        </base-progress>
+      </template>
+      <generic v-if="formData.items.length" :form="formData" />
+      <generic  v-if="reportData.items.length" :form="reportData" />
+    </div>
   </div>
 </template>
 
@@ -42,7 +44,10 @@ export default {
     },
     percentage() {
       return (this.currentPage / this.getItems().length) * 100
-    }
+    },
+    exportEnabled() {
+      return this.$store.state.exportEnabled
+    },
   },
   mounted() {
     this.loadData();
@@ -119,6 +124,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.print-settings {
+  width: 180mm;
+  max-width: 180mm;
+}
+.max-width-for-print {
 
+  width: 180mm;
+  max-width: 180mm;
+}
 </style>

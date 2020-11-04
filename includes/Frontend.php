@@ -38,6 +38,7 @@ class Frontend {
 	public function render_frontend( $atts, $content = '' ) {
 		wp_enqueue_style( 'apprenticeship-online-assessment-tool-frontend' );
 		wp_enqueue_script( 'apprenticeship-online-assessment-tool-frontend' );
+		wp_enqueue_script( 'apprenticeship-online-assessment-tool-frontend-pdf' );
 		$data = [
 			'upload_url' => admin_url('async-upload.php'),
 			'ajax_url'   => admin_url('admin-ajax.php'),
@@ -108,6 +109,7 @@ class Frontend {
 
 		wp_enqueue_style( 'apprenticeship-online-assessment-tool-frontend' );
 		wp_enqueue_script( 'apprenticeship-online-assessment-tool-frontend' );
+		wp_enqueue_script( 'apprenticeship-online-assessment-tool-frontend-pdf' );
 
 		global $post;
 

@@ -226,33 +226,19 @@
 
       async downloadPdf() {
 
-        let doc = new jsPDF('p', 'px', 'a4');
-
         await this.$store.dispatch('enableExport');
 
         setTimeout(async () => {
+
           let element = document.getElementById('vue-frontend-app');
-
-          await doc.html(
-              element, {
-                callback: function () {
-                  doc.save('report12354.pdf');
-                },
-                html2canvas: {
-                  // insert html2canvas options here, e.g.
-                  logging: true,
-                  scale: 0.8,
-                  bottom: 20,
-                },
-                margin: [20, 50, 100, 120],
-                image: {type: 'jpeg',quality: 0.98},
-
-                width: 300,
-              }
-          );
+          await html2pdf().set({
+            margin: [10, 10],
+            pagebreak: { mode: 'avoid-all', after: '.page' },
+            image: {type: 'jpeg', quality: 1}
+          }).from(element).save('report.pdf');
 
           await this.$store.dispatch('disableExport');
-        }, 1000)
+        }, 2000)
 
 
       }
@@ -278,10 +264,9 @@
 
   opacity: 0;
 }
-@media print {
-  /*.page-break {*/
-  /*  page-break-after: always;*/
-  /*}*/
-  /*body *:not(#vue-frontend-app *) {display:none;}*/
-}
+
+  .page-break {
+    page-break-after: always;
+  }
+
 </style>
