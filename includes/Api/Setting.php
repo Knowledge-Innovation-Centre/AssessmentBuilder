@@ -29,9 +29,19 @@ class Setting extends WP_REST_Controller {
             'value'=> 4,
 		],
 		[
-			'label'=> 'Page for assessments:',
+			'label'=> 'Page for assessment',
             'key'=> 'aoat_page_for_assessments',
-            'value'=> 4,
+            'value'=> null,
+		],
+		[
+			'label'=> 'After submitting the assessment redirect user to the list of assessment (If checked, please select page for assessment)',
+            'key'=> 'aoat_redirect_after_completion',
+            'value'=> false,
+		],
+		[
+			'label'=> 'Show link for assessment list (If checked, please select page for assessment)',
+            'key'=> 'aoat_show_link_button',
+            'value'=> false,
 		],
 	];
 

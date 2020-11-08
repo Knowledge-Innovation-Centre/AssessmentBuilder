@@ -120,6 +120,7 @@ class Frontend {
 			'aoatGetMediaUrl' => get_rest_url(null, "/wp/v2/media/"),
 			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
 			'nonce'      => wp_create_nonce('wp_rest'),
+			'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
 		];
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );
 

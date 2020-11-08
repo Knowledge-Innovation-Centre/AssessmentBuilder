@@ -31,7 +31,7 @@
             <generic :key="item.key" :class="elementClass" :form="item"></generic>
           </template>
         </template>
-      <p class="message" v-if="message">{{ message }}</p>
+        <p class="message" v-if="message">{{ message }}</p>
     </div>
 </template>
 
@@ -150,7 +150,7 @@
         })
             .then(function (response) {
               $this.message = 'Assessment successfully submitted!'
-              if ($this.user && $this.settings.aoat_page_for_assessments) {
+              if ($this.user && $this.settings.aoat_page_for_assessments && $this.settings.aoat_redirect_after_completion) {
 
                 window.location.href = $this.settings.aoat_page_for_assessments;
                 return;

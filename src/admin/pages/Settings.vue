@@ -17,6 +17,9 @@
                 :options="pages">
             </multiselect>
           </template>
+          <template v-else-if="['aoat_redirect_after_completion', 'aoat_show_link_button'].includes(setting.key)">
+            <input type="checkbox" v-model="setting.value" />
+          </template>
           <template v-else>
             <input type="text" v-model="setting.value" />
           </template>
@@ -118,4 +121,7 @@ export default {
 </script>
 
 <style lang="css" scoped>
+th {
+  max-width: 300px;
+}
 </style>

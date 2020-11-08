@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="aoat-font-bold">{{ getLabel }}</div>
     <template v-for="graphType in object.selectedResultType">
       <div :key="graphType.key">
         <template v-if="graphType.key === 'pie'">
@@ -10,6 +11,9 @@
         </template>
         <template v-if="graphType.key === 'bar'">
           <bar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="barOptionsOptions"/>
+        </template>
+        <template v-if="graphType.key === 'horizontal_bar'">
+          <horizontal-bar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="horizontalBarOptionsOptions"/>
         </template>
         <template v-if="graphType.key === 'score'">
           {{ score }}/{{ totalScore }}
@@ -26,7 +30,7 @@ import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
 
 export default {
-  name: 'PartScoreReport',
+  name: 'TotalScoreReport',
 
   mixins: [
     labelMixin,
@@ -61,12 +65,14 @@ export default {
         this.calculateScore(item.items);
       }
       if (this.score !== this.totalScore) {
-        this.chartData.labels.push('Missing scores')
+        this.chartData.labels.push('Not compliant info')
         this.graphArray.push(this.totalScore - this.score)
       }
       this.chartData.datasets[0].label = this.getLabel
       this.chartData.datasets[0].backgroundColor = this.colors
       this.chartData.datasets[0].data = this.graphArray;
+      // this.barOptionsOptions.scales.yAxes[0].ticks.max = this.totalScore;
+      // this.horizontalBarOptionsOptions.scales.xAxes[0].ticks.max = this.totalScore;
     },
   }
 };

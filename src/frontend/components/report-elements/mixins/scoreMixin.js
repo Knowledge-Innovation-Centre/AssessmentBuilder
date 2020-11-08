@@ -1,13 +1,15 @@
 import PieChart from "../PieChart";
 import RadarChart from "../RadarChart";
 import BarChart from "../BarChart";
+import HorizontalBarChart from "../HorizontalBarChart";
 
 export default {
 
   components: {
     PieChart,
     RadarChart,
-    BarChart
+    BarChart,
+    HorizontalBarChart
   },
 
 
@@ -60,10 +62,26 @@ export default {
           }]
         }
       },
+      horizontalBarOptionsOptions: {
+        animation: {
+          duration: 500,
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: '#ffffff',
+        scales: {
+          xAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      },
       graphArray: [],
       colors: [],
       score: 0,
       totalScore: 0,
+      alreadyIncludedElementsForScores: [],
     };
   },
 
@@ -88,9 +106,18 @@ export default {
         let value = this.$store.state.assessment[item.reportItemKey]
 
 
+        if (item.disableForScoring) {
+          continue;
+        }
+
         if (!item.options && !item.optionsVertical) {
           continue;
         }
+        if (this.alreadyIncludedElementsForScores.includes(item.reportItemKey)) {
+          continue
+        }
+        this.alreadyIncludedElementsForScores.push(item.reportItemKey)
+
         let maxScore = 0;
         this.chartData.labels.push(this.getItemLabel(item))
 

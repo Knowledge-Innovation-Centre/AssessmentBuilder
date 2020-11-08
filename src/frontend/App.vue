@@ -10,6 +10,9 @@
       <generic v-if="formData.items.length" :form="formData" />
       <generic  v-if="reportData.items.length" :form="reportData" />
     </div>
+    <template v-if="showLink">
+      <a :href="listLink">List of completed assessments</a>
+    </template>
   </div>
 </template>
 
@@ -43,10 +46,30 @@ export default {
       return this.$store.state.currentPage
     },
     percentage() {
-      return (this.currentPage / this.getItems().length) * 100
+      return Math.round((this.currentPage / this.getItems().length) * 100)
     },
     exportEnabled() {
       return this.$store.state.exportEnabled
+    },
+    user() {
+      return this.$store.state.user
+    },
+    settings() {
+      return this.$store.state.settings
+    },
+    showLink() {
+      console.log( this.settings.aoat_page_for_assessments);
+      if (! this.user) {
+        return false
+      }
+      if (! this.settings.aoat_page_for_assessments) {
+        return false
+      }
+      return this.settings.aoat_show_link_button;
+
+    },
+    listLink() {
+      return this.settings.aoat_page_for_assessments;
     },
   },
   mounted() {

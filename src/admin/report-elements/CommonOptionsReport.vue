@@ -16,7 +16,7 @@
           </button>
         </template>
         <div class="aoat-text-left w-800 aoat-py-4">
-          <table class="table aoat-w-full">
+          <table class="table aoat-w-full w-800">
             <tbody>
             <tr>
               <th>Label:</th>
@@ -163,6 +163,10 @@ import VSwatches from 'vue-swatches'
             label: 'Bar',
             key: 'bar'
           },
+          {
+            label: 'Horizontal bar',
+            key: 'horizontal_bar'
+          },
         ]
       };
     },
@@ -215,5 +219,12 @@ import VSwatches from 'vue-swatches'
     left: -10px;
     top: -20px;
     cursor: grab;
+  }
+  td {
+    max-width: 250px;
+    min-width: 200px;
+  }
+  select {
+    width: 100%;
   }
 </style>

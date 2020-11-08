@@ -17,35 +17,39 @@
         </template>
 
         <div class="aoat-text-left w-800 aoat-py-4">
-          <table class="table aoat-w-full">
+          <table class="table aoat-w-full  w-800">
             <tbody>
             <tr>
               <th style="width: 100px;">Name:</th>
-              <td><input v-model="object.name" class="aoat-w-full" type="text"></td>
+              <td colspan="2"><input v-model="object.name" class="aoat-w-full" type="text"></td>
             </tr>
             <tr v-if="typeof object.placeholder !== 'undefined'">
               <th>Placeholder:</th>
               <td><input v-model="object.placeholder" type="text"></td>
-            </tr>
+            </tr colspan="2">
             <tr v-if="typeof object.required !== 'undefined'">
               <th>Required:</th>
-              <td><input  v-model="object.required" type="checkbox"></td>
+              <td colspan="2"><input  v-model="object.required" type="checkbox"></td>
             </tr>
             <tr v-if="typeof object.hidden !== 'undefined'">
               <th>Hidden:</th>
-              <td><input  v-model="object.hidden" type="checkbox"></td>
+              <td colspan="2"><input  v-model="object.hidden" type="checkbox"></td>
             </tr>
             <tr v-if="typeof object.showTitle !== 'undefined'">
               <th>Show title:</th>
-              <td><input  v-model="object.showTitle" type="checkbox"></td>
+              <td colspan="2"><input  v-model="object.showTitle" type="checkbox"></td>
             </tr>
             <tr v-if="typeof object.includeInAssessmentTitle !== 'undefined'">
               <th>Include in assessment title:</th>
-              <td><input v-model="object.includeInAssessmentTitle" type="checkbox"></td>
+              <td colspan="2"><input v-model="object.includeInAssessmentTitle" type="checkbox"></td>
+            </tr>
+                <tr v-if="typeof object.disableForScoring !== 'undefined'">
+              <th>Disable for scoring:</th>
+              <td colspan="2"><input v-model="object.disableForScoring" type="checkbox"></td>
             </tr>
             <tr>
               <th>Show if:</th>
-              <td>
+              <td colspan="2">
                   <table class="aoat-w-full">
                   <tr v-for="(condition, index) in object.conditions">
                     <td>
@@ -105,12 +109,12 @@
             </tr>
 
             <tr>
-              <td></td>
-              <td><button @click="addCondition()">+</button></td>
+              <th></th>
+              <td colspan="2"><button @click="addCondition()">+</button></td>
             </tr>
             <tr>
               <th>Classes:</th>
-              <td><input v-model="object.class" type="text"></td>
+              <td colspan="2"><input v-model="object.class" type="text"></td>
             </tr>
             <tr>
               <th>Max width:</th>
@@ -122,15 +126,15 @@
             </tr>
             <tr v-if="typeof object.maxSize !== 'undefined'">
               <th>Max size (MB):</th>
-              <td><input v-model="object.maxSize" type="number"></td>
+              <td colspan="2"><input v-model="object.maxSize" type="number"></td>
             </tr>
             <tr v-if="typeof object.maxFiles !== 'undefined'">
               <th>Max files:</th>
-              <td><input v-model="object.maxFiles" type="number"></td>
+              <td colspan="2"><input v-model="object.maxFiles" type="number"></td>
             </tr>
             <tr v-if="typeof object.acceptedFileTypes !== 'undefined'">
               <th>Accepted file types:</th>
-              <td><multiselect
+              <td colspan="2"><multiselect
                   v-model="object.acceptedFileTypes"
                   :multiple="true"
                   placeholder="Select one"
@@ -140,7 +144,7 @@
             </tr>
             <tr v-if="typeof object.labelParts !== 'undefined'">
               <th>Build label:</th>
-              <td><multiselect
+              <td colspan="2"><multiselect
                   v-model="object.labelParts"
                   :multiple="true"
                   placeholder="Select one"
@@ -152,7 +156,7 @@
             </tr>
             <tr v-if="typeof object.labelPartsSeperator !== 'undefined'">
               <th>Label seperator:</th>
-              <td><input v-model="object.labelPartsSeperator" type="text"></td>
+              <td colspan="2"><input v-model="object.labelPartsSeperator" type="text"></td>
             </tr>
             </tbody>
           </table>
@@ -328,5 +332,12 @@
   }
   .w-800 {
     width: 800px;
+  }
+  td {
+    max-width: 250px;
+    min-width: 200px;
+  }
+  select {
+    width: 100%;
   }
 </style>

@@ -39,7 +39,7 @@
           <drag
               v-for="(element) in availableBuilderElements"
               :key="element.key"
-              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              class="aoat-bg-white aoat-max-w-xs aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
               :data="element"
               @cut="remove(element)">
             {{element.name}}
@@ -48,7 +48,7 @@
         <h2 class="aoat-mt-6">Form elements</h2>
         <drag v-for="(element) in availableFormElements"
               :key="element.key"
-              class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              class="aoat-bg-white aoat-max-w-xs aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
               :data="element"
               @cut="remove(element)">
           {{element.name}}
