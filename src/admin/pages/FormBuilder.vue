@@ -63,6 +63,27 @@
                   class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
             Save
           </button>
+
+          <button @click="downloadJson()"
+                  class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+            Export
+          </button>
+          <tippy arrow
+                 ref="import_json"
+                 :interactive="true"
+                 theme="light"
+                 :max-width="800"
+                 placement="left"
+                 class="aoat-inline-block"
+                 trigger="click">
+            <template v-slot:trigger>
+              <button class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+                Import...
+              </button>
+            </template>
+            <textarea v-model="importJson"cols="30" rows="10"></textarea>
+            <button class="aoat-mt-2" @click="importData()">Import</button>
+          </tippy>
         </div>
       </div>
       <div class="aoat-h-full aoat-bg-gray-300 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
@@ -116,6 +137,7 @@ export default {
     return {
       addedElements: [],
       title: "",
+      importJson: "",
       formData: {},
       form: {},
       reports: [],
@@ -158,11 +180,6 @@ export default {
   methods: {
     loadForm() {
       if (! this.id) {
-        // let column = this.availableBuilderElements.find(element => element.type === 'column')
-        // let row = this.availableBuilderElements.find(element => element.type === 'row')
-        // let page = this.availableBuilderElements.find(element => element.type === 'page')
-        // row.items.push(column)
-        // page.items.push(row)
         this.formData = {
           key: randomValueHex(10),
           component: "Form",
@@ -241,6 +258,22 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
+    },
+    downloadJson() {
+      let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.formData));
+      let downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href",     dataStr);
+      downloadAnchorNode.setAttribute("download",  "form_data.json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+    },
+    importData() {
+      try {
+        this.formData = JSON.parse(this.importJson);
+      } catch (e) {
+        alert(e)
+      }
     }
   }
 };

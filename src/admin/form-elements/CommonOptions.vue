@@ -25,8 +25,8 @@
             </tr>
             <tr v-if="typeof object.placeholder !== 'undefined'">
               <th>Placeholder:</th>
-              <td><input v-model="object.placeholder" type="text"></td>
-            </tr colspan="2">
+              <td colspan="2"><input v-model="object.placeholder" type="text"></td>
+            </tr>
             <tr v-if="typeof object.required !== 'undefined'">
               <th>Required:</th>
               <td colspan="2"><input  v-model="object.required" type="checkbox"></td>
