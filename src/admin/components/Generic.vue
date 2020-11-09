@@ -10,12 +10,12 @@
     }">
         <legend>{{ form.name }}</legend>
         <template v-if="isReport">
-          <common-options-report @toggleShow="show = !show" :depth="depth" v-if="form.type !== 'report'" :object="form" />
+          <common-options-report :depth="depth" v-if="form.type !== 'report'" :object="form" />
         </template>
         <template v-else>
-          <common-options @toggleShow="show = !show" :depth="depth" v-if="form.type !== 'form'" :object="form" />
+          <common-options :depth="depth" v-if="form.type !== 'form'" :object="form" />
         </template>
-        <component v-show="show" :depth="depth" :is="component" :object="form" class="inner"></component>
+        <component v-show="!form.hideInForm" :depth="depth" :is="component" :object="form" class="inner"></component>
         <slot/>
     </fieldset>
 </template>
@@ -98,7 +98,6 @@
     },
     data() {
       return {
-        show: true
       }
     },
     mounted() {
@@ -129,11 +128,11 @@
     }
 
     .border-orange {
-      border: orange solid 1px;
+      border-color: orange !important;
     }
 
     .border-red {
-      border: orangered solid 1px;
+      border-color: orangered !important;
     }
 
     .background-grey {

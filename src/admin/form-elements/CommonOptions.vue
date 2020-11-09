@@ -163,12 +163,26 @@
         </div>
       </tippy>
       <button class="aoat-px-0 aoat-cursor-pointer" @click="toggleShow()">
-        <span v-if="show" class="dashicons dashicons-hidden"></span>
-        <span v-else class="dashicons aoat-text-orange-600 dashicons-visibility"></span>
+        <span v-if="object.hideInForm" class="dashicons aoat-text-orange-600 dashicons-visibility"></span>
+        <span v-else class="dashicons dashicons-hidden"></span>
       </button>
-      <button class="aoat-px-0 aoat-cursor-pointer" @click="remove()">
-        <span class="dashicons dashicons-trash"></span>
-      </button>
+      <tippy arrow
+             ref="remove_element"
+             :interactive="true"
+             theme="light"
+             :max-width="800"
+             placement="left"
+             class="aoat-inline-block"
+             @show="checkKeys()"
+             trigger="click">
+        <template v-slot:trigger>
+          <button class="aoat-px-0 aoat-cursor-pointer">
+            <span class="dashicons dashicons-trash"></span>
+          </button>
+        </template>
+        <div>Are you sure?</div>
+        <button class="aoat-mt-2" @click="remove()">Confirm</button>
+      </tippy>
 
     </div>
     <span class="handle dashicons dashicons-move" :class="getHandleClass()"></span>
@@ -214,7 +228,6 @@
 
     data () {
       return {
-        show: true,
         fileTypes: [
           'application/pdf',
           'image/jpeg',
@@ -297,12 +310,10 @@
         return 'handle-other' + this.depth
       },
       toggleShow() {
-        this.show = !this.show
-        this.$emit('toggleShow')
+        this.$set(this.object, 'hideInForm', !this.object.hideInForm)
       },
       checkKeys() {
         let element = formElements.find(el => el.type === this.object.type)
-
         Object.keys(element).forEach(key => {
           if (typeof this.object[key] === 'undefined') {
             this.$set(this.object, key, element[key]);
