@@ -121,11 +121,27 @@
 
 <script>
   import { Drag } from "vue-easy-dnd";
+  import { isEmpty } from "lodash";
   import Api from "../Api";
   import formElements from "../utils/form-elements"
   import randomValueHex from "../utils/helpers"
   import Generic from "../components/Generic.vue";
 
+  let isDirty = false
+
+  window.onload = function() {
+    window.addEventListener("beforeunload", function (e) {
+      if (!isDirty) {
+        return undefined;
+      }
+
+      let confirmationMessage = 'It looks like you have been editing something. '
+          + 'If you leave before saving, your changes will be lost.';
+
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
+  };
 export default {
 
   name: 'Home',
@@ -167,10 +183,14 @@ export default {
   watch: {
     formData: {
       deep: true,
-      handler() {
+      handler(newData, oldData) {
         this.$store.dispatch('updateForm', this.formData);
 
         this.$store.dispatch('updateReport', {});
+
+        if (!isEmpty(oldData)) {
+          isDirty = true
+        }
       }
     },
     id() {
@@ -250,9 +270,16 @@ export default {
           window.location.href = aoat_config.aoatViewFormUrl + response.data.ID;
         }
 
+        isDirty = false
+
         $this.$notify({
           title: 'Form saved',
           type: 'success',
+        })
+
+        $this.$notify({
+          title: 'Don\'t forget to update the report!',
+          type: 'warn',
         })
       })
       .catch(function (error) {
@@ -274,6 +301,20 @@ export default {
       } catch (e) {
         alert(e)
       }
+    }
+  },
+
+  beforeRouteLeave (to, from, next) {
+    if(isDirty){
+      const answer = window.confirm('It looks like you have been editing something. '
+          + 'If you leave before saving, your changes will be lost.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
     }
   }
 };

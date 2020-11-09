@@ -86,6 +86,23 @@
   import formElements from "../utils/form-elements"
   import randomValueHex from "../utils/helpers"
   import Generic from "../components/Generic.vue";
+  import {isEmpty} from "lodash";
+
+  let isDirty = false
+
+  window.onload = function() {
+    window.addEventListener("beforeunload", function (e) {
+      if (!isDirty) {
+        return undefined;
+      }
+
+      let confirmationMessage = 'It looks like you have been editing something. '
+          + 'If you leave before saving, your changes will be lost.';
+
+      (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+      return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+    });
+  };
 
 export default {
 
@@ -145,8 +162,12 @@ export default {
   watch: {
     reportData: {
       deep: true,
-      handler() {
+      handler(newData, oldData) {
         this.$store.dispatch('updateReport', this.reportData);
+
+        if (!isEmpty(oldData)) {
+          isDirty = true
+        }
       }
     },
     id() {
@@ -216,6 +237,7 @@ export default {
           window.location.href = aoat_config.aoatViewReportUrl + $this.formId + '/' + response.data.ID;
         }
 
+        isDirty = false
         $this.$notify({
           title: 'Report saved',
           type: 'success',
@@ -230,7 +252,7 @@ export default {
       let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.formData));
       let downloadAnchorNode = document.createElement('a');
       downloadAnchorNode.setAttribute("href",     dataStr);
-      downloadAnchorNode.setAttribute("download",  "form_data.json");
+      downloadAnchorNode.setAttribute("download",  "report_data.json");
       document.body.appendChild(downloadAnchorNode); // required for firefox
       downloadAnchorNode.click();
       downloadAnchorNode.remove();
@@ -241,6 +263,20 @@ export default {
       } catch (e) {
         alert(e)
       }
+    }
+  },
+
+  beforeRouteLeave (to, from, next) {
+    if(isDirty){
+      const answer = window.confirm('It looks like you have been editing something. '
+          + 'If you leave before saving, your changes will be lost.')
+      if (answer) {
+        next()
+      } else {
+        next(false)
+      }
+    } else {
+      next()
     }
   }
 };
