@@ -158,8 +158,6 @@ final class Apprenticeship_Online_Assessment_Tool {
         }
 
         update_option( 'apprenticeship_online_assessment_tool_version', APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_VERSION );
-
-	    flush_rewrite_rules();
     }
 
     /**
@@ -168,8 +166,6 @@ final class Apprenticeship_Online_Assessment_Tool {
      * Nothing being called here yet.
      */
     public function deactivate() {
-
-	    flush_rewrite_rules();
     }
 
     /**
