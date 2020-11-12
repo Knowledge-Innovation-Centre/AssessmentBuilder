@@ -47,7 +47,7 @@
           </tippy>
         </div>
       </div>
-      <div class="aoat-h-full aoat-bg-gray-300 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
+      <div class="aoat-h-full background-grey aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll">
         <div class="aoat-text-center aoat-mb-6">
           <button @click="save()"
                   class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
@@ -69,7 +69,8 @@
         <h2 class="aoat-mt-6">Form elements</h2>
         <drag v-for="(element) in availableFormElements"
               :key="element.key"
-              class="aoat-bg-white aoat-max-w-xs aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              class="aoat-max-w-xs aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+              :class="alreadyInReport(element) ? 'background-grey': 'aoat-bg-white'"
               :data="element"
               @cut="remove(element)">
           {{element.name}}
@@ -153,7 +154,7 @@ export default {
         'total_score_graph',
         'legend'
       ].includes(element.type))
-    }
+    },
   },
   mounted() {
   },
@@ -263,6 +264,14 @@ export default {
       } catch (e) {
         alert(e)
       }
+    },
+
+    alreadyInReport(element) {
+      let usedFormElements = this.getItemsRecursive(this.reportData.items)
+      console.log(element.reportItemKey);
+      console.log(usedFormElements.map(usedElement => usedElement.reportItemKey));
+      return !!usedFormElements.find(usedElement => usedElement.reportItemKey === element.reportItemKey)
+
     }
   },
 
@@ -370,6 +379,10 @@ export default {
     top: 50px;
     z-index: 10;
     background: #f1f1f1;
+  }
+
+  .background-grey {
+    background: #eee;
   }
 </style>
 
