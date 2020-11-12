@@ -26,6 +26,10 @@
               <th>Hidden:</th>
               <td><input  v-model="object.hidden" type="checkbox"></td>
             </tr>
+            <tr v-if="typeof object.hideLabels !== 'undefined'">
+              <th>Hide labels:</th>
+              <td><input  v-model="object.hideLabels" type="checkbox"></td>
+            </tr>
             <tr>
               <th>Classes:</th>
               <td><input v-model="object.class" type="text"></td>
@@ -55,6 +59,20 @@
                       :allow-empty="false"
                       class="aoat-w-full"
                       :options="availableResultTypes">
+                  </multiselect>
+              </td>
+            </tr>
+            <tr v-if="typeof object.legendFor !== 'undefined'">
+              <th>Select score</th>
+              <td>
+                  <multiselect
+                      v-model="object.legendFor"
+                      :multiple="false"
+                      label="reportLabel"
+                      track-by="reportItemKey"
+                      :allow-empty="false"
+                      class="aoat-w-full"
+                      :options="availableScores">
                   </multiselect>
               </td>
             </tr>
@@ -123,6 +141,12 @@ import VSwatches from 'vue-swatches'
     },
 
     computed: {
+      availableScores() {
+        console.log(this.getItemsRecursive(this.$store.state.report.items)
+            .filter(field => ['part_score', 'total_score'].includes(field.type)));
+        return this.getItemsRecursive(this.$store.state.report.items)
+            .filter(field => ['part_score', 'total_score'].includes(field.type))
+      }
     },
 
     data () {
@@ -185,6 +209,15 @@ import VSwatches from 'vue-swatches'
     },
 
     methods: {
+
+      getItemsRecursive(items) {
+        for (let item of items) {
+          if (item.items) {
+            items = items.concat(this.getItemsRecursive(item.items))
+          }
+        }
+        return items;
+      },
       remove() {
         this.$store.dispatch('removeFieldReport', this.object.key);
       },

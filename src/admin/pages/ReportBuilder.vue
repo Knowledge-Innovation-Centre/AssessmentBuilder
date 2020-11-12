@@ -140,7 +140,7 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items)
-      return usedFormElements.filter(element => !['column','row','paragraph'].includes(element.type))
+      return usedFormElements.filter(element => !['column','row','paragraph','legend'].includes(element.type))
     },
     availableBuilderElements() {
       return formElements.filter(element => [
@@ -150,7 +150,8 @@ export default {
         'paragraph',
         'part_score',
         'total_score',
-        'total_score_graph'
+        'total_score_graph',
+        'legend'
       ].includes(element.type))
     }
   },
@@ -236,7 +237,6 @@ export default {
         if (!$this.reportId) {
           window.location.href = aoat_config.aoatViewReportUrl + $this.formId + '/' + response.data.ID;
         }
-
         isDirty = false
         $this.$notify({
           title: 'Report saved',

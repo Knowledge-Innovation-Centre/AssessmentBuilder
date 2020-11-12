@@ -45,6 +45,7 @@
   import FileUploadReport from "../report-elements/FileUploadReport.vue";
   import PartScoreReport from "../report-elements/PartScoreReport.vue";
   import TotalScoreReport from "../report-elements/TotalScoreReport.vue";
+  import LegendReport from "../report-elements/LegendReport.vue";
   import CommonOptions from "../form-elements/CommonOptions.vue";
   import CommonOptionsReport from "../report-elements/CommonOptionsReport.vue";
 
@@ -85,6 +86,7 @@
       FileUploadReport,
       PartScoreReport,
       TotalScoreReport,
+      LegendReport,
       CommonOptions,
       CommonOptionsReport,
     },

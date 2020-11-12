@@ -119,7 +119,12 @@ export default {
         this.alreadyIncludedElementsForScores.push(item.reportItemKey)
 
         let maxScore = 0;
-        this.chartData.labels.push(this.getItemLabel(item))
+
+        if (this.object.hideLabels) {
+          this.chartData.labels.push('')
+        } else {
+          this.chartData.labels.push(this.getItemLabel(item))
+        }
 
         if (item.type === 'radio_grid') {
           for (let option of item.optionsVertical) {
@@ -163,11 +168,8 @@ export default {
             localScore += parseInt(verticalOption.score)
           }
 
-
-
           this.colors.push(this.getScoreGraphColor(item))
           this.graphArray.push(localScore)
-
         }
       }
 

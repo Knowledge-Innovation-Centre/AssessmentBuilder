@@ -82,7 +82,12 @@
         this.chartData.labels = [];
         this.calculateScore(this.getPage.items);
         if (this.score !== this.totalScore) {
-          this.chartData.labels.push('Not compliant info')
+
+          if (this.object.hideLabels) {
+            this.chartData.labels.push('')
+          } else {
+            this.chartData.labels.push('Not compliant info')
+          }
           this.graphArray.push(this.totalScore - this.score)
         }
         this.chartData.datasets[0].label = this.getLabel
