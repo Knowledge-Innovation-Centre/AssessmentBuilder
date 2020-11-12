@@ -11,7 +11,9 @@
       <generic  v-if="reportData.items.length" :form="reportData" />
     </div>
     <template v-if="showLink">
-      <a :href="listLink">List of completed assessments</a>
+      <div class="aoat-text-center aoat-mt-4">
+        <a :href="listLink">List of completed assessments</a>
+      </div>
     </template>
   </div>
 </template>
@@ -58,7 +60,6 @@ export default {
       return this.$store.state.settings
     },
     showLink() {
-      console.log( this.settings.aoat_page_for_assessments);
       if (! this.user) {
         return false
       }

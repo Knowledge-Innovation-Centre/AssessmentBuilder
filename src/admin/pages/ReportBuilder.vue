@@ -186,6 +186,14 @@ export default {
         this.formSettings = this.form.form_settings[0];
       })
 
+      Api.get(aoat_config.aoatGetSettingsUrl).then((result) => {
+        let settings = {}
+        for (let setting of result.data) {
+          settings[setting.key] = setting.value
+        }
+        this.$store.dispatch('updateSettings', settings)
+      })
+
       if (! this.reportId) {
         // let column = this.availableBuilderElements.find(element => element.type === 'column')
         // let row = this.availableBuilderElements.find(element => element.type === 'row')
@@ -268,8 +276,6 @@ export default {
 
     alreadyInReport(element) {
       let usedFormElements = this.getItemsRecursive(this.reportData.items)
-      console.log(element.reportItemKey);
-      console.log(usedFormElements.map(usedElement => usedElement.reportItemKey));
       return !!usedFormElements.find(usedElement => usedElement.reportItemKey === element.reportItemKey)
 
     }

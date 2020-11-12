@@ -199,6 +199,14 @@ export default {
   },
   methods: {
     loadForm() {
+
+      Api.get(aoat_config.aoatGetSettingsUrl).then((result) => {
+        let settings = {}
+        for (let setting of result.data) {
+          settings[setting.key] = setting.value
+        }
+        this.$store.dispatch('updateSettings', settings)
+      })
       if (! this.id) {
         this.formData = {
           key: randomValueHex(10),
@@ -218,7 +226,6 @@ export default {
         this.title = this.form.post_title;
         this.formSettings = this.form.form_settings[0];
         this.reports = this.form.reports
-        this.$store.dispatch('updateSettings', this.form.settings)
       })
     },
     remove(n) {

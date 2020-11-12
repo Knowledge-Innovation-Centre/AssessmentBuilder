@@ -142,8 +142,6 @@ import VSwatches from 'vue-swatches'
 
     computed: {
       availableScores() {
-        console.log(this.getItemsRecursive(this.$store.state.report.items)
-            .filter(field => ['part_score', 'total_score'].includes(field.type)));
         return this.getItemsRecursive(this.$store.state.report.items)
             .filter(field => ['part_score', 'total_score'].includes(field.type))
       }
@@ -151,24 +149,7 @@ import VSwatches from 'vue-swatches'
 
     data () {
       return {
-        swatches: [
-          "#1FBC9C",
-          "#1CA085",
-          "#2ECC70",
-          "#27AF60",
-          "#3398DB",
-          "#2980B9",
-          "#A463BF",
-          "#8E43AD",
-          "#F2C511",
-          "#F39C19",
-          "#E84B3C",
-          "#C0382B",
-          "#DDE6E8",
-          "#BDC3C8",
-          "#3D556E",
-          "",
-        ],
+        swatches: this.$store.state.settings.available_colors,
         availableGraphs: [
           {
             label: "Pie",

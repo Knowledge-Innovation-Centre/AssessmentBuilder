@@ -18,7 +18,7 @@
           <td class="aoat-w-32"><input type="text" class="aoat-w-full" v-model="option.id"></td>
           <td><input type="text" class="aoat-w-full" v-model="option.name"></td>
           <td class="aoat-w-12"><input type="number" class="aoat-w-full" v-model="option.score"></td>
-          <td class="aoat-w-12">    <v-swatches v-model="option.color"></v-swatches></td>
+          <td class="aoat-w-12">    <v-swatches :swatches="swatches" v-model="option.color"></v-swatches></td>
           <td class="aoat-w-12"><button class="aoat-h-6" @click="removeOption(index)">X</button></td>
         </tr>
         </tbody>
@@ -58,6 +58,7 @@ import "vue-swatches/dist/vue-swatches.css"
     data () {
       return {
         show: false,
+        swatches: this.$store.state.settings.available_colors,
       };
     },
     methods: {

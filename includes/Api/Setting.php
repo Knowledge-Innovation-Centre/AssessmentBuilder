@@ -43,6 +43,28 @@ class Setting extends WP_REST_Controller {
             'key'=> 'aoat_show_link_button',
             'value'=> false,
 		],
+		[
+			'label'=> 'Available colors',
+            'key'=> 'available_colors',
+            'value'=> [
+	            "#1FBC9C",
+	            "#1CA085",
+	            "#2ECC70",
+	            "#27AF60",
+	            "#3398DB",
+	            "#2980B9",
+	            "#A463BF",
+	            "#8E43AD",
+	            "#F2C511",
+	            "#F39C19",
+	            "#E84B3C",
+	            "#C0382B",
+	            "#DDE6E8",
+	            "#BDC3C8",
+	            "#3D556E",
+	            "",
+            ],
+		],
 	];
 
     /**

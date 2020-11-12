@@ -20,6 +20,14 @@
           <template v-else-if="['aoat_redirect_after_completion', 'aoat_show_link_button'].includes(setting.key)">
             <input type="checkbox" v-model="setting.value" />
           </template>
+          <template v-else-if="['available_colors'].includes(setting.key)">
+            <div v-for="(settingValue, index) in setting.value">
+              <input :key="index" type="text" v-model="setting.value[index]" />
+
+              <button @click="removeColor(setting, index)">Remove color</button>
+            </div>
+            <button @click="addColor(setting)">Add color</button>
+          </template>
           <template v-else>
             <input type="text" v-model="setting.value" />
           </template>
@@ -115,6 +123,12 @@ export default {
         })
         console.log(error);
       });
+    },
+    addColor(setting) {
+      setting.value.push("")
+    },
+    removeColor(setting, index) {
+      setting.value.splice(index, 1)
     }
   }
 };
