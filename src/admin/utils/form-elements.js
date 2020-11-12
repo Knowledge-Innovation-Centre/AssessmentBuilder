@@ -297,6 +297,8 @@ export default  [
       class: '',
       maxWidth: null,
       maxWidthUnit: 'px',
+      height: null,
+      heightUnit: 'px',
       selectedResultType: [{
         label: "Score",
         key: "score",
@@ -319,6 +321,8 @@ export default  [
       class: '',
       maxWidth: null,
       maxWidthUnit: 'px',
+      height: null,
+      heightUnit: 'px',
       selectedResultType: [{
         label: "Score",
         key: "score",

@@ -92,6 +92,18 @@ export default {
     reportData() {
       return this.$store.state.report
     },
+    myStyles () {
+      if (this.object.height) {
+        return {
+          height: this.object.height + this.object.heightUnit,
+          position: 'relative'
+        }
+      }
+      return {
+        height: `400px`,
+        position: 'relative'
+      }
+    }
   },
   methods: {
 

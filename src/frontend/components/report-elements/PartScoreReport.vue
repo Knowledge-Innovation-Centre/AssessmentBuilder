@@ -4,16 +4,16 @@
     <template v-for="graphType in object.selectedResultType">
       <div :key="graphType.key">
         <template v-if="graphType.key === 'pie'">
-          <pie-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="chartOptions"/>
+          <pie-chart v-if="chartData.datasets[0].data.length" :styles="myStyles" :chart-data="chartData" :options="chartOptions"/>
         </template>
         <template v-if="graphType.key === 'radar'">
-          <radar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="radarOptionsOptions"/>
+          <radar-chart v-if="chartData.datasets[0].data.length" :styles="myStyles" :chart-data="chartData" :options="radarOptionsOptions"/>
         </template>
         <template v-if="graphType.key === 'bar'">
-          <bar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="barOptionsOptions"/>
+          <bar-chart v-if="chartData.datasets[0].data.length" :styles="myStyles" :chart-data="chartData" :options="barOptionsOptions"/>
         </template>
         <template v-if="graphType.key === 'horizontal_bar'">
-          <horizontal-bar-chart v-if="chartData.datasets[0].data.length" :chart-data="chartData" :options="horizontalBarOptionsOptions"/>
+          <horizontal-bar-chart v-if="chartData.datasets[0].data.length" :styles="myStyles" :chart-data="chartData" :options="horizontalBarOptionsOptions"/>
         </template>
         <template v-if="graphType.key === 'score'">
           {{ score }}/{{ totalScore }}
@@ -96,6 +96,12 @@
         // this.barOptionsOptions.scales.yAxes[0].ticks.max = this.totalScore;
         // this.horizontalBarOptionsOptions.scales.xAxes[0].ticks.max = this.totalScore;
       },
+
+      getHeightStyle() {
+        if (this.object.height) {
+          return "max-height:" + this.object.height + this.object.heightUnit + ';'
+        }
+      }
     }
   };
 </script>

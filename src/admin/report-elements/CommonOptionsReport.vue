@@ -83,6 +83,13 @@
                             v-model="object.scoreGraphColor"></v-swatches>
               </td>
             </tr>
+            <tr v-if="typeof object.height !== 'undefined'">
+              <th>Max height:</th>
+              <td><input v-model="object.height" type="number"></td>
+              <td><select v-model="object.heightUnit">
+                <option value="px">px</option>
+              </select></td>
+            </tr>
             </tbody>
           </table>
         </div>
