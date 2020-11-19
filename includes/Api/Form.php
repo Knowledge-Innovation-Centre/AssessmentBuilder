@@ -39,11 +39,35 @@ class Form extends WP_REST_Controller {
         );
         register_rest_route(
             $this->namespace,
+            '/forms/',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_forms' ],
+                    'permission_callback' => [ $this, 'get_forms_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
+        register_rest_route(
+            $this->namespace,
             '/forms/(?P<id>\d+)',
             [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_form' ],
+                    'permission_callback' => [ $this, 'get_form_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
+        register_rest_route(
+            $this->namespace,
+            '/forms/(?P<id>\d+)/assessments',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_form_assessments' ],
                     'permission_callback' => [ $this, 'get_form_permissions_check' ],
                     'args'                => $this->get_collection_params(),
                 ]
@@ -109,6 +133,44 @@ class Form extends WP_REST_Controller {
 	 *
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
+    public function get_forms( WP_REST_Request $request ) {
+	    $args = [
+		    'post_type' => 'aoat_form',
+		    'post_status' => 'any',
+		    'orderby' => 'ID',
+		    'order' => 'ASC',
+	    ];
+	    $forms = get_posts($args);
+
+	    foreach ($forms as $key => $form) {
+		    $forms[$key]->form_data = get_post_meta($form->ID, 'form_data');
+	    }
+
+        return rest_ensure_response( $forms );
+    }
+
+	/**
+	 * Checks if a given request has access to read the items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
+	 */
+    public function get_forms_permissions_check( WP_REST_Request $request ) {
+	    if(is_user_logged_in()) {
+		    return true;
+	    }
+
+	    return new WP_Error( 403, __( "Permission denied", "apprenticeship-online-assessment-tool" ) );
+    }
+
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
     public function get_form( WP_REST_Request $request ) {
 	    $form= get_post($request->get_params()['id']);
 	    $form->form_data = get_post_meta($form->ID, 'form_data');
@@ -126,6 +188,28 @@ class Form extends WP_REST_Controller {
 	    $form->reports = $query;
 
         return rest_ensure_response( $form );
+    }
+
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+    public function get_form_assessments( WP_REST_Request $request ) {
+	    $form= get_post($request->get_params()['id']);
+	    $args = [
+		    'post_type' => 'aoat_assessment',
+		    'meta_key' => 'form_id',
+		    'post_status' => 'any',
+		    'meta_value' => $form->ID,
+		    'orderby' => 'ID',
+		    'order' => 'ASC',
+	    ];
+	    $assessments = get_posts($args);
+
+        return rest_ensure_response( $assessments );
     }
 
 	/**

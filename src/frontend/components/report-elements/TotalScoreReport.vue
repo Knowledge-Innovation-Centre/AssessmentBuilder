@@ -61,9 +61,8 @@ export default {
   methods: {
     setData() {
       this.chartData.labels = [];
-      for(let item of this.reportData.items) {
-        this.calculateScore(item.items);
-      }
+      this.calculateScore(this.reportData.items);
+
       if (this.score !== this.totalScore) {
         if (this.object.hideLabels) {
           this.chartData.labels.push('')

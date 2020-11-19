@@ -1,16 +1,23 @@
 <template>
   <div id="vue-frontend-app">
-    <div :class="reportData.items.length ? 'max-width-for-print' : ''">
-      <template v-if="formData.items.length" >
-        <div class="aoat-text-center">Progress</div>
-        <base-progress :percentage="percentage" class="aoat-mx-2 aoat-mb-5 aoat-h-5">
-          <span class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2">{{percentage}}%</span>
-        </base-progress>
-      </template>
-      <generic v-if="formData.items.length" :form="formData" />
-      <generic  v-if="reportData.items.length" :form="reportData" />
+    <div id="div-for-export">
+      <div :class="reportData.items.length ? 'max-width-for-print' : ''">
+        <template v-if="formData.items.length" >
+          <div class="aoat-text-center">Progress</div>
+          <base-progress :percentage="percentage" class="aoat-mx-2 aoat-mb-5 aoat-h-5">
+            <span class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2">{{percentage}}%</span>
+          </base-progress>
+        </template>
+        <generic v-if="formData.items.length" :form="formData" />
+        <generic  v-if="reportData.items.length" :form="reportData" />
+      </div>
     </div>
-    <template v-if="showLink">
+    <template v-if="exportEnabled">
+      <div class="aoat-text-center aoat-mt-10">
+        Loading PDF...please wait
+      </div>
+    </template>
+    <template v-if="showLink && !exportEnabled">
       <div class="aoat-text-center aoat-mt-4">
         <a :href="listLink">List of completed assessments</a>
       </div>

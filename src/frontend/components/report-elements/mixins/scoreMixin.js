@@ -110,6 +110,9 @@ export default {
     calculateScore(items) {
       for (let item of items) {
 
+        if(!this.checkConditions(item)) {
+          continue;
+        }
         if (item.items) {
           this.calculateScore(item.items)
           continue;
@@ -185,6 +188,35 @@ export default {
         }
       }
 
+      return true
+    },
+
+    checkConditions(item) {
+      if (!item.conditions.length) {
+        return true
+      }
+      for (let condition of item.conditions) {
+        let field = condition.field;
+        let question = condition.question;
+        let selectedOptions = condition.selectedOptions;
+        let assessment = this.$store.state.assessment;
+        if (!assessment[field]) {
+          return false
+        }
+        let assessmentValue = assessment[field];
+        if (selectedOptions) {
+          if (question) {
+            assessmentValue = assessment[field][question]
+          }
+          if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessmentValue)) {
+            return false
+          }
+        }
+
+        if (!assessmentValue === condition.value) {
+          return  false
+        }
+      }
       return true
     },
 

@@ -31,6 +31,7 @@ class Admin {
 
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = [ __( 'Add form', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/forms/create' ];
+            $submenu[ $slug ][] = [ __( 'Reports', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/reports' ];
             $submenu[ $slug ][] = [ __( 'Settings', 'apprenticeship-online-assessment-tool' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
         }
 

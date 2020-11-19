@@ -230,7 +230,7 @@
 
         setTimeout(async () => {
 
-          let element = document.getElementById('vue-frontend-app');
+          let element = document.getElementById('div-for-export');
           await html2pdf().set({
             margin: [10, 10],
             pagebreak: { mode: 'avoid-all', after: '.page' },
