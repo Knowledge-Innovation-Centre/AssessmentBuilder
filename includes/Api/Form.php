@@ -206,8 +206,13 @@ class Form extends WP_REST_Controller {
 		    'meta_value' => $form->ID,
 		    'orderby' => 'ID',
 		    'order' => 'ASC',
+		    'numberposts' => -1
 	    ];
 	    $assessments = get_posts($args);
+
+	    foreach ($assessments as $assessment) {
+		    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+	    }
 
         return rest_ensure_response( $assessments );
     }

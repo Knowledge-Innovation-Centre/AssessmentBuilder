@@ -1,40 +1,33 @@
 <template>
-    <div>
-      {{ getLabel }}
-    </div>
+  <div>
+    {{ getLabel }}
+  </div>
 </template>
 
 <script>
-  import labelMixin from "./mixins/labelMixin";
+import labelMixin from "./mixins/labelMixin";
 
-  export default {
+export default {
+  name: "CountryInputReport",
 
-    name: 'CountryInputReport',
+  components: {},
 
-    components: {
-    },
+  mixins: [labelMixin],
 
-    mixins: [
-      labelMixin
-    ],
-
-    props: {
-      object: {
-        type: Object,
-        required: true,
-      }
-    },
-
-    data () {
-      return {
-        show: false,
-      };
-    },
-
-    methods: {
+  props: {
+    object: {
+      type: Object,
+      required: true
     }
-  };
-</script>
-<style scoped>
+  },
 
-</style>
+  data() {
+    return {
+      show: false
+    };
+  },
+
+  methods: {}
+};
+</script>
+<style scoped></style>

@@ -1,21 +1,20 @@
-
 export const mutations = {
   UPDATE_FORM(state, payload) {
-    state.form = payload
+    state.form = payload;
   },
   REMOVE_FIELD(state, payload) {
     state.form.items = removeByKey(state.form.items, payload);
   },
   UPDATE_REPORT(state, payload) {
-    state.report = payload
+    state.report = payload;
   },
   UPDATE_SETTINGS(state, payload) {
-    state.settings = payload
+    state.settings = payload;
   },
   REMOVE_FIELD_REPORT(state, payload) {
     state.report.items = removeByKey(state.report.items, payload);
-  },
-}
+  }
+};
 
 function removeByKey(items, key) {
   let newItems = [];
@@ -26,7 +25,7 @@ function removeByKey(items, key) {
     if (item.items) {
       item.items = removeByKey(item.items, key);
     }
-    newItems.push(item)
+    newItems.push(item);
   }
-  return newItems
+  return newItems;
 }

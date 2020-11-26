@@ -1,19 +1,26 @@
 <template>
   <div
-      class="aoat-w-full aoat-bg-gray-200 aoat-h-2 aoat-relative aoat-overflow-hidden"
-      :class="[{'aoat-rounded-full': rounded}, { indeterminate: indeterminate}]"
+    class="aoat-w-full aoat-bg-gray-200 aoat-h-2 aoat-relative aoat-overflow-hidden"
+    :class="[
+      { 'aoat-rounded-full': rounded },
+      { indeterminate: indeterminate }
+    ]"
   >
     <div
-        class="aoat-h-full progressbar"
-        :class="[`aoat-bg-${color}-500`, {'aoat-absolute aoat-top-0': indeterminate}, {'aoat-rounded-full': rounded}]"
-        role="progressbar"
-        :style="{width: `${percentage}%`}"
-        :aria-valuenow="percentage"
-        aria-valuemin="0"
-        aria-valuemax="100"
+      class="aoat-h-full progressbar"
+      :class="[
+        `aoat-bg-${color}-500`,
+        { 'aoat-absolute aoat-top-0': indeterminate },
+        { 'aoat-rounded-full': rounded }
+      ]"
+      role="progressbar"
+      :style="{ width: `${percentage}%` }"
+      :aria-valuenow="percentage"
+      aria-valuemin="0"
+      aria-valuemax="100"
     >
       <span class="aoat-flex aoat-items-center aoat-h-full">
-        <slot></slot>
+        <slot />
       </span>
     </div>
   </div>

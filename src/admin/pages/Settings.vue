@@ -3,41 +3,56 @@
     <h2>Apprenticeship online assessment tool settings</h2>
     <table>
       <tbody>
-      <tr v-for="setting in settings" :key="setting.key">
-        <th class="aoat-text-right">{{ setting.label }}</th>
-        <td>
-          <template v-if="setting.key === 'aoat_page_for_assessments'">
-            <multiselect
+        <tr v-for="setting in settings" :key="setting.key">
+          <th class="aoat-text-right">{{ setting.label }}</th>
+          <td>
+            <template v-if="setting.key === 'aoat_page_for_assessments'">
+              <multiselect
                 v-model="setting.value"
                 :multiple="false"
                 label="post_title"
                 placeholder="Select one"
                 class="aoat-w-full"
                 track-by="ID"
-                :options="pages">
-            </multiselect>
-          </template>
-          <template v-else-if="['aoat_redirect_after_completion', 'aoat_show_link_button'].includes(setting.key)">
-            <input type="checkbox" v-model="setting.value" />
-          </template>
-          <template v-else-if="['available_colors'].includes(setting.key)">
-            <div v-for="(settingValue, index) in setting.value">
-              <input :key="index" type="text" v-model="setting.value[index]" />
+                :options="pages"
+              />
+            </template>
+            <template
+              v-else-if="
+                [
+                  'aoat_redirect_after_completion',
+                  'aoat_show_link_button'
+                ].includes(setting.key)
+              "
+            >
+              <input v-model="setting.value" type="checkbox" />
+            </template>
+            <template v-else-if="['available_colors'].includes(setting.key)">
+              <div v-for="(settingValue, index) in setting.value" :key="index">
+                <input
+                  :key="index"
+                  v-model="setting.value[index]"
+                  type="text"
+                />
 
-              <button @click="removeColor(setting, index)">Remove color</button>
-            </div>
-            <button @click="addColor(setting)">Add color</button>
-          </template>
-          <template v-else>
-            <input type="text" v-model="setting.value" />
-          </template>
-        </td>
-      </tr>
+                <button @click="removeColor(setting, index)">
+                  Remove color
+                </button>
+              </div>
+              <button @click="addColor(setting)">Add color</button>
+            </template>
+            <template v-else>
+              <input v-model="setting.value" type="text" />
+            </template>
+          </td>
+        </tr>
       </tbody>
     </table>
 
-    <button @click="saveSettings()"
-            class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow">
+    <button
+      class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+      @click="saveSettings()"
+    >
       Save settings
     </button>
   </div>
@@ -45,17 +60,16 @@
 
 <script>
 import Api from "../Api";
-import {Multiselect} from "vue-multiselect";
+import { Multiselect } from "vue-multiselect";
 
 export default {
-
-  name: 'Settings',
+  name: "Settings",
 
   components: {
     Multiselect
   },
 
-  data () {
+  data() {
     return {
       settings: [],
       pages: []
@@ -68,67 +82,68 @@ export default {
 
   methods: {
     async loadData() {
-      await Api.get(aoat_config.aoatGetPagesUrl).then((result) => {
-        this.pages = result.data
-      })
-      await Api.get(aoat_config.aoatGetSettingsUrl).then((result) => {
-        this.fillSettings(result.data)
-      })
+      await Api.get(aoat_config.aoatGetPagesUrl).then(result => {
+        this.pages = result.data;
+      });
+      await Api.get(aoat_config.aoatGetSettingsUrl).then(result => {
+        this.fillSettings(result.data);
+      });
     },
     fillSettings(responseData) {
       this.settings = [];
       for (let setting of responseData) {
-        if (setting.key === 'aoat_page_for_assessments') {
-          if (typeof setting.value !== 'object') {
-            setting.value = this.pages.find(page => page.guid === setting.value)
+        if (setting.key === "aoat_page_for_assessments") {
+          if (typeof setting.value !== "object") {
+            setting.value = this.pages.find(
+              page => page.guid === setting.value
+            );
           }
-          this.settings.push(setting)
+          this.settings.push(setting);
         } else {
-          this.settings.push(setting)
+          this.settings.push(setting);
         }
       }
     },
     prepareSettings() {
       let settings = [];
       for (let setting of this.settings) {
-        if (setting.key === 'aoat_page_for_assessments') {
+        if (setting.key === "aoat_page_for_assessments") {
           let newSetting = JSON.parse(JSON.stringify(setting));
           if (setting.value) {
-            newSetting.value = setting.value.guid
+            newSetting.value = setting.value.guid;
           } else {
-            newSetting.value = null
+            newSetting.value = null;
           }
-          settings.push(newSetting)
+          settings.push(newSetting);
         } else {
-          settings.push(setting)
+          settings.push(setting);
         }
       }
       return settings;
     },
     saveSettings() {
-      let $this = this
+      let $this = this;
       Api.post(aoat_config.aoatSaveSettingsUrl, {
         settings: this.prepareSettings()
       })
-      .then(() => {
-        $this.$notify({
-          title: 'Settings saved',
-          type: 'success',
+        .then(() => {
+          $this.$notify({
+            title: "Settings saved",
+            type: "success"
+          });
         })
-      })
-      .catch(function (error) {
-        $this.$notify({
-          title: 'Something went wrong',
-          type: 'error',
-        })
-        console.log(error);
-      });
+        .catch(function() {
+          $this.$notify({
+            title: "Something went wrong",
+            type: "error"
+          });
+        });
     },
     addColor(setting) {
-      setting.value.push("")
+      setting.value.push("");
     },
     removeColor(setting, index) {
-      setting.value.splice(index, 1)
+      setting.value.splice(index, 1);
     }
   }
 };

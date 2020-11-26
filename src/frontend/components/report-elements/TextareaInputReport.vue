@@ -6,40 +6,32 @@
 </template>
 
 <script>
+import labelMixin from "./mixins/labelMixin";
 
-  import labelMixin from "./mixins/labelMixin";
+export default {
+  name: "TextareaInputReport",
 
-  export default {
+  components: {},
 
-    name: 'TextareaInputReport',
+  mixins: [labelMixin],
 
-    components: {
-
-    },
-
-    mixins: [
-      labelMixin
-    ],
-
-    props: {
-      object: {
-        type: Object,
-        required: true,
-      }
-    },
-
-    computed: {
-      value() {
-          return this.$store.state.assessment[this.object.reportItemKey]
-      }
-    },
-
-    data () {
-      return {
-      };
-    },
-
-    methods: {
+  props: {
+    object: {
+      type: Object,
+      required: true
     }
-  };
+  },
+
+  data() {
+    return {};
+  },
+
+  computed: {
+    value() {
+      return this.$store.state.assessment[this.object.reportItemKey];
+    }
+  },
+
+  methods: {}
+};
 </script>

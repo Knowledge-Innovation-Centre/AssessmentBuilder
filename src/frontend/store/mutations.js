@@ -1,43 +1,43 @@
-import Vue from 'vue'
+import Vue from "vue";
 
 export const mutations = {
   UPDATE_FORM_ID(state, payload) {
-    state.formId = payload
+    state.formId = payload;
   },
   UPDATE_FORM_SETTINGS(state, payload) {
-    state.formSettings = payload
+    state.formSettings = payload;
   },
   UPDATE_ASSESSMENT(state, payload) {
-    state.assessment = payload
+    state.assessment = payload;
   },
   UPDATE_REPORT(state, payload) {
-    state.report = payload
+    state.report = payload;
   },
   CLEAR_ASSESSMENT(state) {
-    state.assessment = {}
+    state.assessment = {};
   },
   UPDATE_VALUE(state, payload) {
     Vue.set(state.assessment, payload.key, payload.value);
   },
   UPDATE_CURRENT_PAGE(state, payload) {
-    state.currentPage = payload
+    state.currentPage = payload;
   },
   UPDATE_USER(state, payload) {
-    Vue.set(state, 'user', payload);
+    Vue.set(state, "user", payload);
   },
   ADD_ERROR(state, payload) {
-    state.errors.push(payload)
+    state.errors.push(payload);
   },
   CLEAR_ERRORS(state) {
-    state.errors = []
+    state.errors = [];
   },
   ENABLE_EXPORT(state) {
-    state.exportEnabled = true
+    state.exportEnabled = true;
   },
   DISABLE_EXPORT(state) {
-    state.exportEnabled = false
+    state.exportEnabled = false;
   },
   UPDATE_SETTINGS(state, payload) {
-    state.settings = payload
-  },
-}
+    state.settings = payload;
+  }
+};

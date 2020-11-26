@@ -1,4 +1,3 @@
-
 export const state = () => ({
   form: {},
   report: {},
@@ -25,7 +24,7 @@ export const state = () => ({
       "#DDE6E8",
       "#BDC3C8",
       "#3D556E",
-      "",
-    ],
-  },
-})
+      ""
+    ]
+  }
+});

@@ -1,8 +1,7 @@
-
 /*
  * Import remote dependencies.
  */
-import Axios from 'axios';
+import Axios from "axios";
 
 /*
  * Create a Api object with Axios and
@@ -13,8 +12,8 @@ import Axios from 'axios';
  */
 const Api = Axios.create({
   headers: {
-    'content-type': 'application/json',
-    'X-WP-Nonce': aoat_config.nonce
+    "content-type": "application/json",
+    "X-WP-Nonce": aoat_config.nonce
   }
 });
 

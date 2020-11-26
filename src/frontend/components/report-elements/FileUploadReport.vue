@@ -2,7 +2,13 @@
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
     <template v-if="files.length">
-      <a class="" :key="media.ID" v-for="media in files" :href="media.source_url" target="_blank">
+      <a
+        v-for="media in files"
+        :key="media.ID"
+        class=""
+        :href="media.source_url"
+        target="_blank"
+      >
         {{ media.title.rendered }}
       </a>
     </template>
@@ -10,60 +16,53 @@
     <template v-else>
       <span>No files</span>
     </template>
-
   </div>
 </template>
 
 <script>
-import Api from '../../Api'
+import Api from "../../Api";
 import labelMixin from "./mixins/labelMixin";
 
-  export default {
+export default {
+  name: "TextInputReport",
 
-    name: 'TextInputReport',
+  components: {},
 
-    components: {
+  mixins: [labelMixin],
 
-    },
+  props: {
+    object: {
+      type: Object,
+      required: true
+    }
+  },
 
-    mixins: [
-      labelMixin
-    ],
+  data() {
+    return {
+      files: []
+    };
+  },
 
-    props: {
-      object: {
-        type: Object,
-        required: true,
-      }
-    },
+  computed: {
+    value() {
+      return this.$store.state.assessment[this.object.reportItemKey];
+    }
+  },
 
-    data() {
-      return {
-        files: []
-      }
-    },
+  mounted() {
+    this.getMedia();
+  },
 
-    computed: {
-      value() {
-        return this.$store.state.assessment[this.object.reportItemKey]
-      },
-    },
-
-    mounted() {
-      this.getMedia()
-    },
-
-    methods: {
-      getMedia() {
-        if (this.value) {
-          for (let value of this.value) {
-            Api.get(aoat_config.aoatGetMediaUrl + value).then(response => {
-              this.files.push( response.data)
-            })
-          }
+  methods: {
+    getMedia() {
+      if (this.value) {
+        for (let value of this.value) {
+          Api.get(aoat_config.aoatGetMediaUrl + value).then(response => {
+            this.files.push(response.data);
+          });
         }
       }
     }
-
-  };
+  }
+};
 </script>

@@ -4,7 +4,6 @@ import BarChart from "../BarChart";
 import HorizontalBarChart from "../HorizontalBarChart";
 
 export default {
-
   components: {
     PieChart,
     RadarChart,
@@ -12,14 +11,13 @@ export default {
     HorizontalBarChart
   },
 
-
-  data () {
+  data() {
     return {
       chartData: {
         labels: [],
         datasets: [
           {
-            label: '',
+            label: "",
             backgroundColor: [],
             data: [],
             fill: false
@@ -28,19 +26,19 @@ export default {
       },
       chartOptions: {
         animation: {
-          duration: 500,
+          duration: 500
         },
         responsive: true,
         maintainAspectRatio: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff"
       },
       radarOptionsOptions: {
         animation: {
-          duration: 500,
+          duration: 500
         },
         responsive: true,
         maintainAspectRatio: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         scale: {
           ticks: {
             min: 0
@@ -49,77 +47,78 @@ export default {
       },
       barOptionsOptions: {
         animation: {
-          duration: 500,
+          duration: 500
         },
         responsive: true,
         maintainAspectRatio: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
             }
-          }]
+          ]
         }
       },
       horizontalBarOptionsOptions: {
         animation: {
-          duration: 500,
+          duration: 500
         },
         responsive: true,
         maintainAspectRatio: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: "#ffffff",
         scales: {
-          xAxes: [{
-            ticks: {
-              beginAtZero: true
+          xAxes: [
+            {
+              ticks: {
+                beginAtZero: true
+              }
             }
-          }]
+          ]
         }
       },
       graphArray: [],
       colors: [],
       score: 0,
       totalScore: 0,
-      alreadyIncludedElementsForScores: [],
+      alreadyIncludedElementsForScores: []
     };
   },
 
   computed: {
     value() {
-      return this.$store.state.assessment[this.object.reportItemKey]
+      return this.$store.state.assessment[this.object.reportItemKey];
     },
     reportData() {
-      return this.$store.state.report
+      return this.$store.state.report;
     },
-    myStyles () {
+    myStyles() {
       if (this.object.height) {
         return {
           height: this.object.height + this.object.heightUnit,
-          position: 'relative'
-        }
+          position: "relative"
+        };
       }
       return {
         height: `400px`,
-        position: 'relative'
-      }
+        position: "relative"
+      };
     }
   },
   methods: {
-
     calculateScore(items) {
       for (let item of items) {
-
-        if(!this.checkConditions(item)) {
+        if (!this.checkConditions(item)) {
           continue;
         }
         if (item.items) {
-          this.calculateScore(item.items)
+          this.calculateScore(item.items);
           continue;
         }
 
-        let value = this.$store.state.assessment[item.reportItemKey]
-
+        let value = this.$store.state.assessment[item.reportItemKey];
 
         if (item.disableForScoring) {
           continue;
@@ -128,103 +127,115 @@ export default {
         if (!item.options && !item.optionsVertical) {
           continue;
         }
-        if (this.alreadyIncludedElementsForScores.includes(item.reportItemKey)) {
-          continue
+        if (
+          this.alreadyIncludedElementsForScores.includes(item.reportItemKey)
+        ) {
+          continue;
         }
-        this.alreadyIncludedElementsForScores.push(item.reportItemKey)
+        this.alreadyIncludedElementsForScores.push(item.reportItemKey);
 
         let maxScore = 0;
 
         if (this.object.hideLabels) {
-          this.chartData.labels.push('')
+          this.chartData.labels.push("");
         } else {
-          this.chartData.labels.push(this.getItemLabel(item))
+          this.chartData.labels.push(this.getItemLabel(item));
         }
 
-        if (item.type === 'radio_grid') {
+        if (item.type === "radio_grid") {
           for (let option of item.optionsVertical) {
             if (maxScore < option.score) {
-              maxScore = parseInt(option.score)
+              maxScore = parseInt(option.score);
             }
           }
-          this.totalScore += maxScore * item.optionsHorizontal.length
+          this.totalScore += maxScore * item.optionsHorizontal.length;
 
           if (!value) {
             continue;
           }
           let localScore = 0;
           for (let option of item.optionsHorizontal) {
-            let verticalOption = item.optionsVertical.find(optionVertical => optionVertical.id === value[option.id])
+            let verticalOption = item.optionsVertical.find(
+              optionVertical => optionVertical.id === value[option.id]
+            );
             if (verticalOption) {
-              this.score += parseInt(verticalOption.score)
-              localScore += parseInt(verticalOption.score)
+              this.score += parseInt(verticalOption.score);
+              localScore += parseInt(verticalOption.score);
             }
           }
-          this.colors.push(this.getScoreGraphColor(item))
-          this.graphArray.push(localScore)
-
-        } else if(item.options) {
+          this.colors.push(this.getScoreGraphColor(item));
+          this.graphArray.push(localScore);
+        } else if (item.options) {
           for (let option of item.options) {
             if (maxScore < option.score) {
-              maxScore = parseInt(option.score)
+              maxScore = parseInt(option.score);
             }
           }
 
-          this.totalScore += maxScore
+          this.totalScore += maxScore;
 
           if (!value) {
             continue;
           }
-          let verticalOption = item.options.find(optionVertical => optionVertical.id === value)
+          let verticalOption = item.options.find(
+            optionVertical => optionVertical.id === value
+          );
 
           let localScore = 0;
           if (verticalOption) {
-            this.score += parseInt(verticalOption.score)
-            localScore += parseInt(verticalOption.score)
+            this.score += parseInt(verticalOption.score);
+            localScore += parseInt(verticalOption.score);
           }
 
-          this.colors.push(this.getScoreGraphColor(item))
-          this.graphArray.push(localScore)
+          this.colors.push(this.getScoreGraphColor(item));
+          this.graphArray.push(localScore);
         }
       }
 
-      return true
+      return true;
     },
 
-    checkConditions(item) {
+    checkConditions(item, assessment = null) {
       if (!item.conditions.length) {
-        return true
+        return true;
+      }
+      console.log(assessment);
+      if (!assessment) {
+        assessment = this.$store.state.assessment;
       }
       for (let condition of item.conditions) {
         let field = condition.field;
         let question = condition.question;
         let selectedOptions = condition.selectedOptions;
-        let assessment = this.$store.state.assessment;
         if (!assessment[field]) {
-          return false
+          return false;
         }
         let assessmentValue = assessment[field];
         if (selectedOptions) {
           if (question) {
-            assessmentValue = assessment[field][question]
+            assessmentValue = assessment[field][question];
           }
-          if (!selectedOptions.map(selectedOption => selectedOption.id).includes(assessmentValue)) {
-            return false
+          if (
+            !selectedOptions
+              .map(selectedOption => selectedOption.id)
+              .includes(assessmentValue)
+          ) {
+            return false;
           }
         }
 
         if (!assessmentValue === condition.value) {
-          return  false
+          return false;
         }
       }
-      return true
+      return true;
     },
 
     getItemLabel(item) {
-      if (item.reportLabel &&  item.reportLabel !== '') {
-        return item.reportLabel
+      if (item.reportLabel && item.reportLabel !== "") {
+        return item.reportLabel;
       }
-      return item.label
-    },
+      return item.label;
+    }
   }
-}
+};

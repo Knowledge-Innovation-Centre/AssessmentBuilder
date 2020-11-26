@@ -2,55 +2,51 @@
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
     {{ date }}
-    </div>
+  </div>
 </template>
 
 <script>
+import labelMixin from "./mixins/labelMixin";
 
-  import labelMixin from "./mixins/labelMixin";
+export default {
+  name: "DateInputReport",
 
-  export default {
+  components: {},
 
-    name: 'DateInputReport',
+  mixins: [labelMixin],
 
-    components: {
+  props: {
+    object: {
+      type: Object,
+      required: true
+    }
+  },
 
-    },
+  data() {
+    return {
+      date: ""
+    };
+  },
 
-    mixins: [
-      labelMixin
-    ],
+  computed: {
+    value() {
+      return this.$store.state.assessment[this.object.reportItemKey];
+    }
+  },
 
-    props: {
-      object: {
-        type: Object,
-        required: true,
-      }
-    },
+  mounted() {
+    this.setDate();
+  },
 
-    computed: {
-      value() {
-          return this.$store.state.assessment[this.object.reportItemKey]
-      }
-    },
-
-    data () {
-      return {
-        date: ""
-      };
-    },
-
-    mounted() {
-      this.setDate()
-    },
-
-    methods: {
-      setDate() {
-        if (this.value) {
-          let date = new Date(this.value);
-          this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join('.')
-        }
+  methods: {
+    setDate() {
+      if (this.value) {
+        let date = new Date(this.value);
+        this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join(
+          "."
+        );
       }
     }
-  };
+  }
+};
 </script>
