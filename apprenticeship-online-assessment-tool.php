@@ -272,12 +272,22 @@ final class Apprenticeship_Online_Assessment_Tool {
 
 		$user = wp_get_current_user();
 
-		if (!is_admin() && isset($query->query['post_type']) && $query->query['post_type'] == 'aoat_assessment'){
+		if (is_admin()) {
+		    return $query;
+        }
+
+        if (wp_is_json_request()) {
+		    return $query;
+        }
+
+		if (isset($query->query['post_type']) && $query->query['post_type'] == 'aoat_assessment'){
 			if ( is_user_logged_in()) {
 				$query->set( 'author', $user->ID );
+				$query->set( 'posts_per_page', -1 );
 			} else {
 				// do not show anything
 				$query->set( 'author', 99999999 );
+				$query->set( 'posts_per_page', -1 );
 			}
 		}
 

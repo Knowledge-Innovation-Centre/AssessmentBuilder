@@ -8,6 +8,8 @@
       :class="hasError ? 'aoat-border-red-400' : ''"
       :style="getWidthStyle"
       :placeholder="object.placeholder"
+      value-type="format"
+      format="YYYY-MM-DD"
     />
   </div>
 </template>

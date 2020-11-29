@@ -42,9 +42,11 @@ export default {
     setDate() {
       if (this.value) {
         let date = new Date(this.value);
-        this.date = [date.getDay(), date.getMonth(), date.getFullYear()].join(
-          "."
-        );
+        this.date = [
+          date.getDate(),
+          date.getMonth() + 1,
+          date.getFullYear()
+        ].join(".");
       }
     }
   }

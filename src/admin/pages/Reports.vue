@@ -14,7 +14,7 @@
     </div>
     <div v-if="selectedForm">
       <div class="aoat-flex">
-        <div class="aoat-w-1/5 aoat-px-2">
+        <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
             <div
               class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
@@ -36,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="aoat-w-1/5 aoat-px-2">
+        <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
             <div
               class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
@@ -58,7 +58,7 @@
             </div>
           </div>
         </div>
-        <div class="aoat-w-1/5 aoat-px-2">
+        <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
             <div
               class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
@@ -74,13 +74,13 @@
                 <h3
                   class="aoat-text-3xl aoat-text-gray-700 aoat-font-semibold aoat-leading-tight aoat-my-3"
                 >
-                  {{ assessments.length }}
+                  {{ scoreLabels.length }}
                 </h3>
               </div>
             </div>
           </div>
         </div>
-        <div class="aoat-w-1/5 aoat-px-2">
+        <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
             <div
               class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
@@ -111,7 +111,7 @@
       <div class="aoat-w-full aoat-px-2">
         <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
           <div
-            class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+            class="aoat-overflow-auto aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative"
           >
             <table
               id="table-to-export"
@@ -121,26 +121,37 @@
                 <tr class="aoat-border-b">
                   <th
                     class="aoat-text-left aoat-p-3 aoat-px-5"
-                    style="width: 200px;"
+                    style="min-width: 200px;"
                   >
                     Groups
                   </th>
                   <th
                     class="aoat-text-left aoat-p-3 aoat-px-5"
-                    style="width: 300px;"
+                    style="min-width: 300px; width: 300px;"
                   >
                     Assessment
                   </th>
                   <th
+                    class="aoat-text-left aoat-p-3 aoat-px-5"
+                    style="min-width: 200px; width: 200px;"
+                  >
+                    User
+                  </th>
+                  <th
                     v-for="scoreLabel in scoreLabels"
                     :key="scoreLabel"
-                    class="aoat-text-left aoat-p-3 aoat-px-5"
+                    class="aoat-text-right aoat-p-3 aoat-px-5"
                   >
                     {{ scoreLabel }}
                   </th>
+                  <th
+                    class="aoat-text-right aoat-p-3 aoat-px-5"
+                    style="min-width: 200px; width: 200px;"
+                  >
+                    Total score
+                  </th>
                 </tr>
               </thead>
-
               <tbody>
                 <tr
                   v-for="(assessment, index) in assessments"
@@ -168,31 +179,43 @@
                   <th class="aoat-px-5 aoat-text-left">
                     {{ assessment.post_title }}
                   </th>
+                  <th class="aoat-px-5 aoat-text-left">
+                    {{ assessment.user }}
+                  </th>
                   <td
                     v-for="(scoreValue, reportKey) in scoreValuesDefault"
                     :key="reportKey"
-                    class="aoat-px-5"
+                    class="aoat-px-5 aoat-text-right"
                   >
                     {{ scoreValue[assessment.ID] }}
                   </td>
+                  <th class="aoat-px-5 aoat-text-right">
+                    {{ assessmentsScores[assessment.ID.toString()].score }} /
+                    {{ assessmentsScores[assessment.ID.toString()].totalScore }}
+                  </th>
                 </tr>
               </tbody>
               <tfoot>
                 <tr
                   v-for="(scoreValueItems, groupKey) in scoreValues"
                   :key="groupKey"
-                  class="aoat-border-b"
+                  class=""
                 >
+                  <th class="aoat-text-left aoat-p-3 aoat-px-5" />
                   <th class="aoat-text-left aoat-p-3 aoat-px-5" />
                   <th class="aoat-text-left aoat-p-3 aoat-px-5">
                     {{ getGroupName(groupKey) }}
                   </th>
                   <td
-                    v-for="(scoreValueItem, reportKey) in scoreValueItems"
+                    v-for="(scoreValuesDefaultItem,
+                    reportKey) in scoreValuesDefault"
                     :key="reportKey"
-                    class="aoat-text-left aoat-p-3 aoat-px-5"
+                    class="aoat-text-right aoat-p-3 aoat-px-5"
                   >
-                    {{ getMediumValue(scoreValueItem) }}
+                    <span v-if="scoreValueItems[reportKey]">
+                      {{ getMediumValue(scoreValueItems[reportKey]) }}
+                    </span>
+                    <span v-else>0</span>
                   </td>
                 </tr>
               </tfoot>
@@ -202,7 +225,7 @@
       </div>
 
       <div class="aoat-flex">
-        <div class="aoat-w-2/5 aoat-px-2">
+        <div class="aoat-w-1/3 aoat-px-2">
           <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
             <div
               class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
@@ -214,14 +237,39 @@
                 :options="radarOptionsOptions"
                 :update-data="updateData"
               />
+            </div>
+          </div>
+        </div>
+        <div class="aoat-w-1/3 aoat-px-2">
+          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+            <div
+              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+            >
               <pie-chart
                 v-if="chartDataUsers.datasets[0].data.length"
                 :styles="myStyles"
-                :chart-data="chartData"
+                :chart-data="chartDataUsers"
                 :options="chartOptions"
                 :update-data="updateData"
               />
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="aoat-flex">
+      <div class="aoat-w-full aoat-px-2">
+        <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div
+            class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+          >
+            <line-chart
+              v-if="chartTimeline.datasets[0].data.length"
+              :styles="myStyles"
+              :chart-data="chartTimeline"
+              :options="timelineOptions"
+              :update-data="updateData"
+            />
           </div>
         </div>
       </div>
@@ -231,7 +279,7 @@
 
 <script>
 import Api from "../Api";
-import RadarChart from "../../frontend/components/report-elements/RadarChart";
+import LineChart from "../../frontend/components/report-elements/LineChart";
 import scoreMixin from "../../frontend/components/report-elements/mixins/scoreMixin";
 import XLSX from "xlsx";
 
@@ -239,7 +287,7 @@ export default {
   name: "Reports",
 
   components: {
-    RadarChart
+    LineChart
   },
 
   mixins: [scoreMixin],
@@ -259,6 +307,7 @@ export default {
         group2: {},
         group3: {}
       },
+      assessmentsScores: {},
       alreadyIncludedElementsForLabels: [],
       alreadyIncludedElementsForScores: {},
       groups: [
@@ -327,11 +376,79 @@ export default {
         datasets: [
           {
             label: "",
-            borderColor: "",
+            backgroundColor: [],
             data: [],
             fill: false
           }
         ]
+      },
+      chartTimeline: {
+        datasets: [
+          {
+            label: "",
+            data: [],
+            borderWidth: 2,
+            lineTension: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.0)"
+          },
+          {
+            label: "",
+            data: [],
+            borderWidth: 2,
+            lineTension: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.0)"
+          },
+          {
+            label: "",
+            data: [],
+            borderWidth: 2,
+            lineTension: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.0)"
+          },
+          {
+            label: "",
+            data: [],
+            borderWidth: 2,
+            lineTension: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.0)"
+          }
+        ]
+      },
+      timelineOptions: {
+        animation: {
+          duration: 500
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        backgroundColor: "#ffffff",
+        legend: {
+          display: true
+        },
+        scales: {
+          yAxes: [
+            {
+              ticks: {
+                display: true,
+                beginAtZero: true
+              },
+              gridLines: {
+                display: true
+              }
+            }
+          ],
+          xAxes: [
+            {
+              type: "time",
+              time: {
+                unit: "week",
+                tooltipFormat: "MMM DD"
+              },
+              gridLines: {
+                display: true
+              }
+            }
+          ]
+        }
       }
     };
   },
@@ -386,18 +503,53 @@ export default {
         group2: {},
         group3: {}
       };
+      this.assessmentsScores = {};
       this.alreadyIncludedElementsForScores = {};
       this.alreadyIncludedElementsForLabels = [];
       this.uniqueUsers = {};
+      this.chartDataUsers.labels = [];
       for (let assessment of this.assessments) {
         if (!this.uniqueUsers[assessment.post_author]) {
+          this.chartDataUsers.labels.push(assessment.user);
           this.uniqueUsers[assessment.post_author] = [];
         }
-        this.uniqueUsers[assessment.post_author].push(assessment.ID);
-
+        let assessmentId = assessment.ID.toString();
+        this.uniqueUsers[assessment.post_author].push(assessmentId);
+        this.assessmentsScores[assessmentId] = {};
+        this.assessmentsScores[assessmentId].totalScore = 0;
+        this.assessmentsScores[assessmentId].score = 0;
+        this.assessmentsScores[assessmentId].date = assessment.post_date;
         this.alreadyIncludedElementsForScores[assessment.ID.toString()] = [];
         this.calculateScore(this.selectedForm.form_data[0].items, assessment);
       }
+
+      Object.keys(this.groups).forEach(groupIndex => {
+        let groupKey = this.groups[groupIndex].key;
+        this.chartTimeline.datasets[groupIndex].label = this.groups[
+          groupIndex
+        ].key;
+        this.chartTimeline.datasets[
+          groupIndex
+        ].borderColor = this.getGroupColor(groupKey);
+        this.chartTimeline.datasets[groupIndex].data = [];
+        Object.keys(this.groupsToAverage[groupKey]).forEach(assessmentIndex => {
+          let assessmentId = this.groupsToAverage[groupKey][assessmentIndex];
+
+          this.chartTimeline.datasets[groupIndex].data.push({
+            x: this.assessmentsScores[assessmentId].date,
+            y: this.assessmentsScores[assessmentId].score
+          });
+        });
+      });
+
+      this.chartDataUsers.datasets[0].backgroundColor = [];
+      this.chartDataUsers.datasets[0].data = [];
+      Object.keys(this.uniqueUsers).forEach(key => {
+        this.chartDataUsers.datasets[0].backgroundColor.push(
+          this.getRandomColor()
+        );
+        this.chartDataUsers.datasets[0].data.push(this.uniqueUsers[key].length);
+      });
 
       let index = 0;
       Object.keys(this.scoreValues).forEach(key => {
@@ -444,8 +596,6 @@ export default {
           item.reportItemKey
         );
 
-        let maxScore = 0;
-
         if (
           !this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)
         ) {
@@ -476,6 +626,8 @@ export default {
         if (!value) {
           continue;
         }
+        let localScore = 0;
+        let maxScore = 0;
 
         if (item.type === "radio_grid") {
           for (let option of item.optionsVertical) {
@@ -483,25 +635,17 @@ export default {
               maxScore = parseInt(option.score);
             }
           }
-          this.totalScore += maxScore * item.optionsHorizontal.length;
+          this.assessmentsScores[assessmentId].totalScore +=
+            maxScore * item.optionsHorizontal.length;
 
-          let localScore = 0;
           for (let option of item.optionsHorizontal) {
             let verticalOption = item.optionsVertical.find(
               optionVertical => optionVertical.id === value[option.id]
             );
             if (verticalOption) {
-              this.score += parseInt(verticalOption.score);
               localScore += parseInt(verticalOption.score);
             }
           }
-
-          this.scoreValues[group][item.reportItemKey][
-            assessmentId
-          ] = localScore;
-          this.scoreValuesDefault[item.reportItemKey][
-            assessmentId
-          ] = localScore;
         } else if (item.options) {
           for (let option of item.options) {
             if (maxScore < option.score) {
@@ -509,25 +653,19 @@ export default {
             }
           }
 
-          this.totalScore += maxScore;
+          this.assessmentsScores[assessmentId].totalScore += maxScore;
 
           let verticalOption = item.options.find(
             optionVertical => optionVertical.id === value
           );
 
-          let localScore = 0;
           if (verticalOption) {
-            this.score += parseInt(verticalOption.score);
             localScore += parseInt(verticalOption.score);
           }
-
-          this.scoreValues[group][item.reportItemKey][
-            assessmentId
-          ] = localScore;
-          this.scoreValuesDefault[item.reportItemKey][
-            assessmentId
-          ] = localScore;
         }
+        this.assessmentsScores[assessmentId].score += localScore;
+        this.scoreValues[group][item.reportItemKey][assessmentId] = localScore;
+        this.scoreValuesDefault[item.reportItemKey][assessmentId] = localScore;
       }
 
       return true;
@@ -540,6 +678,8 @@ export default {
         count++;
         sum += values[key];
       });
+
+      console.log(Math.round((sum / count) * 100) / 100);
 
       return Math.round((sum / count) * 100) / 100;
     },
@@ -569,6 +709,9 @@ export default {
     },
     getGroupColor(groupKey) {
       return this.groups.find(group => group.key === groupKey).color;
+    },
+    getRandomColor() {
+      return "#" + Math.floor(Math.random() * 16777215).toString(16);
     }
   }
 };

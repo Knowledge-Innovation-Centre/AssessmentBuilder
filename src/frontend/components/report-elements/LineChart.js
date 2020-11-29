@@ -1,7 +1,7 @@
-import { Pie } from "vue-chartjs";
+import { Line } from "vue-chartjs";
 
 export default {
-  extends: Pie,
+  extends: Line,
   props: {
     chartData: {
       type: Object,

@@ -1,7 +1,7 @@
 import "../../assets/scss/frontend.scss";
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
+// import router from "./router";
 import store from "./store";
 import Vuex from "vuex";
 import commonMixin from "./mixins/commonMixin";
@@ -15,7 +15,7 @@ if (document.getElementById("vue-frontend-app")) {
   new Vue({
     store,
     el: "#vue-frontend-app",
-    router,
+    // router,
     render: h => h(App)
   });
 }
