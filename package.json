@@ -15,7 +15,6 @@
     "filepond": "^4.20.1",
     "filepond-plugin-file-validate-size": "^2.2.2",
     "filepond-plugin-file-validate-type": "^1.2.5",
-    "jspdf": "^2.1.1",
     "lodash": "^4.17.20",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",

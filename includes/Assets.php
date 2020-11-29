@@ -64,41 +64,41 @@ class Assets {
      */
     public function get_scripts() {
         $scripts = [
-            // 'apprenticeship-online-assessment-tool-runtime' => [
-            //    'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/runtime.js',
-            //    'in_footer' => true
-            // ],
-            // 'apprenticeship-online-assessment-tool-vendor' => [
-            //    'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/vendors.js',
-            //    'in_footer' => true
-            // ],
-            // 'apprenticeship-online-assessment-tool-frontend' => [
-            //    'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/frontend.js',
-            //    'deps'      => [ 'jquery' ],
-            //    'in_footer' => true
-            // ],
-            // 'apprenticeship-online-assessment-tool-admin' => [
-            //    'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/admin.js',
-            //    'deps'      => [ 'jquery' ],
-            //    'in_footer' => true
-            // ],
+            'apprenticeship-online-assessment-tool-runtime' => [
+               'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/runtime.js',
+               'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-vendor' => [
+               'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/vendors.js',
+               'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-frontend' => [
+               'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/frontend.js',
+               'deps'      => [ 'jquery' ],
+               'in_footer' => true
+            ],
+            'apprenticeship-online-assessment-tool-admin' => [
+               'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/admin.js',
+               'deps'      => [ 'jquery' ],
+               'in_footer' => true
+            ],
             'apprenticeship-online-assessment-tool-frontend-pdf' => [
                 'src'       => APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/js/html2pdf.bundle.min.js',
                 'deps'      => [ 'jquery' ],
                 'in_footer' => true
             ],
-            'apprenticeship-online-assessment-tool-frontend' => [
-                'src'       => 'http://localhost:8080/frontend.js',
-                'deps'      => [ 'jquery' ],
-                'version'   => '',
-                'in_footer' => true
-            ],
-            'apprenticeship-online-assessment-tool-admin' => [
-                'src'       => 'http://localhost:8080/admin.js',
-                'deps'      => [ 'jquery' ],
-                'version'   => '',
-                'in_footer' => true
-            ],
+            // 'apprenticeship-online-assessment-tool-frontend' => [
+            //     'src'       => 'http://localhost:8080/frontend.js',
+            //     'deps'      => [ 'jquery' ],
+            //     'version'   => '',
+            //     'in_footer' => true
+            // ],
+            // 'apprenticeship-online-assessment-tool-admin' => [
+            //     'src'       => 'http://localhost:8080/admin.js',
+            //     'deps'      => [ 'jquery' ],
+            //     'version'   => '',
+            //     'in_footer' => true
+            // ],
         ];
 
         return $scripts;
@@ -112,18 +112,18 @@ class Assets {
     public function get_styles() {
 
         $styles = [
-            // 'apprenticeship-online-assessment-tool-style' => [
-            //    'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/style.css'
-            // ],
-            // 'apprenticeship-online-assessment-tool-frontend' => [
-            //    'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/frontend.css'
-            // ],
-            // 'apprenticeship-online-assessment-tool-admin' => [
-            //    'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.css'
-            // ],
-            // 'apprenticeship-online-assessment-tool-admin-extend' => [
-            //    'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.extend.css'
-            // ],
+            'apprenticeship-online-assessment-tool-style' => [
+               'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/style.css'
+            ],
+            'apprenticeship-online-assessment-tool-frontend' => [
+               'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/frontend.css'
+            ],
+            'apprenticeship-online-assessment-tool-admin' => [
+               'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.css'
+            ],
+            'apprenticeship-online-assessment-tool-admin-extend' => [
+               'src' =>  APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS . '/css/admin.extend.css'
+            ],
         ];
 
         return $styles;

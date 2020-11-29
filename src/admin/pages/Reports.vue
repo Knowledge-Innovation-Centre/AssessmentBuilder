@@ -15,9 +15,9 @@
     <div v-if="selectedForm">
       <div class="aoat-flex">
         <div class="aoat-w-1/4 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
@@ -37,9 +37,9 @@
           </div>
         </div>
         <div class="aoat-w-1/4 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
@@ -59,9 +59,9 @@
           </div>
         </div>
         <div class="aoat-w-1/4 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
@@ -81,9 +81,9 @@
           </div>
         </div>
         <div class="aoat-w-1/4 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
@@ -109,9 +109,9 @@
         </div>
       </div>
       <div class="aoat-w-full aoat-px-2">
-        <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+        <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
           <div
-            class="aoat-overflow-auto aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative"
+            class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative"
           >
             <table
               id="table-to-export"
@@ -226,9 +226,9 @@
 
       <div class="aoat-flex">
         <div class="aoat-w-1/3 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <radar-chart
                 v-if="chartData.datasets[0].data.length"
@@ -241,9 +241,9 @@
           </div>
         </div>
         <div class="aoat-w-1/3 aoat-px-2">
-          <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <pie-chart
                 v-if="chartDataUsers.datasets[0].data.length"
@@ -259,9 +259,9 @@
     </div>
     <div class="aoat-flex">
       <div class="aoat-w-full aoat-px-2">
-        <div class="aoat-rounded-lg aoat-shadow-sm aoat-mb-4">
+        <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
           <div
-            class="aoat-rounded-lg aoat-bg-white aoat-shadow-lg md:aoat-shadow-xl aoat-relative aoat-overflow-hidden"
+            class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
           >
             <line-chart
               v-if="chartTimeline.datasets[0].data.length"
