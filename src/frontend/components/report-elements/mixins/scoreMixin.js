@@ -159,6 +159,8 @@ export default {
               optionVertical => optionVertical.id === value[option.id]
             );
             if (verticalOption) {
+              console.log(item);
+              console.log(verticalOption);
               this.score += parseInt(verticalOption.score);
               localScore += parseInt(verticalOption.score);
             }
@@ -183,6 +185,8 @@ export default {
 
           let localScore = 0;
           if (verticalOption) {
+            console.log(item);
+            console.log(verticalOption);
             this.score += parseInt(verticalOption.score);
             localScore += parseInt(verticalOption.score);
           }
@@ -199,7 +203,7 @@ export default {
       if (!item.conditions.length) {
         return true;
       }
-      console.log(assessment);
+
       if (!assessment) {
         assessment = this.$store.state.assessment;
       }

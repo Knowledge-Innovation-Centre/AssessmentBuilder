@@ -272,7 +272,7 @@ final class Apprenticeship_Online_Assessment_Tool {
 
 		$user = wp_get_current_user();
 
-		if (is_admin()) {
+		if (current_user_can('administrator')) {
 		    return $query;
         }
 
