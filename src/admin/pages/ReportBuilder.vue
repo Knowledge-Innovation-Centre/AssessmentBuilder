@@ -62,7 +62,7 @@
         </div>
       </div>
       <div
-        class="aoat-h-full background-grey aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-max-h-screen aoat-overflow-y-scroll"
+        class="aoat-sidebar background-grey aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-overflow-y-scroll"
       >
         <div class="aoat-text-center aoat-mb-6">
           <button
