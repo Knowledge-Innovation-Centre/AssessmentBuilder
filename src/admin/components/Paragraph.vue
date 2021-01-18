@@ -1,5 +1,5 @@
 <template>
-  <div class="background-grey">
+  <div class="aoat-bg-blue-300">
     <editor
       v-model="object.label"
       api-key="lho3l6oj8tvr7qmrxxmj3i4t8zwc6nk7h1ic415l2dyjzmt1"

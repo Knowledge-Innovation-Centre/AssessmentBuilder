@@ -8,7 +8,7 @@
       column: form.type === 'column',
       row: form.type === 'row',
       'aoat-bg-white': ['page', 'form', 'report'].includes(form.type),
-      'background-grey': !['page', 'form', 'report'].includes(form.type)
+      'aoat-bg-blue-300': !['page', 'form', 'report'].includes(form.type)
     }"
   >
     <legend>{{ form.name }}</legend>

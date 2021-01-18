@@ -91,14 +91,14 @@
         <generic :depth="0" :form="formData" class="root" />
         <div class="aoat-text-center aoat-mt-5">
           <button
-            class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+            class="aoat-p-3 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
             @click="save()"
           >
             Save
           </button>
 
           <button
-            class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+            class="aoat-p-3 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
             @click="downloadJson()"
           >
             Export
@@ -115,7 +115,7 @@
           >
             <template v-slot:trigger>
               <button
-                class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-py-2 aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+                class="aoat-p-3 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
               >
                 Import...
               </button>
@@ -126,38 +126,44 @@
         </div>
       </div>
       <div
-        class="aoat-sidebar aoat-bg-gray-300 aoat-top-2 aoat-rounded aoat-sticky aoat-p-4 aoat-overflow-y-scroll"
+        class="aoat-sidebar aoat-bg-blue-300 aoat-top-2 aoat-sticky aoat-overflow-y-scroll"
       >
-        <div class="aoat-text-center aoat-mb-6">
+        <div class="aoat-text-center">
           <button
-            class="aoat-bg-white aoat-py-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+            class="aoat-w-full aoat-py-4 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
             @click="save()"
           >
             Save
           </button>
         </div>
-        <h2 class="aoat-mt-0">Builder elements</h2>
-        <div>
+        <div class="aoat-p-4">
+          <h2 class="aoat-uppercase aoat-text-blue-700 aoat-text-xs">
+            Builder elements
+          </h2>
+          <div>
+            <drag
+              v-for="element in availableBuilderElements"
+              :key="element.key"
+              class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
+              :data="element"
+              @cut="remove(element)"
+            >
+              {{ element.name }}
+            </drag>
+          </div>
+          <h2 class="aoat-mt-6 aoat-uppercase aoat-text-blue-700 aoat-text-xs">
+            Form elements
+          </h2>
           <drag
-            v-for="element in availableBuilderElements"
+            v-for="element in availableFormElements"
             :key="element.key"
-            class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+            class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
             :data="element"
             @cut="remove(element)"
           >
             {{ element.name }}
           </drag>
         </div>
-        <h2 class="aoat-mt-6">Form elements</h2>
-        <drag
-          v-for="element in availableFormElements"
-          :key="element.key"
-          class="aoat-bg-white aoat-py-2 aoat-text-center aoat-mb-2 aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
-          :data="element"
-          @cut="remove(element)"
-        >
-          {{ element.name }}
-        </drag>
       </div>
     </div>
   </div>
