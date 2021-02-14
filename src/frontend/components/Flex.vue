@@ -56,6 +56,9 @@
 
 <script>
 import Api from "../Api";
+import { jsPDF } from "jspdf";
+
+import "jspdf-autotable";
 
 export default {
   name: "Flex",
@@ -72,7 +75,9 @@ export default {
       currentPage: 0,
       title: "",
       message: null,
-      errors: []
+      errors: [],
+      currentIndex: 0,
+      itemsForPdf: {}
     };
   },
   computed: {
@@ -244,11 +249,127 @@ export default {
       return true;
     },
 
+    getItemsFlatList(items) {
+      let index = 0;
+      for (let object of items) {
+        if (object.items && object.items.length) {
+          this.getItemsFlatList(object.items);
+          // if (key) {
+          // } else {
+          //   this.getItemsFlatList(object.items, index.toString());
+          // }
+
+          console.log(object.type);
+          if (object.type === "column") {
+            this.currentIndex++;
+          }
+          continue;
+        }
+        if (!this.itemsForPdf[this.currentIndex]) {
+          this.itemsForPdf[this.currentIndex] = [];
+        }
+        //
+        // if (key) {
+        //   if (!this.itemsForPdf[key]) {
+        //     this.itemsForPdf[key] = [];
+        //   }
+        //   this.itemsForPdf[key].push(object);
+        // } else {
+        //   if (!this.itemsForPdf[index.toString()]) {
+        //     this.itemsForPdf[index.toString()] = [];
+        //   }
+        // }
+        this.itemsForPdf[this.currentIndex].push(object);
+        console.log(object.type);
+        index++;
+      }
+    },
+
     async downloadPdf() {
+      // var doc = new jsPDF("portrait");
+      // await this.$store.dispatch("enableExport");
+      //
+      // setTimeout(async () => {
+      //   this.itemsForPdf = [];
+      //   this.currentIndex = 0;
+      //   this.getItemsFlatList(this.getItems);
+      //
+      //   for (let itemForPdf of this.itemsForPdf) {
+      //     let body = [[], []];
+      //
+      //     let images = {};
+      //     let colIndex = 0;
+      //     let colIndexesToChange = [];
+      //     for (let item of itemForPdf) {
+      //       body[0].push(item.label);
+      //       if (item.type == "total_score") {
+      //         var canvas = document.getElementById(
+      //           "pie-chart" //"total-score-" + object.reportItemKey
+      //         );
+      //         var dataURL = canvas.toDataURL();
+      //
+      //         body[1].push("");
+      //         colIndexesToChange.push(colIndex);
+      //         images[colIndex] = {
+      //           imageData: dataURL,
+      //           width: canvas.width,
+      //           height: canvas.height
+      //         };
+      //       } else {
+      //         body[1].push(this.$store.state.assessment[item.reportItemKey]);
+      //       }
+      //       colIndex++;
+      //     }
+      //
+      //     console.log(colIndexesToChange);
+      //     console.log(images);
+      //
+      //     doc.autoTable({
+      //       head: [],
+      //       body,
+      //       alternateRowStyles: {
+      //         fillColor: [255, 255, 255]
+      //       },
+      //       columnStyles: {
+      //         text: { cellWidth: Math.floor(100 / itemForPdf.length) }
+      //       },
+      //       didDrawCell: function(data) {
+      //         if (
+      //           colIndexesToChange.includes(data.column.index) &&
+      //           data.row.section === "body"
+      //         ) {
+      //           console.log(data);
+      //           var dim = data.cell.height - data.cell.padding("vertical");
+      //           // var textPos = data.cell.textPos;
+      //           doc.addImage(
+      //             images[data.column.index].imageData,
+      //             "PNG",
+      //             data.cell.x,
+      //             data.cell.y,
+      //             100,
+      //             100
+      //           );
+      //         }
+      //       }
+      //     });
+      //   }
+      //
+      //   return doc.save();
+      // }, 2000);
+      // return;
       await this.$store.dispatch("enableExport");
 
       setTimeout(async () => {
         let element = document.getElementById("div-for-export");
+        // var doc = new jsPDF();
+        //
+        // await doc.html(element, {
+        //   callback: function(doc) {
+        //     doc.save();
+        //   },
+        //   x: 10,
+        //   y: 10
+        // });
         await html2pdf()
           .set({
             margin: [10, 10],

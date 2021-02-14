@@ -12,7 +12,7 @@
               <router-link
                 class="aoat-float-right aoat-no-underline aoat-text-sm aoat-text-blue-700"
                 :to="'/forms/' + formId"
-                >Back</router-link
+                >Back to form</router-link
               >
             </h2>
             <h2 v-else class="aoat-mt-0 aoat-text-gray-700">
@@ -30,7 +30,8 @@
             />
           </div>
         </div>
-        <generic :depth="0" :form="reportData" class="root" />
+        <loader :loading="loading" />
+        <generic v-if="!loading" :depth="0" :form="reportData" class="root" />
         <div class="aoat-text-center aoat-mt-5">
           <button
             class="aoat-p-3 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
@@ -121,6 +122,7 @@ import formElements from "../utils/form-elements";
 import randomValueHex from "../utils/helpers";
 import Generic from "../components/Generic.vue";
 import { isEmpty } from "lodash";
+import Loader from "../components/Loader.vue";
 
 let isDirty = false;
 
@@ -143,10 +145,12 @@ export default {
   name: "Home",
   components: {
     Drag,
-    Generic
+    Generic,
+    Loader
   },
   data() {
     return {
+      loading: false,
       addedElements: [],
       formTitle: "",
       title: "",
@@ -215,6 +219,7 @@ export default {
   },
   methods: {
     loadForm() {
+      this.loading = true;
       Api.get(aoat_config.aoatGetFormUrl + this.formId).then(result => {
         this.form = result.data;
         this.formData = result.data.form_data[0];
@@ -246,6 +251,7 @@ export default {
             // page
           ]
         };
+        this.loading = false;
 
         return;
       }
@@ -254,6 +260,7 @@ export default {
         this.reportData = result.data.report_data[0];
         this.title = this.report.post_title;
         this.reportSettings = this.report.report_settings[0];
+        this.loading = false;
       });
     },
 

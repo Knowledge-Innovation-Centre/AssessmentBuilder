@@ -55,25 +55,32 @@
                 </router-link>
                 <div>
                   <div>
+                    <router-link :to="'/reports/' + id + '/' + report.ID">
+                      <button
+                        class="aoat-bg-white aoat-cursor-pointer aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+                      >
+                        <span class="dashicons dashicons-visibility" />
+                      </button>
+                    </router-link>
                     <button
                       :class="
                         report.post_status === 'publish'
                           ? 'aoat-bg-green-200'
                           : 'aoat-bg-white'
                       "
-                      class="aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+                      class="aoat-hover:bg-gray-100 aoat-cursor-pointer aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
                       @click="activateReport(report.ID)"
                     >
                       <span class="dashicons dashicons-saved" />
                     </button>
                     <button
-                      class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+                      class="aoat-bg-white aoat-hover:bg-gray-100 aoat-cursor-pointer aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
                       @click="duplicateReport(report.ID)"
                     >
                       <span class="dashicons dashicons-admin-page" />
                     </button>
                     <button
-                      class="aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
+                      class="aoat-bg-white aoat-hover:bg-gray-100 aoat-cursor-pointer aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
                       @click="removeReport(report.ID)"
                     >
                       <span class="dashicons dashicons-trash" />
@@ -88,7 +95,9 @@
           <code>[aoat-form id="{{ form.ID }}"]</code>
           <code>[aoat-assessment-list id="{{ form.ID }}"]</code>
         </div>
-        <generic :depth="0" :form="formData" class="root" />
+
+        <loader :loading="loading" />
+        <generic v-if="!loading" :depth="0" :form="formData" class="root" />
         <div class="aoat-text-center aoat-mt-5">
           <button
             class="aoat-p-3 aoat-text-white aoat-text-lg aoat-border-0 aoat-text-center aoat-cursor-pointer aoat-bg-blue-700"
@@ -176,6 +185,7 @@ import Api from "../Api";
 import formElements from "../utils/form-elements";
 import randomValueHex from "../utils/helpers";
 import Generic from "../components/Generic.vue";
+import Loader from "../components/Loader.vue";
 
 let isDirty = false;
 
@@ -197,10 +207,12 @@ export default {
   name: "Home",
   components: {
     Drag,
-    Generic
+    Generic,
+    Loader
   },
   data() {
     return {
+      loading: false,
       addedElements: [],
       title: "",
       importJson: "",
@@ -263,6 +275,7 @@ export default {
   },
   methods: {
     loadForm() {
+      this.loading = true;
       Api.get(aoat_config.aoatGetSettingsUrl).then(result => {
         let settings = {};
         for (let setting of result.data) {
@@ -281,6 +294,7 @@ export default {
             // page
           ]
         };
+        this.loading = false;
         return;
       }
       Api.get(aoat_config.aoatGetFormUrl + this.id).then(result => {
@@ -289,6 +303,8 @@ export default {
         this.title = this.form.post_title;
         this.formSettings = this.form.form_settings[0];
         this.reports = this.form.reports;
+
+        this.loading = false;
       });
     },
     remove(n) {

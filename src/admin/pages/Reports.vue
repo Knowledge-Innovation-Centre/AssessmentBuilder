@@ -17,18 +17,18 @@
         <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-blue-700 aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
               >
                 <h4
-                  class="aoat-text-sm aoat-uppercase aoat-text-gray-500 aoat-leading-tight"
+                  class="aoat-text-sm aoat-uppercase aoat-text-white aoat-leading-tight"
                 >
                   Assessments
                 </h4>
                 <h3
-                  class="aoat-text-3xl aoat-text-gray-700 aoat-font-semibold aoat-leading-tight aoat-my-3"
+                  class="aoat-text-3xl aoat-text-white aoat-font-semibold aoat-leading-tight aoat-my-3"
                 >
                   {{ assessments.length }}
                 </h3>
@@ -39,18 +39,18 @@
         <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-blue-700 aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
               >
                 <h4
-                  class="aoat-text-sm aoat-uppercase aoat-text-gray-500 aoat-leading-tight"
+                  class="aoat-text-sm aoat-uppercase aoat-text-white aoat-leading-tight"
                 >
                   Unique users
                 </h4>
                 <h3
-                  class="aoat-text-3xl aoat-text-gray-700 aoat-font-semibold aoat-leading-tight aoat-my-3"
+                  class="aoat-text-3xl aoat-text-white aoat-font-semibold aoat-leading-tight aoat-my-3"
                 >
                   {{ Object.keys(uniqueUsers).length }}
                 </h3>
@@ -61,18 +61,18 @@
         <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-blue-700 aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
               >
                 <h4
-                  class="aoat-text-sm aoat-uppercase aoat-text-gray-500 aoat-leading-tight"
+                  class="aoat-text-sm aoat-uppercase aoat-text-white aoat-leading-tight"
                 >
                   Scoring questions
                 </h4>
                 <h3
-                  class="aoat-text-3xl aoat-text-gray-700 aoat-font-semibold aoat-leading-tight aoat-my-3"
+                  class="aoat-text-3xl aoat-text-white aoat-font-semibold aoat-leading-tight aoat-my-3"
                 >
                   {{ scoreLabels.length }}
                 </h3>
@@ -83,21 +83,21 @@
         <div class="aoat-w-1/4 aoat-px-2">
           <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
             <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+              class="aoat-rounded aoat-bg-blue-700 aoat-shadow-md aoat-relative aoat-overflow-hidden"
             >
               <div
                 class="aoat-px-3 aoat-pt-8 aoat-pb-10 aoat-text-center aoat-relative aoat-z-10"
               >
                 <h4
-                  class="aoat-text-sm aoat-uppercase aoat-text-gray-500 aoat-leading-tight"
+                  class="aoat-text-sm aoat-uppercase aoat-text-white aoat-leading-tight"
                 >
                   Export
                 </h4>
                 <h3
-                  class="aoat-text-gray-700 aoat-font-semibold aoat-leading-tight aoat-my-3"
+                  class="aoat-text-white aoat-font-semibold aoat-leading-tight aoat-my-3"
                 >
                   <button
-                    class="aoat-bg-blue-500 hover:aoat-bg-blue-700 aoat-cursor-pointer aoat-text-white aoat-font-bold aoat-py-2 aoat-px-4 aoat-rounded aoat-border-none"
+                    class="aoat-bg-white hover:aoat-bg-blue-300 aoat-cursor-pointer aoat-text-blue-700 aoat-font-bold aoat-py-2 aoat-px-4 aoat-rounded aoat-border-none"
                     @click="exportExcel"
                   >
                     export.xlsx
@@ -111,23 +111,18 @@
       <div class="aoat-w-full aoat-px-2">
         <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
           <div
-            class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative"
+            class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative wrapper"
           >
-            <table
-              id="table-to-export"
-              class="aoat-w-full aoat-text-md aoat-my-4"
-            >
+            <table id="table-to-export" class="aoat-w-full aoat-text-md">
               <thead>
-                <tr class="aoat-border-b">
+                <tr class="aoat-border-b aoat-bg-blue-700 aoat-text-white">
                   <th
-                    class="aoat-text-left aoat-p-3 aoat-px-5"
-                    style="min-width: 200px;"
+                    class="aoat-text-left aoat-p-3 aoat-px-5 sticky-col first-col"
                   >
                     Groups
                   </th>
                   <th
-                    class="aoat-text-left aoat-p-3 aoat-px-5"
-                    style="min-width: 300px; width: 300px;"
+                    class="aoat-text-left aoat-p-3 aoat-px-5 sticky-col second-col"
                   >
                     Assessment
                   </th>
@@ -156,14 +151,16 @@
                 <tr
                   v-for="(assessment, index) in assessments"
                   :key="assessment.ID"
-                  :class="index % 2 === 0 ? 'aoat-bg-gray-100' : ''"
+                  :class="
+                    index % 2 === 0 ? 'aoat-bg-gray-100' : 'aoat-bg-blue-300'
+                  "
                   class="aoat-border-b hover:aoat-bg-orange-100"
                 >
-                  <th class="aoat-px-5">
+                  <th class="aoat-px-5 aoat-text-left sticky-col first-col">
                     <button
                       v-for="group in groups"
                       :key="group.key"
-                      class="aoat-mr-3 aoat-text-sm aoat-bg-blue-300 hover:aoat-bg-blue-500 aoat-text-white aoat-py-1 aoat-border-none aoat-px-2 aoat-rounded aoat-cursor-pointer"
+                      class="aoat-mr-1 aoat-text-sm aoat-bg-blue-500 hover:aoat-bg-blue-700 aoat-text-white aoat-py-1 aoat-border-none aoat-px-2 aoat-rounded aoat-cursor-pointer"
                       :class="
                         groupsToAverage[group.key].includes(
                           assessment.ID.toString()
@@ -176,7 +173,7 @@
                       {{ group.short_name }}
                     </button>
                   </th>
-                  <th class="aoat-px-5 aoat-text-left">
+                  <th class="aoat-px-5 aoat-text-left sticky-col second-col">
                     {{ assessment.post_title }}
                   </th>
                   <th class="aoat-px-5 aoat-text-left">
@@ -224,44 +221,40 @@
         </div>
       </div>
 
-      <div class="aoat-flex">
-        <div class="aoat-w-1/3 aoat-px-2">
-          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
-            <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
-            >
-              <radar-chart
-                v-if="chartData.datasets[0].data.length"
-                :styles="myStyles"
-                :chart-data="chartData"
-                :options="radarOptionsOptions"
-                :update-data="updateData"
-              />
-            </div>
+      <div class="aoat-grid aoat-grid-cols-3 aoat-gap-4 aoat-px-2">
+        <div
+          class="aoat-rounded aoat-pb-2 aoat-px-2 aoat-bg-white aoat-shadow-md"
+        >
+          <h3>Legend</h3>
+          <div v-for="(scoreLabel, index) in scoreLabels" :key="index">
+            {{ index + 1 }}: {{ scoreLabel }}
           </div>
         </div>
-        <div class="aoat-w-1/3 aoat-px-2">
-          <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
-            <div
-              class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
-            >
-              <pie-chart
-                v-if="chartDataUsers.datasets[0].data.length"
-                :styles="myStyles"
-                :chart-data="chartDataUsers"
-                :options="chartOptions"
-                :update-data="updateData"
-              />
-            </div>
-          </div>
+        <div
+          class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+        >
+          <radar-chart
+            v-if="chartData.datasets[0].data.length"
+            :styles="myStyles"
+            :chart-data="chartData"
+            :options="radarOptionsOptions"
+            :update-data="updateData"
+          />
         </div>
-      </div>
-    </div>
-    <div class="aoat-flex">
-      <div class="aoat-w-full aoat-px-2">
-        <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
+        <div
+          class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+        >
+          <pie-chart
+            v-if="chartDataUsers.datasets[0].data.length"
+            :styles="myStyles"
+            :chart-data="chartDataUsers"
+            :options="chartOptions"
+            :update-data="updateData"
+          />
+        </div>
+        <div class="aoat-col-span-3">
           <div
-            class="aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+            class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
           >
             <line-chart
               v-if="chartTimeline.datasets[0].data.length"
@@ -565,7 +558,14 @@ export default {
 
         index++;
       });
-      this.chartData.labels = this.scoreLabels;
+      let indexes = [];
+      let currentIndex = 1;
+      for (let label of this.scoreLabels) {
+        indexes.push(currentIndex);
+        currentIndex++;
+      }
+      console.log(indexes);
+      this.chartData.labels = indexes;
       this.updateData++;
     },
 
@@ -679,8 +679,6 @@ export default {
         sum += values[key];
       });
 
-      console.log(Math.round((sum / count) * 100) / 100);
-
       return Math.round((sum / count) * 100) / 100;
     },
 
@@ -724,5 +722,32 @@ th {
 
 button.active {
   border: dodgerblue 1px solid;
+}
+
+.wrapper {
+  position: relative;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.sticky-col {
+  position: sticky;
+  background: inherit;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.first-col {
+  width: 175px;
+  min-width: 175px;
+  max-width: 175px;
+  left: 0px;
+}
+
+.second-col {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  left: 175px;
 }
 </style>
