@@ -108,12 +108,43 @@
           </div>
         </div>
       </div>
-      <div class="aoat-w-full aoat-px-2">
+
+      <!--      <div class="aoat-w-full aoat-px-2">-->
+      <!--        <nav-->
+      <!--          class="aoat-flex aoat-flex-row hover:aoat-text-blue-700 aoat-cursor-pointer aoat-font-bold aoat-uppercase"-->
+      <!--        >-->
+      <!--          <div-->
+      <!--            class="aoat-py-4 aoat-px-6 aoat-border-solid aoat-border-0"-->
+      <!--            :class="activeTab === 1 ? 'aoat-border-b-2 aoat-text-blue-700' : ''"-->
+      <!--            @click="activeTab = 1"-->
+      <!--          >-->
+      <!--            Simple reports-->
+      <!--          </div>-->
+      <!--          <div-->
+      <!--            class="aoat-py-4 aoat-px-6 aoat-border-solid  aoat-border-0"-->
+      <!--            :class="activeTab === 2 ? 'aoat-border-b-2 aoat-text-blue-700' : ''"-->
+      <!--            @click="activeTab = 2"-->
+      <!--          >-->
+      <!--            Advanced reports-->
+      <!--          </div>-->
+      <!--        </nav>-->
+      <!--      </div>-->
+      <!--      <div v-if="activeTab === 1">-->
+      <!--        <simple-report-->
+      <!--          :assessments="assessments"-->
+      <!--          :form-items="selectedForm.form_data[0].items"-->
+      <!--        />-->
+      <!--      </div>-->
+      <div class="aoat-w-full aoat-px-2 ">
+        <advanced-reports />
         <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
           <div
             class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative wrapper"
           >
-            <table id="table-to-export" class="aoat-w-full aoat-text-md">
+            <table
+              id="table-to-export"
+              class="aoat-w-full aoat-p-5 aoat-text-md"
+            >
               <thead>
                 <tr class="aoat-border-b aoat-bg-blue-700 aoat-text-white">
                   <th
@@ -219,50 +250,50 @@
             </table>
           </div>
         </div>
-      </div>
 
-      <div class="aoat-grid aoat-grid-cols-3 aoat-gap-4 aoat-px-2">
-        <div
-          class="aoat-rounded aoat-pb-2 aoat-px-2 aoat-bg-white aoat-shadow-md"
-        >
-          <h3>Legend</h3>
-          <div v-for="(scoreLabel, index) in scoreLabels" :key="index">
-            {{ index + 1 }}: {{ scoreLabel }}
+        <div class="aoat-grid aoat-grid-cols-3 aoat-gap-4">
+          <div
+            class="aoat-rounded aoat-pb-2 aoat-px-2 aoat-bg-white aoat-shadow-md"
+          >
+            <h3>Legend</h3>
+            <div v-for="(scoreLabel, index) in scoreLabels" :key="index">
+              {{ index + 1 }}: {{ scoreLabel }}
+            </div>
           </div>
-        </div>
-        <div
-          class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
-        >
-          <radar-chart
-            v-if="chartData.datasets[0].data.length"
-            :styles="myStyles"
-            :chart-data="chartData"
-            :options="radarOptionsOptions"
-            :update-data="updateData"
-          />
-        </div>
-        <div
-          class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
-        >
-          <pie-chart
-            v-if="chartDataUsers.datasets[0].data.length"
-            :styles="myStyles"
-            :chart-data="chartDataUsers"
-            :options="chartOptions"
-            :update-data="updateData"
-          />
-        </div>
-        <div class="aoat-col-span-3">
           <div
             class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
           >
-            <line-chart
-              v-if="chartTimeline.datasets[0].data.length"
+            <radar-chart
+              v-if="chartData.datasets[0].data.length"
               :styles="myStyles"
-              :chart-data="chartTimeline"
-              :options="timelineOptions"
+              :chart-data="chartData"
+              :options="radarOptionsOptions"
               :update-data="updateData"
             />
+          </div>
+          <div
+            class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+          >
+            <pie-chart
+              v-if="chartDataUsers.datasets[0].data.length"
+              :styles="myStyles"
+              :chart-data="chartDataUsers"
+              :options="chartOptions"
+              :update-data="updateData"
+            />
+          </div>
+          <div class="aoat-col-span-3">
+            <div
+              class="aoat-rounded aoat-p-2 aoat-bg-white aoat-shadow-md aoat-relative aoat-overflow-hidden"
+            >
+              <line-chart
+                v-if="chartTimeline.datasets[0].data.length"
+                :styles="myStyles"
+                :chart-data="chartTimeline"
+                :options="timelineOptions"
+                :update-data="updateData"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -273,6 +304,7 @@
 <script>
 import Api from "../Api";
 import LineChart from "../../frontend/components/report-elements/LineChart";
+import SimpleReport from "../../admin/components/SimpleReport.vue";
 import scoreMixin from "../../frontend/components/report-elements/mixins/scoreMixin";
 import XLSX from "xlsx";
 
@@ -280,7 +312,8 @@ export default {
   name: "Reports",
 
   components: {
-    LineChart
+    LineChart,
+    SimpleReport
   },
 
   mixins: [scoreMixin],
@@ -289,7 +322,9 @@ export default {
     return {
       forms: [],
       updateData: 0,
+      activeTab: 1,
       selectedForm: null,
+      selectedUser: null,
       assessments: [],
       scoreLabels: [],
       scoreValuesDefault: {},
@@ -564,7 +599,6 @@ export default {
         indexes.push(currentIndex);
         currentIndex++;
       }
-      console.log(indexes);
       this.chartData.labels = indexes;
       this.updateData++;
     },

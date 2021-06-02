@@ -7,6 +7,9 @@ export const mutations = {
   UPDATE_FORM_SETTINGS(state, payload) {
     state.formSettings = payload;
   },
+  UPDATE_ASSESSMENT_OBJECT(state, payload) {
+    state.assessmentObject = payload;
+  },
   UPDATE_ASSESSMENT(state, payload) {
     state.assessment = payload;
   },

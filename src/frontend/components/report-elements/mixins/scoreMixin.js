@@ -2,6 +2,7 @@ import PieChart from "../PieChart";
 import RadarChart from "../RadarChart";
 import BarChart from "../BarChart";
 import HorizontalBarChart from "../HorizontalBarChart";
+import itemsHelper from "../../../mixins/itemsHelpers";
 
 export default {
   components: {
@@ -87,6 +88,7 @@ export default {
     };
   },
 
+  mixins: [itemsHelper],
   computed: {
     value() {
       return this.$store.state.assessment[this.object.reportItemKey];
@@ -108,18 +110,24 @@ export default {
     }
   },
   methods: {
-    calculateScore(items) {
+    calculateScore(items, assessment = null) {
+      if (!assessment) {
+        assessment = this.$store.state.assessment;
+      }
+
+      let score = 0;
+      let totalScore = 0;
       for (let item of items) {
         if (!this.checkConditions(item)) {
           continue;
         }
         if (item.items) {
-          this.calculateScore(item.items);
+          const scores = this.calculateScore(item.items, assessment);
+          score += scores.score;
+          totalScore += scores.totalScore;
           continue;
         }
-
-        let value = this.$store.state.assessment[item.reportItemKey];
-
+        let value = assessment[item.reportItemKey];
         if (item.disableForScoring) {
           continue;
         }
@@ -127,11 +135,13 @@ export default {
         if (!item.options && !item.optionsVertical) {
           continue;
         }
+
         if (
           this.alreadyIncludedElementsForScores.includes(item.reportItemKey)
         ) {
           continue;
         }
+
         this.alreadyIncludedElementsForScores.push(item.reportItemKey);
 
         let maxScore = 0;
@@ -149,6 +159,7 @@ export default {
             }
           }
           this.totalScore += maxScore * item.optionsHorizontal.length;
+          totalScore += maxScore * item.optionsHorizontal.length;
 
           if (!value) {
             continue;
@@ -160,75 +171,67 @@ export default {
             );
             if (verticalOption) {
               this.score += parseInt(verticalOption.score);
+              score += parseInt(verticalOption.score);
               localScore += parseInt(verticalOption.score);
             }
           }
           this.colors.push(this.getScoreGraphColor(item));
           this.graphArray.push(localScore);
         } else if (item.options) {
-          for (let option of item.options) {
-            if (maxScore < option.score) {
-              maxScore = parseInt(option.score);
+          let localScore = 0;
+          if (!value) {
+            continue;
+          }
+          if (Array.isArray(value)) {
+            if (!value.length) {
+              continue;
+            }
+
+            for (let option of item.options) {
+              maxScore += parseInt(option.score);
+            }
+
+            for (const valueItem of value) {
+              let verticalOption = item.options.find(
+                optionVertical => optionVertical.id === valueItem
+              );
+
+              if (verticalOption) {
+                this.score += parseInt(verticalOption.score);
+                score += parseInt(verticalOption.score);
+                localScore += parseInt(verticalOption.score);
+              }
+            }
+          } else {
+            for (let option of item.options) {
+              if (maxScore < option.score) {
+                maxScore = parseInt(option.score);
+              }
+            }
+
+            let verticalOption = item.options.find(
+              optionVertical => optionVertical.id === value
+            );
+
+            if (verticalOption) {
+              this.score += parseInt(verticalOption.score);
+              score += parseInt(verticalOption.score);
+              localScore += parseInt(verticalOption.score);
             }
           }
 
           this.totalScore += maxScore;
-
-          if (!value) {
-            continue;
-          }
-          let verticalOption = item.options.find(
-            optionVertical => optionVertical.id === value
-          );
-
-          let localScore = 0;
-          if (verticalOption) {
-            this.score += parseInt(verticalOption.score);
-            localScore += parseInt(verticalOption.score);
-          }
+          totalScore += maxScore;
 
           this.colors.push(this.getScoreGraphColor(item));
           this.graphArray.push(localScore);
         }
       }
 
-      return true;
-    },
-
-    checkConditions(item, assessment = null) {
-      if (!item.conditions.length) {
-        return true;
-      }
-
-      if (!assessment) {
-        assessment = this.$store.state.assessment;
-      }
-      for (let condition of item.conditions) {
-        let field = condition.field;
-        let question = condition.question;
-        let selectedOptions = condition.selectedOptions;
-        if (!assessment[field]) {
-          return false;
-        }
-        let assessmentValue = assessment[field];
-        if (selectedOptions) {
-          if (question) {
-            assessmentValue = assessment[field][question];
-          }
-          if (
-            !selectedOptions
-              .map(selectedOption => selectedOption.id)
-              .includes(assessmentValue)
-          ) {
-            return false;
-          }
-        }
-
-        if (!assessmentValue === condition.value) {
-          return false;
-        }
-      }
-      return true;
+      return {
+        score,
+        totalScore
+      };
     },
 
     getItemLabel(item) {

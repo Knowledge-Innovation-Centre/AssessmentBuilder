@@ -7,6 +7,7 @@
       v-model="value"
       class="aoat-w-full"
       :style="getWidthStyle"
+      :multiple="multiple"
       :class="hasError ? 'aoat-border-red-400' : ''"
     >
       <option :value="null" disabled hidden>{{ object.placeholder }}</option>
@@ -42,7 +43,13 @@ export default {
   computed: {
     value: {
       get() {
-        return this.$store.state.assessment[this.object.key];
+        if (this.$store.state.assessment[this.object.key]) {
+          return this.$store.state.assessment[this.object.key];
+        }
+        if (this.multiple) {
+          return [];
+        }
+        return null;
       },
       set(newValue) {
         return this.$store.dispatch("updateValue", {
@@ -50,6 +57,9 @@ export default {
           value: newValue
         });
       }
+    },
+    multiple() {
+      return this.object.multiple ?? false;
     },
     options() {
       return this.object.options;

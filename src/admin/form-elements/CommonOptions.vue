@@ -48,6 +48,12 @@
                   <input v-model="object.hidden" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.multiple !== 'undefined'">
+                <th>Multiple:</th>
+                <td colspan="2">
+                  <input v-model="object.multiple" type="checkbox" />
+                </td>
+              </tr>
               <tr v-if="typeof object.showTitle !== 'undefined'">
                 <th>Show title:</th>
                 <td colspan="2">

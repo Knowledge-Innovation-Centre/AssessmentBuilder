@@ -27,6 +27,61 @@
                 <th>Hidden:</th>
                 <td><input v-model="object.hidden" type="checkbox" /></td>
               </tr>
+              <tr v-if="typeof object.currentResult !== 'undefined'">
+                <th>Current report:</th>
+                <td>
+                  <input v-model="object.currentResult" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.previousResult !== 'undefined'">
+                <th>Previous report:</th>
+                <td>
+                  <input v-model="object.previousResult" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.firstResult !== 'undefined'">
+                <th>First report:</th>
+                <td><input v-model="object.firstResult" type="checkbox" /></td>
+              </tr>
+              <tr v-if="typeof object.userResults !== 'undefined'">
+                <th>User reports:</th>
+                <td>
+                  <input v-model="object.userResults" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.countryResults !== 'undefined'">
+                <th>Country reports:</th>
+                <td>
+                  <input v-model="object.countryResults" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.allResults !== 'undefined'">
+                <th>All reports:</th>
+                <td>
+                  <input v-model="object.allResults" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.averageResult !== 'undefined'">
+                <th>Average report:</th>
+                <td>
+                  <input v-model="object.averageResult" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.averageUserResult !== 'undefined'">
+                <th>Average user report:</th>
+                <td>
+                  <input v-model="object.averageUserResult" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.averageCountryResult !== 'undefined'">
+                <th>Average country report:</th>
+                <td>
+                  <input
+                    v-model="object.averageCountryResult"
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
                 <th>Hide labels:</th>
                 <td><input v-model="object.hideLabels" type="checkbox" /></td>
@@ -201,7 +256,9 @@ export default {
     availableScores() {
       return this.getItemsRecursive(
         this.$store.state.report.items
-      ).filter(field => ["part_score", "total_score"].includes(field.type));
+      ).filter(field =>
+        ["part_score", "total_score", "compare_score"].includes(field.type)
+      );
     }
   },
 

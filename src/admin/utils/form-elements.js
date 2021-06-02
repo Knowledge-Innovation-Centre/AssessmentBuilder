@@ -337,6 +337,41 @@ export default [
   {
     key: randomValueHex(15),
     reportItemKey: "",
+    name: "Compare score",
+    type: "compare_score",
+    label: "Compare score",
+    reportLabel: "",
+    conditions: [],
+    component: "CompareScore",
+    reportComponent: "CompareScoreReport",
+    canRemove: true,
+    hidden: false,
+    hideInForm: false,
+    hideLabels: false,
+    currentResult: true,
+    previousResult: true,
+    firstResult: false,
+    userResults: false,
+    countryResults: false,
+    allResults: false,
+    averageResult: false,
+    averageUserResult: false,
+    averageCountryResult: false,
+    class: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    height: null,
+    heightUnit: "px",
+    selectedResultType: [
+      {
+        label: "Score",
+        key: "score"
+      }
+    ]
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
     name: "Legend",
     type: "legend",
     label: "",

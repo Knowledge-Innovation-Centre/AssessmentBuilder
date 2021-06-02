@@ -40,6 +40,9 @@ export default {
     user() {
       return this.$store.state.user;
     },
+    multiple() {
+      return this.object.multiple ?? false;
+    },
     value: {
       get() {
         return this.$store.state.assessment[this.object.key];

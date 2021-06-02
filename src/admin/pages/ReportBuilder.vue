@@ -193,6 +193,7 @@ export default {
           "part_score",
           "total_score",
           "total_score_graph",
+          "compare_score",
           "legend"
         ].includes(element.type)
       );

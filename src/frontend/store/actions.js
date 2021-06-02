@@ -8,6 +8,9 @@ export const actions = {
   updateAssessment({ commit }, payload) {
     commit("UPDATE_ASSESSMENT", payload);
   },
+  updateAssessmentObject({ commit }, payload) {
+    commit("UPDATE_ASSESSMENT_OBJECT", payload);
+  },
   updateReport({ commit }, payload) {
     commit("UPDATE_REPORT", payload);
   },

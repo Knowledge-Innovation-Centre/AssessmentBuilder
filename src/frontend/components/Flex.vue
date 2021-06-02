@@ -1,6 +1,6 @@
 <template>
   <div :class="classes">
-    <template v-for="(item, index) in getItems">
+    <template v-for="(item, index) in filteredItems">
       <template v-if="item.type === 'page'">
         <transition :key="item.key" name="slide-fade" mode="out-in">
           <div
@@ -13,18 +13,20 @@
               v-if="!exportEnabled"
               class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5"
             >
-              <template v-if="index === 0 && getItems.length > 1">
+              <template v-if="index === 0 && filteredItems.length > 1">
                 <div />
                 <button @click="setNextPage(index, item)">Next</button>
               </template>
               <template
-                v-else-if="index < getItems.length - 1 && getItems.length > 1"
+                v-else-if="
+                  index < filteredItems.length - 1 && filteredItems.length > 1
+                "
               >
                 <button @click="setPreviousPage(index)">Back</button>
                 <button @click="setNextPage(index, item)">Next</button>
               </template>
               <template v-else>
-                <template v-if="getItems.length > 1">
+                <template v-if="filteredItems.length > 1">
                   <button id="prevButton" @click="setPreviousPage(index)">
                     Back
                   </button>
@@ -59,12 +61,14 @@ import Api from "../Api";
 import { jsPDF } from "jspdf";
 
 import "jspdf-autotable";
+import itemsHelper from "../mixins/itemsHelpers";
 
 export default {
   name: "Flex",
   components: {
     Generic: () => import("./Generic.vue")
   },
+  mixins: [itemsHelper],
   props: {
     items: null,
     direction: String,
@@ -90,39 +94,8 @@ export default {
     exportEnabled() {
       return this.$store.state.exportEnabled;
     },
-    getItems() {
-      return this.items.filter(item => {
-        if (!item.conditions.length) {
-          return true;
-        }
-        for (let condition of item.conditions) {
-          let field = condition.field;
-          let question = condition.question;
-          let selectedOptions = condition.selectedOptions;
-          let assessment = this.$store.state.assessment;
-          if (!assessment[field]) {
-            return false;
-          }
-          let assessmentValue = assessment[field];
-          if (selectedOptions) {
-            if (question) {
-              assessmentValue = assessment[field][question];
-            }
-            if (
-              !selectedOptions
-                .map(selectedOption => selectedOption.id)
-                .includes(assessmentValue)
-            ) {
-              return false;
-            }
-          }
-
-          if (!assessmentValue === condition.value) {
-            return false;
-          }
-        }
-        return true;
-      });
+    filteredItems() {
+      return this.getItems(this.items);
     },
     classes() {
       let classes = [];
@@ -259,7 +232,6 @@ export default {
           //   this.getItemsFlatList(object.items, index.toString());
           // }
 
-          console.log(object.type);
           if (object.type === "column") {
             this.currentIndex++;
           }
@@ -280,7 +252,6 @@ export default {
         //   }
         // }
         this.itemsForPdf[this.currentIndex].push(object);
-        console.log(object.type);
         index++;
       }
     },

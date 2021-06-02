@@ -1,4 +1,5 @@
 export const state = () => ({
+  assessmentObject: {},
   assessment: {},
   report: {},
   formId: {},

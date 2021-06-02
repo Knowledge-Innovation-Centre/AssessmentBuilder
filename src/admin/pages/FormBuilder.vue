@@ -231,9 +231,12 @@ export default {
     availableFormElements() {
       let filteredFormElements = formElements.filter(
         element =>
-          !["part_score", "total_score", "total_score_graph"].includes(
-            element.type
-          )
+          ![
+            "part_score",
+            "total_score",
+            "total_score_graph",
+            "compare_score"
+          ].includes(element.type)
       );
       return filteredFormElements.filter(
         element =>
@@ -243,9 +246,12 @@ export default {
     availableBuilderElements() {
       let filteredFormElements = formElements.filter(
         element =>
-          !["part_score", "total_score", "total_score_graph"].includes(
-            element.type
-          )
+          ![
+            "part_score",
+            "total_score",
+            "total_score_graph",
+            "compare_score"
+          ].includes(element.type)
       );
       return filteredFormElements.filter(element =>
         ["column", "row", "page", "paragraph"].includes(element.type)

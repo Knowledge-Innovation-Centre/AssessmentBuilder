@@ -35,6 +35,7 @@
 import Api from "./Api";
 import Generic from "./components/Generic.vue";
 import BaseProgress from "./components/BaseProgress.vue";
+import itemsHelper from "./mixins/itemsHelpers.js";
 
 export default {
   name: "App",
@@ -42,6 +43,7 @@ export default {
     Generic,
     BaseProgress
   },
+  mixins: [itemsHelper],
   data() {
     return {
       form: {},
@@ -61,7 +63,9 @@ export default {
       return this.$store.state.currentPage;
     },
     percentage() {
-      return Math.round((this.currentPage / this.getItems().length) * 100);
+      return Math.round(
+        (this.currentPage / this.getItems(this.formData.items).length) * 100
+      );
     },
     exportEnabled() {
       return this.$store.state.exportEnabled;
@@ -111,6 +115,7 @@ export default {
       if (aoat_config.aoatGetAssessmentUrl) {
         Api.get(aoat_config.aoatGetAssessmentUrl).then(result => {
           this.assessment = result.data;
+          this.$store.dispatch("updateAssessmentObject", this.assessment);
           this.assessmentData = this.assessment.assessment_data[0];
           this.report = this.assessment.report;
           if (this.report) {
@@ -127,40 +132,6 @@ export default {
           settings[setting.key] = setting.value;
         }
         this.$store.dispatch("updateSettings", settings);
-      });
-    },
-    getItems() {
-      return this.formData.items.filter(item => {
-        if (!item.conditions.length) {
-          return true;
-        }
-        for (let condition of item.conditions) {
-          let field = condition.field;
-          let question = condition.question;
-          let selectedOptions = condition.selectedOptions;
-          let assessment = this.$store.state.assessment;
-          if (!assessment[field]) {
-            return false;
-          }
-          let assessmentValue = assessment[field];
-          if (selectedOptions) {
-            if (question) {
-              assessmentValue = assessment[field][question];
-            }
-            if (
-              !selectedOptions
-                .map(selectedOption => selectedOption.id)
-                .includes(assessmentValue)
-            ) {
-              return false;
-            }
-          }
-
-          if (!assessmentValue === condition.value) {
-            return false;
-          }
-        }
-        return true;
       });
     }
   }

@@ -32,6 +32,7 @@ import DateInputReport from "./report-elements/DateInputReport.vue";
 import FileUploadReport from "./report-elements/FileUploadReport.vue";
 import PartScoreReport from "./report-elements/PartScoreReport.vue";
 import TotalScoreReport from "./report-elements/TotalScoreReport.vue";
+import CompareScoreReport from "./report-elements/CompareScoreReport.vue";
 import LegendReport from "./report-elements/LegendReport.vue";
 import FileUpload from "./form-elements/FileUpload.vue";
 
@@ -61,6 +62,7 @@ export default {
     FileUploadReport,
     PartScoreReport,
     TotalScoreReport,
+    CompareScoreReport,
     LegendReport,
     FileUpload
   },

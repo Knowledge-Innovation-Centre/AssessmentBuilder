@@ -39,6 +39,18 @@ class Assessment extends WP_REST_Controller {
         );
         register_rest_route(
             $this->namespace,
+            '/assessments',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_assessments' ],
+                    'permission_callback' => [ $this, 'get_assessment_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
+        register_rest_route(
+            $this->namespace,
             '/assessments/(?P<id>\d+)',
             [
                 [
@@ -149,6 +161,35 @@ class Assessment extends WP_REST_Controller {
 	    }
 
         return rest_ensure_response( $assessment );
+    }
+
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+    public function get_assessments( WP_REST_Request $request ) {
+
+
+        $formId = get_post_meta($request->get_params()['assessment_id'], 'form_id');
+
+	    $assessments= get_posts([
+	        'post_type' => 'aoat_assessment',
+            'numberposts'       => -1,
+            'orderby' => 'date',
+            'order'   => 'DESC',
+            'meta_key' => 'form_id',
+            'meta_value' => $formId,
+            ]);
+
+        foreach ($assessments as &$assessment) {
+            $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+        }
+
+
+        return rest_ensure_response( $assessments );
     }
 
 	/**
