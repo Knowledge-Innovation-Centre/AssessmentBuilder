@@ -1,3 +1,3 @@
 # AssessmentBuilder
 WordPress Plugin to design Assessments
-Developed by Jure Jager and Carmen L. Padrón
+Developed by Jure Jager and Carmen L. Padrón (Knowledge Innovation Centre)
