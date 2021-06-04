@@ -6,7 +6,11 @@
           <th>
             Report
           </th>
-          <th v-for="(page, index) of currentResult.pages" :key="index">
+          <th
+            v-for="(page, index) of currentResult.pages"
+            :key="index"
+            width="100"
+          >
             {{ page.title }}
           </th>
         </tr>
