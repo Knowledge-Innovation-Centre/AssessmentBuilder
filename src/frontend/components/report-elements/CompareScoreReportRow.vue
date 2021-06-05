@@ -8,7 +8,11 @@
         <th>
           {{ result.title }}
         </th>
-        <th v-for="(page, index) of result.pages" :key="index">
+        <th
+          v-for="(page, index) of result.pages"
+          :key="index"
+          class="aoat-text-center"
+        >
           {{ page.score }}/{{ page.totalScore }}
         </th>
       </template>
@@ -19,7 +23,7 @@
         <td
           v-for="(page, index) of result.pages"
           :key="index"
-          class="aoat-text-right"
+          class="aoat-text-center"
         >
           <template v-if="index === result.pages.length - 1">
             <strong> {{ page.score }}/{{ page.totalScore }}</strong>

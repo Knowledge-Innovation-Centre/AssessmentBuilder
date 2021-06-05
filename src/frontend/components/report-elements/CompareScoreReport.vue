@@ -9,7 +9,7 @@
           <th
             v-for="(page, index) of currentResult.pages"
             :key="index"
-            class="aoat-w-26"
+            class="aoat-whitespace-no-wrap"
           >
             {{ page.title }}
           </th>
@@ -182,9 +182,8 @@ export default {
 
       for (let averageResult of averageResults) {
         averageResultPages.push({
-          score: Math.round((averageResult.score / totalResults) * 100) / 100,
-          totalScore:
-            Math.round((averageResult.totalScore / totalResults) * 100) / 100
+          score: Math.round((averageResult.score / totalResults) * 10) / 10,
+          totalScore: Math.round(averageResult.totalScore / totalResults)
         });
       }
       return averageResultPages;
@@ -268,7 +267,7 @@ export default {
       let index = 1;
 
       let totalScorePage = {
-        title: "Total",
+        title: "D. dd",
         score: 0,
         totalScore: 0
       };
@@ -277,7 +276,7 @@ export default {
         this.alreadyIncludedElementsForScores = [];
 
         let onePage = {
-          title: "Page " + index,
+          title: "D. " + index,
           ...this.calculateScore(page.items, assessmentData)
         };
 
