@@ -267,12 +267,16 @@ export default {
       let index = 1;
 
       let totalScorePage = {
-        title: "D. dd",
+        title: "Total",
         score: 0,
         totalScore: 0
       };
 
       for (let page of this.reportData.items) {
+        if (page.excludeForScoreComparing) {
+          index++;
+          continue;
+        }
         this.alreadyIncludedElementsForScores = [];
 
         let onePage = {

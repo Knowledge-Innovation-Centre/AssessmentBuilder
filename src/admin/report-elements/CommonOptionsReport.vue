@@ -27,6 +27,15 @@
                 <th>Hidden:</th>
                 <td><input v-model="object.hidden" type="checkbox" /></td>
               </tr>
+              <tr v-if="typeof object.excludeForScoreComparing !== 'undefined'">
+                <th>Exclude for score compare:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.excludeForScoreComparing"
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.currentResult !== 'undefined'">
                 <th>Current report:</th>
                 <td>

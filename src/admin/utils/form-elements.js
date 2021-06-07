@@ -229,6 +229,7 @@ export default [
     previousButtonText: "",
     hidden: false,
     hideInForm: false,
+    excludeForScoreComparing: false,
     showTitle: false,
     maxWidth: null,
     maxWidthUnit: "px"
