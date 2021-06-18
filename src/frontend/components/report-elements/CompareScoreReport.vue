@@ -210,12 +210,16 @@ export default {
           this.currentResult.pages = currentResults;
         }
 
-        if (index === 1) {
+        if (
+          +assessment.post_author === +this.user.id &&
+          !this.previousResult.pages.length &&
+          index !== 0
+        ) {
           this.previousResult.title = assessment.post_title;
           this.previousResult.pages = currentResults;
         }
 
-        if (index === assessments.length - 1) {
+        if (+assessment.post_author === +this.user.id && index !== 0) {
           this.firstResult.title = assessment.post_title;
           this.firstResult.pages = currentResults;
         }

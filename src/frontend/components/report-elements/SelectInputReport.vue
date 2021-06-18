@@ -34,7 +34,13 @@ export default {
         return "/";
       }
 
-      return this.object.options.find(option => option.id === key).name;
+      let foundOption = this.object.options.find(option => option.id === key);
+
+      if (!foundOption) {
+        return "/";
+      }
+
+      return foundOption.name;
     }
   },
 
