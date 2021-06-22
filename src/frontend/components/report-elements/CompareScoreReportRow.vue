@@ -5,9 +5,7 @@
     </tr>
     <tr v-for="result of results">
       <template v-if="bold">
-        <th>
-          {{ result.title }}
-        </th>
+        <th v-html="result.title" />
         <th
           v-for="(page, index) of result.pages"
           :key="index"
@@ -17,9 +15,7 @@
         </th>
       </template>
       <template v-else>
-        <td>
-          {{ result.title }}
-        </td>
+        <td v-html="result.title" />
         <td
           v-for="(page, index) of result.pages"
           :key="index"

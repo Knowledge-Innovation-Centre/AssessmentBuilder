@@ -185,7 +185,7 @@ class Assessment extends WP_REST_Controller {
             ]);
 
         foreach ($assessments as &$assessment) {
-            $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+            $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data', true);
         }
 
 

@@ -91,6 +91,23 @@
                   />
                 </td>
               </tr>
+              <tr v-if="typeof object.compareScoringTitleField !== 'undefined'">
+                <th>Scoring title field:</th>
+                <td colspan="2">
+                  <select
+                    v-model="object.compareScoringTitleField"
+                    multiple="true"
+                  >
+                    <option
+                      v-for="fieldInForm in fieldsInForm"
+                      :key="fieldInForm.reportItemKey"
+                      :value="fieldInForm.reportItemKey"
+                    >
+                      {{ fieldInForm.name }}
+                    </option>
+                  </select>
+                </td>
+              </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
                 <th>Hide labels:</th>
                 <td><input v-model="object.hideLabels" type="checkbox" /></td>
@@ -268,6 +285,16 @@ export default {
       ).filter(field =>
         ["part_score", "total_score", "compare_score"].includes(field.type)
       );
+    },
+    fieldsInForm() {
+      let childrenKeys = this.getItemsRecursive([this.object]).map(
+        item => item.key
+      );
+      return this.getItemsRecursive(this.$store.state.report.items)
+        .filter(field => !childrenKeys.includes(field.key))
+        .filter(field =>
+          ["text", "select", "date", "radio", "radio_grid"].includes(field.type)
+        );
     }
   },
 

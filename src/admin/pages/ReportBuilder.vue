@@ -178,25 +178,35 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items);
-      return usedFormElements.filter(
-        element =>
-          !["column", "row", "paragraph", "legend"].includes(element.type)
-      );
+      return usedFormElements
+        .filter(
+          element =>
+            !["column", "row", "paragraph", "legend"].includes(element.type)
+        )
+        .map(element => {
+          element.reportItemKey = null;
+          return element;
+        });
     },
     availableBuilderElements() {
-      return formElements.filter(element =>
-        [
-          "column",
-          "row",
-          "page",
-          "paragraph",
-          "part_score",
-          "total_score",
-          "total_score_graph",
-          "compare_score",
-          "legend"
-        ].includes(element.type)
-      );
+      return formElements
+        .filter(element =>
+          [
+            "column",
+            "row",
+            "page",
+            "paragraph",
+            "part_score",
+            "total_score",
+            "total_score_graph",
+            "compare_score",
+            "legend"
+          ].includes(element.type)
+        )
+        .map(element => {
+          element.reportItemKey = null;
+          return element;
+        });
     }
   },
   watch: {
@@ -307,7 +317,7 @@ export default {
     downloadJson() {
       let dataStr =
         "data:text/json;charset=utf-8," +
-        encodeURIComponent(JSON.stringify(this.formData));
+        encodeURIComponent(JSON.stringify(this.reportData));
       let downloadAnchorNode = document.createElement("a");
       downloadAnchorNode.setAttribute("href", dataStr);
       downloadAnchorNode.setAttribute("download", "report_data.json");
@@ -317,7 +327,7 @@ export default {
     },
     importData() {
       try {
-        this.formData = JSON.parse(this.importJson);
+        this.reportData = JSON.parse(this.importJson);
       } catch (e) {
         alert(e);
       }

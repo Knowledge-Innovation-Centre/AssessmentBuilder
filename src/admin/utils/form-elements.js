@@ -127,10 +127,7 @@ export default [
     defaultValue: null,
     label: "",
     reportLabel: "",
-    conditions: {
-      field: null,
-      value: null
-    },
+    conditions: [],
     required: false,
     canRemove: true,
     component: "DateInput",
@@ -363,6 +360,7 @@ export default [
     maxWidthUnit: "px",
     height: null,
     heightUnit: "px",
+    compareScoringTitleField: [],
     selectedResultType: [
       {
         label: "Score",

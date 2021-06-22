@@ -194,19 +194,21 @@ export default {
       let countryIndex = 0;
 
       for (const assessment of assessments) {
-        let assessmentData = assessment.assessment_data[0];
+        let assessmentData = assessment.assessment_data;
         if (!assessmentData) {
           continue;
         }
         let currentResults = this.setData(assessmentData);
 
+        const title = this.getTitle(assessment);
+
         this.allResults.push({
-          title: assessment.post_title,
+          title: title,
           pages: currentResults
         });
 
         if (index === 0) {
-          this.currentResult.title = assessment.post_title;
+          this.currentResult.title = title;
           this.currentResult.pages = currentResults;
         }
 
@@ -215,12 +217,12 @@ export default {
           !this.previousResult.pages.length &&
           index !== 0
         ) {
-          this.previousResult.title = assessment.post_title;
+          this.previousResult.title = title;
           this.previousResult.pages = currentResults;
         }
 
         if (+assessment.post_author === +this.user.id && index !== 0) {
-          this.firstResult.title = assessment.post_title;
+          this.firstResult.title = title;
           this.firstResult.pages = currentResults;
         }
 
@@ -233,14 +235,14 @@ export default {
             this.currentAssessmentData[countryReportItem.reportItemKey]
         ) {
           this.countryResults.push({
-            title: assessment.post_title,
+            title: title,
             pages: currentResults
           });
         }
 
         if (+assessment.post_author === +this.user.id) {
           this.userResults.push({
-            title: assessment.post_title,
+            title: title,
             pages: currentResults
           });
         }
@@ -265,6 +267,65 @@ export default {
         }
       }
       return null;
+    },
+    getTitle(assessment) {
+      let titleFields = this.object.compareScoringTitleField;
+      let assessmentData = assessment.assessment_data;
+      if (!titleFields) {
+        return assessment.post_title;
+      }
+
+      let assessmentValues = {};
+      for (const titleField of titleFields) {
+        if (assessmentData[titleField]) {
+          assessmentValues[titleField] = assessmentData[titleField];
+        }
+      }
+
+      let reportItems = [];
+
+      let titles = [];
+
+      for (let titleField of titleFields) {
+        let reportItem = this.getReportItem(this.reportData.items, titleField);
+
+        let assessmentValue = assessmentValues[titleField];
+        if (!reportItem) {
+          continue;
+        }
+        if (!assessmentValue) {
+          continue;
+        }
+        if (!reportItem.options.length) {
+          titles.push(assessmentValue);
+          continue;
+        }
+
+        let reportItemOption = reportItem.options.find(
+          option => option.id.toString() === assessmentValue.toString()
+        );
+        if (reportItemOption) {
+          titles.push(reportItemOption.name);
+        }
+      }
+      if (!titles.length) {
+        return assessment.post_title;
+      }
+      return titles.join("<br>");
+    },
+    getReportItem(items, selectedKey) {
+      for (const item of items) {
+        if (item.reportItemKey === selectedKey) {
+          return item;
+          return;
+        }
+        if (item.items) {
+          let foundItem = this.getReportItem(item.items, selectedKey);
+          if (foundItem) {
+            return foundItem;
+          }
+        }
+      }
     },
     setData(assessmentData) {
       let pages = [];

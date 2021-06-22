@@ -79,7 +79,7 @@
                 <th>Show if:</th>
                 <td colspan="2">
                   <table class="aoat-w-full">
-                    <tr v-for="(condition, index) in object.conditions">
+                    <tr v-for="(condition, index) in conditions">
                       <td>
                         <select v-model="condition.field">
                           <option
@@ -312,6 +312,12 @@ export default {
         .filter(field =>
           ["text", "select", "date", "radio", "radio_grid"].includes(field.type)
         );
+    },
+    conditions() {
+      if (typeof this.object.conditions !== "array") {
+        return [];
+      }
+      return this.object.conditions;
     }
   },
 
