@@ -1,41 +1,24 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ value }}
+    {{ getReportValue(object) }}
   </div>
 </template>
 
 <script>
 import labelMixin from "./mixins/labelMixin";
+import itemsHelper from "../../mixins/itemsHelpers";
 
 export default {
   name: "CountryInputReport",
 
-  components: {},
-
-  mixins: [labelMixin],
+  mixins: [labelMixin, itemsHelper],
 
   props: {
     object: {
       type: Object,
       required: true
     }
-  },
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    value() {
-      let key = this.$store.state.assessment[this.object.reportItemKey];
-      if (!key) {
-        return "/";
-      }
-      return this.object.options.find(option => option.id === key).name;
-    }
-  },
-
-  methods: {}
+  }
 };
 </script>

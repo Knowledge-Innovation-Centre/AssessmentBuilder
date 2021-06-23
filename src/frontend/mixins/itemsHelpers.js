@@ -62,6 +62,27 @@ export default {
       }
 
       return any;
+    },
+    getReportValue(object) {
+      let result = this.$store.state.assessment[object.reportItemKey];
+      if (!result) {
+        return "/";
+      }
+
+      if (!object.options) {
+        return result;
+      }
+
+      let names = [];
+      if (Array.isArray(result)) {
+        for (const resultItem of result) {
+          names.push(
+            object.options.find(option => option.id === resultItem).name
+          );
+        }
+        return names.join(", ");
+      }
+      return object.options.find(option => option.id === result).name;
     }
   }
 };

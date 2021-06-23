@@ -1,37 +1,24 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ value }}
+    {{ getReportValue(object) }}
   </div>
 </template>
 
 <script>
 import labelMixin from "./mixins/labelMixin";
+import itemsHelper from "../../mixins/itemsHelpers";
 
 export default {
   name: "RadioInputReport",
 
-  components: {},
-
-  mixins: [labelMixin],
+  mixins: [labelMixin, itemsHelper],
 
   props: {
     object: {
       type: Object,
       required: true
     }
-  },
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    value() {
-      return this.$store.state.assessment[this.object.reportItemKey];
-    }
-  },
-
-  methods: {}
+  }
 };
 </script>
