@@ -53,7 +53,7 @@ final class Apprenticeship_Online_Assessment_Tool {
      *
      * @var string
      */
-    public $version = '1.4.7';
+    public $version = '1.4.8';
 
     /**
      * Holds various class instances

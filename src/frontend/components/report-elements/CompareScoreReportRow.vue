@@ -5,7 +5,7 @@
     </tr>
     <tr v-for="result of results">
       <template v-if="bold">
-        <th v-html="result.title" />
+        <th class="aoat-text-left" v-html="result.title" />
         <th
           v-for="(page, index) of result.pages"
           :key="index"
@@ -15,7 +15,7 @@
         </th>
       </template>
       <template v-else>
-        <td v-html="result.title" />
+        <td class="aoat-text-left"><strong v-html="result.title" /></td>
         <td
           v-for="(page, index) of result.pages"
           :key="index"

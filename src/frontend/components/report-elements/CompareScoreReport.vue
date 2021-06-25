@@ -37,7 +37,7 @@
       />
       <compare-score-report-row
         v-if="object.countryResults && countryResults.length"
-        title="Country results"
+        :title="'Country results: ' + country"
         :results="countryResults"
       />
       <compare-score-report-row
@@ -70,6 +70,7 @@
 <script>
 import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
+import itemsHelper from "../../mixins/itemsHelpers";
 import CompareScoreReportRow from "./CompareScoreReportRow.vue";
 import Api from "../../Api";
 
@@ -80,7 +81,7 @@ export default {
     CompareScoreReportRow
   },
 
-  mixins: [labelMixin, scoreMixin],
+  mixins: [labelMixin, scoreMixin, itemsHelper],
   props: {
     object: {
       type: Object,
@@ -116,7 +117,8 @@ export default {
       averageResult: {
         title: "",
         pages: []
-      }
+      },
+      country: "/"
     };
   },
 
@@ -190,8 +192,6 @@ export default {
     },
     loopResults(assessments) {
       let index = 0;
-      let userIndex = 0;
-      let countryIndex = 0;
 
       for (const assessment of assessments) {
         let assessmentData = assessment.assessment_data;
@@ -234,6 +234,7 @@ export default {
           assessmentData[countryReportItem.reportItemKey] ===
             this.currentAssessmentData[countryReportItem.reportItemKey]
         ) {
+          this.country = this.getReportValue(countryReportItem);
           this.countryResults.push({
             title: title,
             pages: currentResults
@@ -329,7 +330,7 @@ export default {
     },
     setData(assessmentData) {
       let pages = [];
-      let index = 1;
+      let index = 0;
 
       let totalScorePage = {
         title: "Total",
