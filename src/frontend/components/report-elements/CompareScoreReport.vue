@@ -296,7 +296,7 @@ export default {
         if (!assessmentValue) {
           continue;
         }
-        if (!reportItem.options.length) {
+        if (!reportItem.options) {
           titles.push(assessmentValue);
           continue;
         }
