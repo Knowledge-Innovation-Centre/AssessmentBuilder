@@ -311,6 +311,7 @@ export default {
         this.chartData.datasets.push({
           label: "",
           borderColor: "",
+          backgroundColor: "",
           data: [],
           fill: false
         });
@@ -352,6 +353,9 @@ export default {
         this.chartTimeline.datasets[index].borderColor = this.getGroupColor(
           index
         );
+        this.chartTimeline.datasets[
+          index
+        ].backgroundColor = this.getGroupColorWithTransparency(index);
         this.chartTimeline.datasets[index].data = [];
         let innerIndex = 0;
         for (const assessmentId of this.groupsToAverage[index]) {
@@ -377,6 +381,9 @@ export default {
       index = 0;
       for (const scoreValue of this.scoreValues) {
         this.chartData.datasets[index].borderColor = this.getGroupColor(index);
+        this.chartData.datasets[
+          index
+        ].backgroundColor = this.getGroupColorWithTransparency(index);
         this.chartData.datasets[index].data = [];
         Object.keys(scoreValue).forEach(key1 => {
           this.chartData.datasets[index].data.push(
@@ -544,7 +551,21 @@ export default {
       return this.groups[index].color;
     },
     getRandomColor() {
-      return "#" + Math.floor(Math.random() * 16777215).toString(16);
+      return this.getGroupColorWithTransparency(
+        "#" + Math.floor(Math.random() * 16777215).toString(16)
+      );
+    },
+    getGroupColorWithTransparency(index) {
+      let c;
+
+      c = this.groups[index].color.substring(1).split("");
+      if (c.length == 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = "0x" + c.join("");
+      return (
+        "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.5)"
+      );
     }
   }
 };

@@ -136,7 +136,7 @@
       <!--        />-->
       <!--      </div>-->
       <div class="aoat-w-full aoat-px-2 ">
-        <advanced-reports />
+        <!--        <advanced-reports />-->
         <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
           <div
             class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative wrapper"
@@ -343,25 +343,25 @@ export default {
           key: "default",
           short_name: "Default",
           name: "Default",
-          color: "#ff5733"
+          color: "#70CCCC"
         },
         {
           key: "group1",
           short_name: "1",
           name: "Group 1",
-          color: "#46ff33"
+          color: "#60B4EF"
         },
         {
           key: "group2",
           short_name: "2",
           name: "Group 2",
-          color: "#336eff"
+          color: "#FFD778"
         },
         {
           key: "group3",
           short_name: "3",
           name: "Group 3",
-          color: "#e0ff33"
+          color: "#FF839C"
         }
       ],
       groupsToAverage: {
@@ -376,26 +376,30 @@ export default {
           {
             label: "",
             borderColor: "",
+            backgroundColor: "",
             data: [],
-            fill: false
+            fill: true
           },
           {
             label: "",
             borderColor: "",
+            backgroundColor: "",
             data: [],
-            fill: false
+            fill: true
           },
           {
             label: "",
             borderColor: "",
+            backgroundColor: "",
             data: [],
-            fill: false
+            fill: true
           },
           {
             label: "",
             borderColor: "",
+            backgroundColor: "",
             data: [],
-            fill: false
+            fill: true
           }
         ]
       },
@@ -583,6 +587,11 @@ export default {
       Object.keys(this.scoreValues).forEach(key => {
         this.chartData.datasets[index].label = this.getGroupName(key);
         this.chartData.datasets[index].borderColor = this.getGroupColor(key);
+        this.chartData.datasets[
+          index
+        ].backgroundColor = this.getGroupColorWithTransparency(
+          this.getGroupColor(key)
+        );
         this.chartData.datasets[index].data = [];
 
         Object.keys(this.scoreValues[key]).forEach(key1 => {
@@ -743,7 +752,22 @@ export default {
       return this.groups.find(group => group.key === groupKey).color;
     },
     getRandomColor() {
-      return "#" + Math.floor(Math.random() * 16777215).toString(16);
+      return this.getGroupColorWithTransparency(
+        "#" + Math.floor(Math.random() * 16777215).toString(16)
+      );
+    },
+
+    getGroupColorWithTransparency(color) {
+      let c;
+
+      c = color.substring(1).split("");
+      if (c.length == 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = "0x" + c.join("");
+      return (
+        "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.5)"
+      );
     }
   }
 };

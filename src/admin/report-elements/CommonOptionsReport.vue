@@ -17,7 +17,7 @@
           </button>
         </template>
         <div class="aoat-text-left w-800 aoat-py-4">
-          <table class="table aoat-w-full w-800">
+          <table class="table aoat-w-full w-800 aoat-align-top">
             <tbody>
               <tr>
                 <th>Label:</th>
@@ -29,7 +29,7 @@
               </tr>
               <tr v-if="typeof object.excludeForScoreComparing !== 'undefined'">
                 <th>Exclude for score compare:</th>
-                <td colspan="2">
+                <td>
                   <input
                     v-model="object.excludeForScoreComparing"
                     type="checkbox"
@@ -64,6 +64,26 @@
                   <input v-model="object.countryResults" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.customFieldResults !== 'undefined'">
+                <th>Reports by custom field:</th>
+                <td>
+                  <input v-model="object.customFieldResults" type="checkbox" />
+                  <select
+                    v-if="object.customFieldResults"
+                    v-model="object.customFieldResultsFields"
+                    class="aoat-mt-3"
+                    :multiple="true"
+                  >
+                    <option
+                      v-for="fieldInForm in fieldsInForm"
+                      :key="fieldInForm.reportItemKey"
+                      :value="fieldInForm.reportItemKey"
+                    >
+                      {{ fieldInForm.name }}
+                    </option>
+                  </select>
+                </td>
+              </tr>
               <tr v-if="typeof object.allResults !== 'undefined'">
                 <th>All reports:</th>
                 <td>
@@ -93,7 +113,7 @@
               </tr>
               <tr v-if="typeof object.compareScoringTitleField !== 'undefined'">
                 <th>Scoring title field:</th>
-                <td colspan="2">
+                <td>
                   <select
                     v-model="object.compareScoringTitleField"
                     multiple="true"
@@ -343,10 +363,15 @@ export default {
   padding: 5px 10px;
 }
 .table > tbody > tr > th {
+  vertical-align: top;
   text-align: right;
 }
 /deep/ .multiselect__input {
   display: none;
+}
+.table input:not([type="checkbox"]),
+.table select {
+  width: 100%;
 }
 .handle {
   position: absolute;

@@ -14,8 +14,8 @@
             >
           </base-progress>
         </template>
-        <generic v-if="formData.items.length" :form="formData" />
-        <generic v-if="reportData.items.length" :form="reportData" />
+        <pages v-if="formData.items.length" :items="formData.items" />
+        <pages v-if="reportData.items.length" :items="reportData.items" />
       </div>
     </div>
     <template v-if="exportEnabled">
@@ -33,14 +33,14 @@
 
 <script>
 import Api from "./Api";
-import Generic from "./components/Generic.vue";
+import Pages from "./components/Pages.vue";
 import BaseProgress from "./components/BaseProgress.vue";
 import itemsHelper from "./mixins/itemsHelpers.js";
 
 export default {
   name: "App",
   components: {
-    Generic,
+    Pages,
     BaseProgress
   },
   mixins: [itemsHelper],

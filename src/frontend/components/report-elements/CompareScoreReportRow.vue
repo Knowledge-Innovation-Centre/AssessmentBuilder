@@ -4,7 +4,7 @@
       <th :colspan="results[0].pages.length + 1">{{ title }}</th>
     </tr>
     <tr v-for="result of results">
-      <template v-if="bold">
+      <template v-if="bold || result.id === assessmentId">
         <th class="aoat-text-left" v-html="result.title" />
         <th
           v-for="(page, index) of result.pages"
@@ -47,6 +47,14 @@ export default {
     bold: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    assessmentObject() {
+      return this.$store.state.assessmentObject;
+    },
+    assessmentId() {
+      return this.assessmentObject.ID;
     }
   }
 };

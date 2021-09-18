@@ -150,7 +150,8 @@ export default {
         optionVertical => optionVertical.name
       );
       this.chartData.datasets[0].backgroundColor = this.object.optionsVertical.map(
-        optionVertical => optionVertical.color
+        optionVertical =>
+          this.getGroupColorWithTransparency(optionVertical.color)
       );
       let options = {};
       for (let option of this.object.optionsVertical) {
@@ -166,6 +167,19 @@ export default {
         preparedArray.push(option);
       }
       this.chartData.datasets[0].data = preparedArray;
+    },
+
+    getGroupColorWithTransparency(color) {
+      let c;
+
+      c = color.substring(1).split("");
+      if (c.length == 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = "0x" + c.join("");
+      return (
+        "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.5)"
+      );
     }
   }
 };

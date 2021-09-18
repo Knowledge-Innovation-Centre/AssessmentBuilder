@@ -80,7 +80,7 @@
                 <td colspan="2">
                   <table class="aoat-w-full">
                     <tr v-for="(condition, index) in conditions">
-                      <td>
+                      <td v-if="condition">
                         <select v-model="condition.field">
                           <option
                             v-for="fieldInForm in fieldsInForm"
@@ -91,7 +91,7 @@
                           </option>
                         </select>
                       </td>
-                      <template v-if="condition.field">
+                      <template v-if="condition && condition.field">
                         <td v-if="isSelect(getFieldByKey(condition.field))">
                           <multiselect
                             v-model="condition.selectedOptions"
@@ -138,10 +138,10 @@
                         <td v-else>
                           <input v-model="condition.value" type="text" />
                         </td>
-                        <td style="width: 50px;">
-                          <button @click="removeCondition(index)">X</button>
-                        </td>
                       </template>
+                      <td style="width: 20px; min-width: 20px;">
+                        <button @click="removeCondition(index)">X</button>
+                      </td>
                     </tr>
                   </table>
                 </td>
@@ -314,7 +314,7 @@ export default {
         );
     },
     conditions() {
-      if (typeof this.object.conditions !== "array") {
+      if (!this.object.conditions) {
         return [];
       }
       return this.object.conditions;
@@ -395,9 +395,14 @@ export default {
 }
 .table > tbody > tr > th {
   text-align: right;
+  vertical-align: top;
 }
 /deep/ .multiselect__input {
   display: none;
+}
+.table input:not([type="checkbox"]),
+.table select {
+  width: 100%;
 }
 .handle {
   position: absolute;

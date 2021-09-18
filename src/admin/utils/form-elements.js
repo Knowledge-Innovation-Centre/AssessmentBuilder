@@ -351,6 +351,8 @@ export default [
     firstResult: false,
     userResults: false,
     countryResults: false,
+    customFieldResults: false,
+    customFieldResultsFields: false,
     allResults: false,
     averageResult: false,
     averageUserResult: false,

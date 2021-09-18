@@ -41,6 +41,11 @@
         :results="countryResults"
       />
       <compare-score-report-row
+        v-if="object.customFieldResults && customFieldResults.length"
+        :title="'Matched results: '"
+        :results="customFieldResults"
+      />
+      <compare-score-report-row
         v-if="object.allResults && allResults.length"
         title="All results"
         :results="allResults"
@@ -106,6 +111,7 @@ export default {
       allResults: [],
       userResults: [],
       countryResults: [],
+      customFieldResults: [],
       averageUserResult: {
         title: "",
         pages: []
@@ -191,39 +197,43 @@ export default {
       return averageResultPages;
     },
     loopResults(assessments) {
-      let index = 0;
-
+      const currentAssessmentAuthor = +this.assessmentObject.post_author;
       for (const assessment of assessments) {
         let assessmentData = assessment.assessment_data;
         if (!assessmentData) {
           continue;
         }
+        const assessmentAuthor = +assessment.post_author;
+        const sameAssessment = this.assessmentId === assessment.ID;
         let currentResults = this.setData(assessmentData);
 
         const title = this.getTitle(assessment);
 
-        this.allResults.push({
-          title: title,
-          pages: currentResults
-        });
-
-        if (index === 0) {
+        if (sameAssessment) {
           this.currentResult.title = title;
           this.currentResult.pages = currentResults;
         }
 
+        this.allResults.push({
+          title: title,
+          pages: currentResults,
+          id: assessment.ID
+        });
+
         if (
-          +assessment.post_author === +this.user.id &&
+          assessmentAuthor === currentAssessmentAuthor &&
           !this.previousResult.pages.length &&
-          index !== 0
+          !sameAssessment
         ) {
           this.previousResult.title = title;
           this.previousResult.pages = currentResults;
+          this.previousResult.id = assessment.ID;
         }
 
-        if (+assessment.post_author === +this.user.id && index !== 0) {
+        if (assessmentAuthor === currentAssessmentAuthor) {
           this.firstResult.title = title;
           this.firstResult.pages = currentResults;
+          this.firstResult.id = assessment.ID;
         }
 
         let countryReportItem = this.findCountry(this.reportData.items);
@@ -237,18 +247,37 @@ export default {
           this.country = this.getReportValue(countryReportItem);
           this.countryResults.push({
             title: title,
-            pages: currentResults
+            pages: currentResults,
+            id: assessment.ID
           });
         }
 
-        if (+assessment.post_author === +this.user.id) {
+        if (this.object.customFieldResults) {
+          let isMatched = true;
+          for (const searchItem of this.object.customFieldResultsFields) {
+            if (
+              assessmentData[searchItem] !==
+              this.currentAssessmentData[searchItem]
+            ) {
+              isMatched = false;
+            }
+          }
+          if (isMatched) {
+            this.customFieldResults.push({
+              title: title,
+              pages: currentResults,
+              id: assessment.ID
+            });
+          }
+        }
+
+        if (assessmentAuthor === currentAssessmentAuthor) {
           this.userResults.push({
             title: title,
-            pages: currentResults
+            pages: currentResults,
+            id: assessment.ID
           });
         }
-
-        index++;
       }
     },
     findCountry(items) {
@@ -283,8 +312,6 @@ export default {
         }
       }
 
-      let reportItems = [];
-
       let titles = [];
 
       for (let titleField of titleFields) {
@@ -318,7 +345,6 @@ export default {
       for (const item of items) {
         if (item.reportItemKey === selectedKey) {
           return item;
-          return;
         }
         if (item.items) {
           let foundItem = this.getReportItem(item.items, selectedKey);
