@@ -60,7 +60,6 @@
             </button>
           </div>
         </template>
-        <div v-else />
 
         <download-pdf v-if="isReport" />
 
@@ -78,11 +77,12 @@
 import Api from "../Api";
 import itemsHelper from "../mixins/itemsHelpers";
 import DownloadPdf from "./DownloadPdf.vue";
+import Generic from "./Generic.vue";
 
 export default {
   name: "Pages",
   components: {
-    Generic: () => import("./Generic.vue"),
+    Generic,
     DownloadPdf
   },
   mixins: [itemsHelper],
