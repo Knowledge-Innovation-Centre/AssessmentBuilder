@@ -3,7 +3,7 @@
     <tr>
       <th :colspan="results[0].pages.length + 1">{{ title }}</th>
     </tr>
-    <tr v-for="result of results">
+    <tr v-for="result of results" :key="result.id">
       <template v-if="bold || result.id === assessmentId">
         <th class="aoat-text-left" v-html="result.title" />
         <th

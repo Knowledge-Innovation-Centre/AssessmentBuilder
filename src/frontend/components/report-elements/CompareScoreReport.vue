@@ -1,6 +1,6 @@
 <template>
   <div :id="'compare-score-' + object.reportItemKey">
-    <table class="aoat-w-full">
+    <table class="aoat-w-full benchmark-table">
       <thead>
         <tr>
           <th>
@@ -223,7 +223,8 @@ export default {
         if (
           assessmentAuthor === currentAssessmentAuthor &&
           !this.previousResult.pages.length &&
-          !sameAssessment
+          !sameAssessment &&
+          this.currentResult.pages.length
         ) {
           this.previousResult.title = title;
           this.previousResult.pages = currentResults;
@@ -391,3 +392,12 @@ export default {
   }
 };
 </script>
+<style scoped lang="scss">
+.benchmark-table {
+  /deep/ td,
+  /deep/ th {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+</style>
