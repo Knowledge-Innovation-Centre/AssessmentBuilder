@@ -156,8 +156,20 @@ class Assessment extends WP_REST_Controller {
 	    $query = get_posts($args);
 
 	    $assessment->report = $query[0] ?? null;
+
+
+        $args = [
+            'post_type' => 'aoat_form',
+            'ID' => $formId,
+        ];
+        $query = get_posts($args);
+
+	    $assessment->form = $query[0] ?? null;
 	    if ($assessment->report) {
 	        $assessment->report->report_data = get_post_meta($assessment->report->ID, 'report_data');
+	    }
+	    if ($assessment->form) {
+	        $assessment->form->form_data = get_post_meta($assessment->form->ID, 'form_data');
 	    }
 
         return rest_ensure_response( $assessment );

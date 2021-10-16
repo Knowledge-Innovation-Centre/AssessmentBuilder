@@ -1,7 +1,7 @@
 <template>
   <div :class="classes">
     <generic
-      v-for="item in items"
+      v-for="item in getItems(items)"
       :key="item.key"
       :class="elementClass"
       :form="item"

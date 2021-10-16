@@ -1,29 +1,31 @@
 <template>
-  <div class="aoat-flex aoat-flex-col">
+  <div>
     <label>
       {{ object.label }} <template v-if="object.required">*</template>
     </label>
-    <textarea
+    <select
       v-model="value"
       class="aoat-w-full"
-      :style="getWidthStyle"
       :class="hasError ? 'aoat-border-red-400' : ''"
-      :placeholder="object.placeholder"
-    />
-    <small
-      v-if="selectedAssessmentForReview"
-      class="aoat-w-full aoat-text-sm aoat-block"
-      >Initial data:
-      <strong>{{ selectedAssessmentForReview[object.key] }}</strong></small
+      :style="getWidthStyle"
+      @change="getAssessmentInfo()"
     >
+      <option :value="null" disabled hidden>{{ object.placeholder }}</option>
+      <option v-for="option in options" :key="option.ID" :value="option.ID">{{
+        option.post_title
+      }}</option>
+    </select>
   </div>
 </template>
 
 <script>
+import Api from "../../Api";
+
 export default {
-  name: "TextareaInput",
+  name: "CountryInput",
 
   components: {},
+
   props: {
     object: {
       type: Object,
@@ -37,13 +39,12 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      options: []
+    };
   },
 
   computed: {
-    selectedAssessmentForReview() {
-      return this.$store.state.selectedAssessmentForReview;
-    },
     value: {
       get() {
         return this.$store.state.assessment[this.object.key];
@@ -64,6 +65,27 @@ export default {
       return "";
     }
   },
-  methods: {}
+  mounted() {
+    this.getOptions();
+  },
+  methods: {
+    getOptions() {
+      Api.get(
+        aoat_config.aoatGetAssessmentsUrl +
+          "?assessment_id=" +
+          this.$store.state.formId
+      ).then(result => {
+        this.options = result.data;
+      });
+    },
+    getAssessmentInfo() {
+      Api.get(aoat_config.aoatGetAssessmentsUrl + this.value).then(result => {
+        this.$store.dispatch(
+          "updateSelectedAssessmentForReview",
+          result.data.assessment_data[0]
+        );
+      });
+    }
+  }
 };
 </script>

@@ -313,7 +313,14 @@ export default {
       return this.getItemsRecursive(this.$store.state.report.items)
         .filter(field => !childrenKeys.includes(field.key))
         .filter(field =>
-          ["text", "select", "date", "radio", "radio_grid"].includes(field.type)
+          [
+            "first_last_name",
+            "text",
+            "select",
+            "date",
+            "radio",
+            "radio_grid"
+          ].includes(field.type)
         );
     }
   },

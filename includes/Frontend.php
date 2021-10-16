@@ -45,7 +45,8 @@ class Frontend {
 			'nonce'      => wp_create_nonce('wp_rest'),
 			'aoatGetFormUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/" . ($atts['id'] ?: null)),
 			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
-			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me"),
+            'aoatGetAssessmentsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
+			'aoatGetUserUrl' => get_rest_url(null, "/wp/v2/users/me?context=edit"),
 			'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
 		];
 		wp_localize_script( 'apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data );

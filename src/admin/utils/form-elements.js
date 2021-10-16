@@ -62,7 +62,8 @@ export default [
     class: "",
     placeholder: "",
     maxWidth: null,
-    maxWidthUnit: "px"
+    maxWidthUnit: "px",
+    includeInAssessmentTitle: false
   },
   {
     key: randomValueHex(15),
@@ -118,6 +119,31 @@ export default [
       }
     ],
     labelPartsSeperator: "-"
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
+    name: "Assessments",
+    type: "select",
+    defaultValue: null,
+    label: "Select assessment",
+    reportLabel: "",
+    conditions: [],
+    roleConditions: [],
+    required: false,
+    canRemove: true,
+    component: "AssessmentsInput",
+    reportComponent: "AssessmentsInputReport",
+    options: ["author", "administrator"],
+    hidden: false,
+    hideInForm: false,
+    class: "",
+    placeholder: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    includeInAssessmentTitle: false,
+    multiple: false,
+    queryParameterField: null
   },
   {
     key: randomValueHex(15),

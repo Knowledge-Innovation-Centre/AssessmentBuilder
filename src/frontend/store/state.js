@@ -1,6 +1,8 @@
 export const state = () => ({
   assessmentObject: {},
   assessment: {},
+  selectedAssessmentForReview: null,
+  selectedAssessmentForReviewId: null,
   report: {},
   formId: {},
   formSettings: {},

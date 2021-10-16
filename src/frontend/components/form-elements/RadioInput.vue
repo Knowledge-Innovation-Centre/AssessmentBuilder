@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aoat-flex aoat-flex-col">
     {{ object.label }} <template v-if="object.required">*</template>
     <label
       v-for="option in options"
@@ -15,6 +15,13 @@
       />
       {{ option.name }}
     </label>
+    <small
+      v-if="selectedAssessmentForReview"
+      class="aoat-w-full aoat-text-sm aoat-block"
+      >Initial data:<strong>
+        {{ selectedAssessmentForReview[object.key] }}</strong
+      ></small
+    >
   </div>
 </template>
 
@@ -41,6 +48,9 @@ export default {
   },
 
   computed: {
+    selectedAssessmentForReview() {
+      return this.$store.state.selectedAssessmentForReview;
+    },
     value: {
       get() {
         return this.$store.state.assessment[this.object.key];

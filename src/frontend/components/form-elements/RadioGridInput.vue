@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aoat-flex aoat-flex-col">
     {{ object.label }}
     <table
       class="aoat-w-full"
@@ -34,12 +34,26 @@
             v-for="optionVertical in optionsVertical"
             :key="optionVertical.id"
           >
-            <input
-              v-model="value[optionHorizontal.id]"
-              type="radio"
-              :name="optionHorizontal.id"
-              :value="optionVertical.id"
-            />
+            <div class="aoat-flex">
+              <div>
+                <input
+                  v-model="value[optionHorizontal.id]"
+                  type="radio"
+                  :name="optionHorizontal.id"
+                  :value="optionVertical.id"
+                />
+              </div>
+              <small
+                v-if="
+                  selectedAssessmentForReview &&
+                    selectedAssessmentForReview[object.key][
+                      optionHorizontal.id
+                    ] === optionVertical.id
+                "
+                class="aoat-w-full aoat-text-sm"
+                ><span class="dashicons dashicons-yes"
+              /></small>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -71,6 +85,9 @@ export default {
     };
   },
   computed: {
+    selectedAssessmentForReview() {
+      return this.$store.state.selectedAssessmentForReview;
+    },
     optionsHorizontal() {
       return this.object.optionsHorizontal;
     },

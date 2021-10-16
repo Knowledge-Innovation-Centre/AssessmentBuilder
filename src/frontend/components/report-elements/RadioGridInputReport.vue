@@ -52,7 +52,7 @@
                     <template
                       v-if="value[optionHorizontal.id] === optionVertical.id"
                     >
-                      <span class="checkmark">
+                      <span class="checkmark aoat-inline">
                         <div class="checkmark_stem" />
                         <div class="checkmark_kick" />
                       </span>
@@ -61,9 +61,19 @@
                   <template v-else>
                     <span
                       v-if="value[optionHorizontal.id] === optionVertical.id"
-                      class="dashicons dashicons-yes"
+                      class="dashicons dashicons-yes aoat-inline"
                     />
                   </template>
+                  <span
+                    v-if="
+                      selectedAssessmentForReview &&
+                        getReportValue(object, selectedAssessmentForReview)[
+                          optionHorizontal.id
+                        ] === optionVertical.id
+                    "
+                    class="aoat-inline aoat-text-gray-500 "
+                    ><span class="dashicons dashicons-yes"
+                  /></span>
                 </td>
                 <td>
                   {{
@@ -72,6 +82,19 @@
                         optionVertical.id === value[optionHorizontal.id]
                     ).score
                   }}
+                  <span
+                    v-if="selectedAssessmentForReview"
+                    class="aoat-inline aoat-text-gray-500 "
+                    >{{
+                      optionsVertical.find(
+                        optionVertical =>
+                          optionVertical.id ===
+                          getReportValue(object, selectedAssessmentForReview)[
+                            optionHorizontal.id
+                          ]
+                      ).score
+                    }}</span
+                  >
                 </td>
               </tr>
             </tbody>
@@ -86,6 +109,7 @@
 import PieChart from "./PieChart";
 import RadarChart from "./RadarChart";
 import labelMixin from "./mixins/labelMixin";
+import itemsHelper from "../../mixins/itemsHelpers";
 
 export default {
   name: "RadioGridInputReport",
@@ -95,7 +119,7 @@ export default {
     RadarChart
   },
 
-  mixins: [labelMixin],
+  mixins: [labelMixin, itemsHelper],
 
   props: {
     object: {
@@ -129,6 +153,9 @@ export default {
   },
 
   computed: {
+    selectedAssessmentForReview() {
+      return this.$store.state.selectedAssessmentForReview;
+    },
     value() {
       return this.$store.state.assessment[this.object.reportItemKey] ?? {};
     },
@@ -184,31 +211,4 @@ export default {
   }
 };
 </script>
-<style scoped>
-.checkmark {
-  display: inline-block;
-  width: 22px;
-  height: 22px;
-  -ms-transform: rotate(45deg); /* IE 9 */
-  -webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
-  transform: rotate(45deg);
-}
-
-.checkmark_stem {
-  position: absolute;
-  width: 3px;
-  height: 9px;
-  background-color: #ccc;
-  left: 11px;
-  top: 6px;
-}
-
-.checkmark_kick {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background-color: #ccc;
-  left: 8px;
-  top: 12px;
-}
-</style>
+<style scoped></style>

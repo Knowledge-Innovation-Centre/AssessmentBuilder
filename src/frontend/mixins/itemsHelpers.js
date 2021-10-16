@@ -7,6 +7,26 @@ export default {
     },
 
     checkConditions(item, assessment = null) {
+      if (item.roleConditions && item.roleConditions.length) {
+        if (!this.$store.state.user) {
+          return false;
+        }
+
+        if (!this.$store.state.user.roles.includes(item.roleConditions)) {
+          return false;
+        }
+      }
+
+      if (item.queryParameterField) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const show = urlParams.get(item.queryParameterField);
+
+        if (show !== "1") {
+          return false;
+        }
+      }
+
       if (!item.conditions) {
         return true;
       }
@@ -55,6 +75,10 @@ export default {
       );
 
       let any = false;
+      if (!assessmentValue) {
+        return any;
+      }
+
       for (let assessmentValueItem of assessmentValue) {
         if (requiredConditionIds.includes(assessmentValueItem)) {
           any = true;
@@ -63,8 +87,11 @@ export default {
 
       return any;
     },
-    getReportValue(object) {
-      let result = this.$store.state.assessment[object.reportItemKey];
+    getReportValue(object, assessment = null) {
+      if (!assessment) {
+        assessment = this.$store.state.assessment;
+      }
+      let result = assessment[object.reportItemKey];
       if (!result) {
         return "/";
       }
@@ -83,6 +110,21 @@ export default {
         return names.join(", ");
       }
       return object.options.find(option => option.id === result).name;
+    },
+    findByKey(items, value, key = "type") {
+      for (const item of items) {
+        if (item[key] === value) {
+          return item;
+        }
+        if (!item.items) {
+          continue;
+        }
+        const found = this.findByKey(item.items, value, key);
+        if (found) {
+          return found;
+        }
+      }
+      return null;
     }
   }
 };

@@ -191,6 +191,24 @@
                   />
                 </td>
               </tr>
+              <tr v-if="typeof object.roleConditions !== 'undefined'">
+                <th>Select roles:</th>
+                <td colspan="2">
+                  <multiselect
+                    v-model="object.roleConditions"
+                    placeholder="Select one"
+                    :close-on-select="true"
+                    :options="object.options"
+                  />
+                </td>
+              </tr>
+
+              <tr v-if="typeof object.queryParameterField !== 'undefined'">
+                <th>Query parameter key:</th>
+                <td colspan="2">
+                  <input v-model="object.queryParameterField" type="text" />
+                </td>
+              </tr>
               <tr v-if="typeof object.labelParts !== 'undefined'">
                 <th>Build label:</th>
                 <td colspan="2">

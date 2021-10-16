@@ -122,8 +122,28 @@ export default {
             this.reportData = this.assessment.report.report_data[0];
             this.$store.dispatch("updateReport", this.reportData);
           }
-
           this.$store.dispatch("updateAssessment", this.assessmentData);
+
+          const assessmentInputObject = this.findByKey(
+            this.assessment.form.form_data[0].items,
+            "AssessmentsInput",
+            "component"
+          );
+          if (this.assessmentData[assessmentInputObject.key]) {
+            Api.get(
+              aoat_config.aoatGetAssessmentsUrl +
+                this.assessmentData[assessmentInputObject.key]
+            ).then(result => {
+              this.$store.dispatch(
+                "updateSelectedAssessmentForReview",
+                result.data.assessment_data[0]
+              );
+              this.$store.dispatch(
+                "updateSelectedAssessmentForReviewId",
+                result.data.ID
+              );
+            });
+          }
         });
       }
       Api.get(aoat_config.aoatGetSettingsUrl).then(result => {
@@ -132,6 +152,15 @@ export default {
           settings[setting.key] = setting.value;
         }
         this.$store.dispatch("updateSettings", settings);
+      });
+    },
+
+    getAssessmentInfo() {
+      Api.get(aoat_config.aoatGetAssessmentsUrl + this.value).then(result => {
+        this.$store.dispatch(
+          "updateSelectedAssessmentForReview",
+          result.data.assessment_data[0]
+        );
       });
     }
   }

@@ -21,6 +21,11 @@
         :results="[currentResult]"
       />
       <compare-score-report-row
+        v-if="selectedAssessmentForReview"
+        title="Reviewed result"
+        :results="[reviewedResult]"
+      />
+      <compare-score-report-row
         v-if="object.previousResult && previousResult.pages.length"
         title="Previous result"
         :results="[previousResult]"
@@ -100,6 +105,10 @@ export default {
         title: "Current result",
         pages: []
       },
+      reviewedResult: {
+        title: "Reviewed result",
+        pages: []
+      },
       previousResult: {
         title: "Previous result",
         pages: []
@@ -129,6 +138,12 @@ export default {
   },
 
   computed: {
+    selectedAssessmentForReview() {
+      return this.$store.state.selectedAssessmentForReview;
+    },
+    selectedAssessmentForReviewId() {
+      return this.$store.state.selectedAssessmentForReviewId;
+    },
     user() {
       return this.$store.state.user;
     },
@@ -212,6 +227,15 @@ export default {
         if (sameAssessment) {
           this.currentResult.title = title;
           this.currentResult.pages = currentResults;
+        }
+        console.log(this.selectedAssessmentForReviewId);
+        console.log(assessment.ID);
+        if (
+          this.selectedAssessmentForReviewId &&
+          this.selectedAssessmentForReviewId === assessment.ID
+        ) {
+          this.reviewedResult.title = title;
+          this.reviewedResult.pages = currentResults;
         }
 
         this.allResults.push({

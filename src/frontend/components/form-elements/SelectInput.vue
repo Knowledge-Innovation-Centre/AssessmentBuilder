@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="aoat-flex aoat-flex-col">
     <label>
       {{ object.label }} <template v-if="object.required">*</template>
     </label>
@@ -15,6 +15,18 @@
         option.name
       }}</option>
     </select>
+    <template v-if="selectedAssessmentForReview">
+      <small v-if="multiple" class="aoat-w-full aoat-text-sm aoat-block"
+        >Initial data:
+        <strong>{{
+          getList(selectedAssessmentForReview[object.key])
+        }}</strong></small
+      >
+      <small v-else class="aoat-w-full aoat-text-sm aoat-block"
+        >Initial data:
+        <strong>{{ selectedAssessmentForReview[object.key] }}</strong></small
+      >
+    </template>
   </div>
 </template>
 
@@ -41,6 +53,9 @@ export default {
   },
 
   computed: {
+    selectedAssessmentForReview() {
+      return this.$store.state.selectedAssessmentForReview;
+    },
     value: {
       get() {
         if (this.$store.state.assessment[this.object.key]) {
@@ -73,6 +88,15 @@ export default {
       return "";
     }
   },
-  methods: {}
+  methods: {
+    getList(items) {
+      if (!items) {
+        return "";
+      }
+      console.log(items);
+      // const items = JSON.parse(items);
+      return items.join(", ");
+    }
+  }
 };
 </script>
