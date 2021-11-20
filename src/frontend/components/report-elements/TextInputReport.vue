@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    <a v-if="isUrl" :href="getReportValue(object)">{{
+    <a v-if="isUrl" target="_blank" :href="getReportValue(object)">{{
       getReportValue(object)
     }}</a>
     <span v-else>

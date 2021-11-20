@@ -15,7 +15,17 @@
       v-if="selectedAssessmentForReview"
       class="aoat-w-full aoat-text-sm aoat-block"
       >Initial data:
-      <strong>{{ selectedAssessmentForReview[object.key] }}</strong></small
+      <strong>
+        <a
+          v-if="object.isUrl"
+          target="_blank"
+          :href="selectedAssessmentForReview[object.key]"
+          >{{ selectedAssessmentForReview[object.key] }}</a
+        >
+        <span v-else>{{
+          selectedAssessmentForReview[object.key]
+        }}</span></strong
+      ></small
     >
   </div>
 </template>
