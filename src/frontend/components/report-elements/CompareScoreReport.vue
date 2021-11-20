@@ -17,63 +17,70 @@
       </thead>
       <compare-score-report-row
         v-if="object.currentResult"
-        title="Current result"
+        :title="object.currentResultLabel"
         :results="[currentResult]"
       />
       <compare-score-report-row
         v-if="selectedAssessmentForReview"
-        title="Reviewed result"
+        :title="object.reviewedResultLabel"
         :results="[reviewedResult]"
       />
       <compare-score-report-row
         v-if="object.previousResult && previousResult.pages.length"
-        title="Previous result"
+        :title="object.previousResultLabel"
         :results="[previousResult]"
       />
       <compare-score-report-row
         v-if="object.firstResult && firstResult.pages.length"
-        title="First result"
+        :title="object.previousResultLabel"
         :results="[firstResult]"
       />
       <compare-score-report-row
         v-if="object.userResults && userResults.length"
-        title="User results"
+        :title="object.userResultsLabel"
         :results="userResults"
       />
       <compare-score-report-row
         v-if="object.countryResults && countryResults.length"
-        :title="'Country results: ' + country"
+        :title="object.countryResultsLabel + ': ' + country"
         :results="countryResults"
       />
       <compare-score-report-row
         v-if="object.customFieldResults && customFieldResults.length"
-        :title="'Matched results: '"
+        :title="object.customFieldResultsLabel"
         :results="customFieldResults"
       />
       <compare-score-report-row
         v-if="object.allResults && allResults.length"
-        title="All results"
+        :title="object.allResultsLabel"
         :results="allResults"
       />
       <compare-score-report-row
         v-if="object.averageResult && averageResult.pages.length"
-        title="Average result"
+        :title="object.averageResultLabel"
         :bold="true"
         :results="[averageResult]"
       />
       <compare-score-report-row
         v-if="object.averageUserResult && averageUserResult.pages.length"
-        title="User result"
+        :title="object.averageUserResultLabel"
         :bold="true"
         :results="[averageUserResult]"
       />
       <compare-score-report-row
         v-if="object.averageCountryResult && averageCountryResult.pages.length"
-        title="Country result"
+        :title="object.averageCountryResultLabel"
         :bold="true"
         :results="[averageCountryResult]"
       />
     </table>
+
+    <div v-if="selectedAssessmentForReview" class="aoat-text-center aoat-mt-5">
+      <button :disabled="!reviewPassed" @click="sendMail()">
+        Send email
+      </button>
+      <div v-if="mailSent">Mail has been sent!</div>
+    </div>
   </div>
 </template>
 
@@ -101,6 +108,7 @@ export default {
 
   data() {
     return {
+      reviewPassed: false,
       currentResult: {
         title: "Current result",
         pages: []
@@ -133,7 +141,8 @@ export default {
         title: "",
         pages: []
       },
-      country: "/"
+      country: "/",
+      mailSent: false
     };
   },
 
@@ -167,6 +176,7 @@ export default {
       if (!aoat_config.aoatGetAssessmentsUrl) {
         return;
       }
+      console.log(this.assessmentId);
       Api.get(
         aoat_config.aoatGetAssessmentsUrl +
           "?assessment_id=" +
@@ -174,7 +184,50 @@ export default {
       ).then(result => {
         this.loopResults(result.data);
         this.calculateAverage();
+        this.checkReviewPassed();
       });
+    },
+    checkReviewPassed() {
+      if (!this.selectedAssessmentForReview) {
+        this.reviewPassed = false;
+        return;
+      }
+
+      if (
+        this.reviewedResult.pages[this.reviewedResult.pages.length - 1].score >
+        this.currentResult.pages[this.currentResult.pages.length - 1].score
+      ) {
+        return false;
+      }
+      this.reviewPassed = this.checkPassedItems(this.reportData.items);
+    },
+    checkPassedItems(items) {
+      for (const item of items) {
+        if (item.items) {
+          if (!this.checkPassedItems(item.items)) {
+            return false;
+          }
+          continue;
+        }
+
+        if (!item.minScore) {
+          continue;
+        }
+
+        let reviewedScoreSum = 0;
+        for (const optionHorizontal of item.optionsHorizontal) {
+          reviewedScoreSum += +item.optionsVertical.find(
+            optionVertical =>
+              optionVertical.id ===
+              (this.assessmentObject.assessment_data[0][item.reportItemKey] ??
+                {})[optionHorizontal.id]
+          ).score;
+        }
+        if (reviewedScoreSum < item.minScore) {
+          return false;
+        }
+      }
+      return true;
     },
     calculateAverage() {
       this.averageResult.pages = this.averageResults(this.allResults);
@@ -228,8 +281,6 @@ export default {
           this.currentResult.title = title;
           this.currentResult.pages = currentResults;
         }
-        console.log(this.selectedAssessmentForReviewId);
-        console.log(assessment.ID);
         if (
           this.selectedAssessmentForReviewId &&
           this.selectedAssessmentForReviewId === assessment.ID
@@ -378,6 +429,23 @@ export default {
           }
         }
       }
+    },
+    sendMail() {
+      const formData = new FormData();
+      formData.append("assessment_id", this.selectedAssessmentForReviewId);
+      formData.append("review_assessment_id", this.assessmentId);
+      formData.append("action", "aoat_send_reviewer_mail");
+
+      Api.post(aoat_config.ajax_url, formData, {
+        processData: false,
+        contentType: false
+      })
+        .then(response => {
+          this.mailSent = true;
+        })
+        .catch(response => {
+          console.log(response);
+        });
     },
     setData(assessmentData) {
       let pages = [];

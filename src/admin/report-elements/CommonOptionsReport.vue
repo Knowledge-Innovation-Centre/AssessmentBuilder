@@ -18,18 +18,29 @@
         </template>
         <div class="aoat-text-left w-800 aoat-py-4">
           <table class="table aoat-w-full w-800 aoat-align-top">
+            <thead>
+              <tr>
+                <td />
+                <td style="max-width: 50px; min-width: 50px" />
+                <td />
+              </tr>
+            </thead>
             <tbody>
               <tr>
                 <th>Label:</th>
-                <td><input v-model="object.reportLabel" type="text" /></td>
+                <td colspan="2">
+                  <input v-model="object.reportLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.hidden !== 'undefined'">
                 <th>Hidden:</th>
-                <td><input v-model="object.hidden" type="checkbox" /></td>
+                <td colspan="2">
+                  <input v-model="object.hidden" type="checkbox" />
+                </td>
               </tr>
               <tr v-if="typeof object.excludeForScoreComparing !== 'undefined'">
                 <th>Exclude for score compare:</th>
-                <td>
+                <td colspan="2">
                   <input
                     v-model="object.excludeForScoreComparing"
                     type="checkbox"
@@ -41,27 +52,43 @@
                 <td>
                   <input v-model="object.currentResult" type="checkbox" />
                 </td>
+                <td>
+                  <input v-model="object.currentResultLabel" type="text" />
+                  <input v-model="object.reviewedResultLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.previousResult !== 'undefined'">
                 <th>Previous report:</th>
                 <td>
                   <input v-model="object.previousResult" type="checkbox" />
                 </td>
+                <td>
+                  <input v-model="object.previousResultLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.firstResult !== 'undefined'">
                 <th>First report:</th>
                 <td><input v-model="object.firstResult" type="checkbox" /></td>
+                <td>
+                  <input v-model="object.firstResultLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.userResults !== 'undefined'">
                 <th>User reports:</th>
                 <td>
                   <input v-model="object.userResults" type="checkbox" />
                 </td>
+                <td>
+                  <input v-model="object.userResultsLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.countryResults !== 'undefined'">
                 <th>Country reports:</th>
                 <td>
                   <input v-model="object.countryResults" type="checkbox" />
+                </td>
+                <td>
+                  <input v-model="object.countryResultsLabel" type="text" />
                 </td>
               </tr>
               <tr v-if="typeof object.customFieldResults !== 'undefined'">
@@ -83,11 +110,17 @@
                     </option>
                   </select>
                 </td>
+                <td>
+                  <input v-model="object.customFieldResultsLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.allResults !== 'undefined'">
                 <th>All reports:</th>
                 <td>
                   <input v-model="object.allResults" type="checkbox" />
+                </td>
+                <td>
+                  <input v-model="object.allResultsLabel" type="text" />
                 </td>
               </tr>
               <tr v-if="typeof object.averageResult !== 'undefined'">
@@ -95,11 +128,17 @@
                 <td>
                   <input v-model="object.averageResult" type="checkbox" />
                 </td>
+                <td>
+                  <input v-model="object.averageResultLabel" type="text" />
+                </td>
               </tr>
               <tr v-if="typeof object.averageUserResult !== 'undefined'">
                 <th>Average user report:</th>
                 <td>
                   <input v-model="object.averageUserResult" type="checkbox" />
+                </td>
+                <td>
+                  <input v-model="object.averageUserResultLabel" type="text" />
                 </td>
               </tr>
               <tr v-if="typeof object.averageCountryResult !== 'undefined'">
@@ -110,10 +149,16 @@
                     type="checkbox"
                   />
                 </td>
+                <td>
+                  <input
+                    v-model="object.averageCountryResultLabel"
+                    type="text"
+                  />
+                </td>
               </tr>
               <tr v-if="typeof object.compareScoringTitleField !== 'undefined'">
                 <th>Scoring title field:</th>
-                <td>
+                <td colspan="2">
                   <select
                     v-model="object.compareScoringTitleField"
                     multiple="true"
@@ -130,15 +175,19 @@
               </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
                 <th>Hide labels:</th>
-                <td><input v-model="object.hideLabels" type="checkbox" /></td>
+                <td colspan="2">
+                  <input v-model="object.hideLabels" type="checkbox" />
+                </td>
               </tr>
               <tr>
                 <th>Classes:</th>
-                <td><input v-model="object.class" type="text" /></td>
+                <td colspan="2">
+                  <input v-model="object.class" type="text" />
+                </td>
               </tr>
               <tr v-if="object.type === 'radio_grid'">
                 <th>Select graph</th>
-                <td>
+                <td colspan="2">
                   <multiselect
                     v-model="object.selectedGraph"
                     :multiple="true"
@@ -152,7 +201,7 @@
               </tr>
               <tr v-if="typeof object.selectedResultType !== 'undefined'">
                 <th>Select type</th>
-                <td>
+                <td colspan="2">
                   <multiselect
                     v-model="object.selectedResultType"
                     :multiple="true"
@@ -166,7 +215,7 @@
               </tr>
               <tr v-if="typeof object.legendFor !== 'undefined'">
                 <th>Select score</th>
-                <td>
+                <td colspan="2">
                   <multiselect
                     v-model="object.legendFor"
                     :multiple="false"
@@ -180,7 +229,7 @@
               </tr>
               <tr v-if="typeof object.scoreGraphColor !== 'undefined'">
                 <th>Select score graph color</th>
-                <td>
+                <td colspan="2">
                   <v-swatches
                     v-model="object.scoreGraphColor"
                     :swatches="swatches"
@@ -189,8 +238,8 @@
               </tr>
               <tr v-if="typeof object.height !== 'undefined'">
                 <th>Max height:</th>
-                <td><input v-model="object.height" type="number" /></td>
-                <td>
+                <td colspan="2">
+                  <input v-model="object.height" type="number" />
                   <select v-model="object.heightUnit">
                     <option value="px">px</option>
                   </select>
@@ -386,11 +435,9 @@ export default {
   top: -20px;
   cursor: grab;
 }
-td {
-  max-width: 250px;
-  min-width: 200px;
-}
+
 select {
   width: 100%;
+  max-width: 100%;
 }
 </style>

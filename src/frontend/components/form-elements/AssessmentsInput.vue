@@ -20,11 +20,12 @@
 
 <script>
 import Api from "../../Api";
+import itemsHelper from "../../mixins/itemsHelpers";
 
 export default {
-  name: "CountryInput",
+  name: "AssessmentsInput",
 
-  components: {},
+  mixins: [itemsHelper],
 
   props: {
     object: {
@@ -75,7 +76,9 @@ export default {
           "?assessment_id=" +
           this.$store.state.formId
       ).then(result => {
-        this.options = result.data;
+        this.options = result.data.filter(dataItem => {
+          return !dataItem.assessment_data[this.object.key];
+        });
       });
     },
     getAssessmentInfo() {

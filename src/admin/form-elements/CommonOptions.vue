@@ -54,6 +54,12 @@
                   <input v-model="object.multiple" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.isUrl !== 'undefined'">
+                <th>Is URL:</th>
+                <td colspan="2">
+                  <input v-model="object.isUrl" type="checkbox" />
+                </td>
+              </tr>
               <tr v-if="typeof object.showTitle !== 'undefined'">
                 <th>Show title:</th>
                 <td colspan="2">
@@ -73,6 +79,12 @@
                 <th>Disable for scoring:</th>
                 <td colspan="2">
                   <input v-model="object.disableForScoring" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.minScore !== 'undefined'">
+                <th>Min threshold:</th>
+                <td colspan="2">
+                  <input v-model="object.minScore" type="number" />
                 </td>
               </tr>
               <tr>

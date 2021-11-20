@@ -127,6 +127,9 @@ class Assessment extends WP_REST_Controller {
 	    if(current_user_can('editor')) {
 		    return true;
 	    }
+	    if(current_user_can('author')) {
+		    return true;
+	    }
 	    if (!is_user_logged_in()) {
 		    return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
 	    }
@@ -218,6 +221,9 @@ class Assessment extends WP_REST_Controller {
 	    if(current_user_can('editor')) {
 		    return true;
 	    }
+        if(current_user_can('author')) {
+            return true;
+        }
 	    if (!is_user_logged_in()) {
 		    return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
 	    }
@@ -252,6 +258,9 @@ class Assessment extends WP_REST_Controller {
 		if(current_user_can('editor')) {
 			return true;
 		}
+        if(current_user_can('author')) {
+            return true;
+        }
 		if (!is_user_logged_in()) {
 			return new WP_Error( 403, __( "User not logged in", "apprenticeship-online-assessment-tool" ) );
 		}

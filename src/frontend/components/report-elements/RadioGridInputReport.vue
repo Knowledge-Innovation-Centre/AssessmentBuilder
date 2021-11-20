@@ -85,7 +85,8 @@
                   <span
                     v-if="selectedAssessmentForReview"
                     class="aoat-inline aoat-text-gray-500 "
-                    >{{
+                    >/
+                    {{
                       optionsVertical.find(
                         optionVertical =>
                           optionVertical.id ===

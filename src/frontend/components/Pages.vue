@@ -233,7 +233,7 @@ export default {
       }
       for (let item of items) {
         if (item.items) {
-          this.checkValidation(item.items);
+          this.checkValidation(this.getItems(item.items));
           continue;
         }
 

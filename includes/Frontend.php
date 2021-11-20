@@ -17,6 +17,8 @@ class Frontend {
 		add_action('wp_ajax_aoat_upload_file', [ $this, 'aoat_upload_file']);
 		add_action('wp_ajax_nopriv_aoat_upload_file', [ $this, 'aoat_upload_file']);
 
+		add_action('wp_ajax_aoat_send_reviewer_mail', [ $this, 'aoat_send_reviewer_mail']);
+
 		add_action('rest_prepare_user', [ $this, 'rest_prepare_user'], 10, 3 );
 	}
 
@@ -117,6 +119,7 @@ class Frontend {
 		$data = [
 			'aoatSaveAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
 			'aoatGetFormUrl' => null,
+            'ajax_url'   => admin_url('admin-ajax.php'),
 			'aoatGetAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/" . ($post->ID ?: null)),
 			'aoatGetAssessmentsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
 			'aoatGetMediaUrl' => get_rest_url(null, "/wp/v2/media/"),
@@ -143,7 +146,22 @@ class Frontend {
 		}
 		echo $uploadedFileId;
 		wp_die();
-		echo json_encode(rest_ensure_response( get_post($uploadedFileId) ));
+	}
+
+	function aoat_send_reviewer_mail(){
+        $assessment = get_post($_POST['assessment_id']);
+        $review_assessment = get_post($_POST['review_assessment_id']);
+        $review_assessment_display_name = get_the_author_meta( 'display_name', $review_assessment->post_author);
+
+        $email = get_the_author_meta( 'user_email', $assessment->post_author);
+        $display_name = get_the_author_meta( 'display_name', $assessment->post_author);
+
+        $emailContent = '<span>' . __('Dear') . ' ' . $display_name . '</span><br><br>';
+        $emailContent .= '<span>' . sprintf(__('Your assessment %s has passed the review process.'), $assessment->post_title).'</span><br>';
+        $emailContent .= '<span>' . sprintf(__('Review has been completed by %s.'), $review_assessment_display_name).'</span><br>';
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+        wp_mail( $email, __('Your assessment was reviewed and approved'), $emailContent, $headers);
+        echo $email;
 		wp_die();
 	}
 

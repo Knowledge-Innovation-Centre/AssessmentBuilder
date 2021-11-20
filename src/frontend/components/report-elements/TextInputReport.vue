@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="aoat-font-bold">{{ getLabel }}</div>
-    {{ getReportValue(object) }}
-
+    <a v-if="isUrl" :href="getReportValue(object)">{{
+      getReportValue(object)
+    }}</a>
+    <span v-else>
+      {{ getReportValue(object) }}
+    </span>
     <small
       v-if="selectedAssessmentForReview"
       class="aoat-w-full aoat-text-sm aoat-block"
@@ -32,6 +36,16 @@ export default {
   computed: {
     selectedAssessmentForReview() {
       return this.$store.state.selectedAssessmentForReview;
+    },
+    formData() {
+      return this.$store.state.assessmentObject.form.form_data[0];
+    },
+    isUrl() {
+      const formObject = this.getFormItemData(
+        this.formData.items,
+        this.object.reportItemKey
+      );
+      return !!formObject.isUrl;
     }
   }
 };
