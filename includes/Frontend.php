@@ -158,7 +158,7 @@ class Frontend {
 
         $emailContent = '<span>' . __('Dear') . ' ' . $display_name . '</span><br><br>';
         $emailContent .= '<span>' . sprintf(__('Your assessment %s has passed the review process.'), $assessment->post_title).'</span><br>';
-        $emailContent .= '<span>' . sprintf(__('Review has been completed by %s.'), $review_assessment_display_name).'</span><br>';
+        $emailContent .= '<span>' . sprintf(__('Review has been completed by %s.'), $review_assessment_display_name).'</span><br><br><br>';
         $headers = array('Content-Type: text/html; charset=UTF-8');
         wp_mail( $email, __('Your assessment was reviewed and approved'), $emailContent, $headers);
         echo $email;

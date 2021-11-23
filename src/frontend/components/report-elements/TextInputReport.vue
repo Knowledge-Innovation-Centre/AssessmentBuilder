@@ -11,9 +11,17 @@
       v-if="selectedAssessmentForReview"
       class="aoat-w-full aoat-text-sm aoat-block"
       >Initial data:
-      <strong>{{
-        getReportValue(object, selectedAssessmentForReview)
-      }}</strong></small
+      <strong>
+        <a
+          v-if="object.isUrl"
+          target="_blank"
+          :href="getReportValue(object, selectedAssessmentForReview)"
+          >{{ getReportValue(object, selectedAssessmentForReview) }}</a
+        >
+        <span v-else>{{
+          getReportValue(object, selectedAssessmentForReview)
+        }}</span></strong
+      ></small
     >
   </div>
 </template>

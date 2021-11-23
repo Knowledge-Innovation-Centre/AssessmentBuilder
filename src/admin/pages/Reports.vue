@@ -172,7 +172,7 @@
                   </th>
                   <th
                     class="aoat-text-right aoat-p-3 aoat-px-5"
-                    style="min-width: 200px; width: 200px;"
+                    style="min-width: 100px; width: 200px;"
                   >
                     Total score
                   </th>
@@ -785,7 +785,6 @@ button.active {
 .wrapper {
   position: relative;
   overflow: auto;
-  white-space: nowrap;
 }
 
 .sticky-col {
