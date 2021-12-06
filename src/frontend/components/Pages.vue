@@ -95,6 +95,7 @@ export default {
       currentIndex: 0,
       currentItem: null,
       clickedForward: true,
+      hasReviewField: false,
       title: "",
       message: null,
       errors: []
@@ -115,6 +116,9 @@ export default {
     },
     showPageNumbers() {
       return this.$store.state.formSettings.showPageNumbers;
+    },
+    selectedAssessmentForReviewId() {
+      return this.$store.state.selectedAssessmentForReviewId;
     }
   },
   watch: {
@@ -141,9 +145,17 @@ export default {
       }
 
       let $this = this;
+      this.hasReviewField = false;
       this.setTitle(this.items);
       if (this.title === "") {
         this.title = "Assessment " + new Date().toLocaleString();
+      }
+      if (this.hasReviewField) {
+        if (this.selectedAssessmentForReviewId) {
+          this.title = "R2 " + this.title;
+        } else {
+          this.title = "R1 " + this.title;
+        }
       }
       let assessmentData = this.$store.state.assessment;
       Api.post(aoat_config.aoatSaveAssessmentUrl, {
@@ -203,6 +215,9 @@ export default {
 
     setTitle(items) {
       for (let item of items) {
+        if (item.component === "AssessmentsInput") {
+          this.hasReviewField = true;
+        }
         if (item.includeInAssessmentTitle) {
           this.title += this.getValue(item.key) + " ";
         }

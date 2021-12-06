@@ -87,6 +87,10 @@ export default {
           "updateSelectedAssessmentForReview",
           result.data.assessment_data[0]
         );
+        this.$store.dispatch(
+          "updateSelectedAssessmentForReviewId",
+          result.data.ID
+        );
       });
     }
   }

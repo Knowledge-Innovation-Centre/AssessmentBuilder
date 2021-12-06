@@ -2,6 +2,7 @@
 namespace ApprenticeshipOnlineAssessmentTool;
 
 use WP_Query;
+use function WPML\FP\Strings\replace;
 
 /**
  * Frontend Pages Handler
@@ -156,12 +157,23 @@ class Frontend {
         $email = get_the_author_meta( 'user_email', $assessment->post_author);
         $display_name = get_the_author_meta( 'display_name', $assessment->post_author);
 
-        $emailContent = '<span>' . __('Dear') . ' ' . $display_name . '</span><br><br>';
-        $emailContent .= '<span>' . sprintf(__('Your assessment %s has passed the review process.'), $assessment->post_title).'</span><br>';
-        $emailContent .= '<span>' . sprintf(__('Review has been completed by %s.'), $review_assessment_display_name).'</span><br><br><br>';
+        $emailContent = get_option('aoat_email_content');
+        $emailSubject = get_option('aoat_email_subject');
+        $cc = explode(',', trim(get_option('aoat_review_emails')));
+
+        $emailContent = str_replace('$initialReviewer', $display_name, $emailContent);
+        $emailContent = str_replace('$assessment', $assessment->post_title, $emailContent);
+        $emailContent = str_replace('$reviewer', $review_assessment_display_name, $emailContent);
+        $emailContent = nl2br($emailContent);
+
         $headers = array('Content-Type: text/html; charset=UTF-8');
-        wp_mail( $email, __('Your assessment was reviewed and approved'), $emailContent, $headers);
-        echo $email;
+
+        foreach ($cc as $ccEmail) {
+            echo $ccEmail;
+            $headers[] = 'Cc: ' . $ccEmail;
+        }
+        wp_mail( $email, $emailSubject, $emailContent, $headers);
+        echo 'ok';
 		wp_die();
 	}
 

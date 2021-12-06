@@ -44,7 +44,7 @@ class Setting extends WP_REST_Controller {
             'value'=> false,
 		],
 		[
-			'label'=> 'Available colors',
+			'label'=> 'Available colors:',
             'key'=> 'available_colors',
             'value'=> [
 	            "#1FBC9C",
@@ -65,6 +65,21 @@ class Setting extends WP_REST_Controller {
 	            "",
             ],
 		],
+        [
+            'label' => 'Review notification emails (split by comma):',
+            'key'=> 'aoat_review_emails',
+            'value'=> '',
+        ],
+        [
+            'label' => 'Review email subject:',
+            'key'=> 'aoat_email_subject',
+            'value'=> '',
+        ],
+        [
+            'label' => 'Review email content (reserved words: $initialReviewer, $assessment, $reviewer):',
+            'key'=> 'aoat_email_content',
+            'value'=> '',
+        ],
 	];
 
     /**

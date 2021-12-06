@@ -1,51 +1,63 @@
 <template>
   <div class="app-settings">
     <h2>Apprenticeship online assessment tool settings</h2>
-    <table>
+    <table class="aoat-w-full">
       <tbody>
-        <tr v-for="setting in settings" :key="setting.key">
-          <th class="aoat-text-right">{{ setting.label }}</th>
-          <td>
-            <template v-if="setting.key === 'aoat_page_for_assessments'">
-              <multiselect
-                v-model="setting.value"
-                :multiple="false"
-                label="post_title"
-                placeholder="Select one"
-                class="aoat-w-full"
-                track-by="ID"
-                :options="pages"
-              />
-            </template>
-            <template
-              v-else-if="
-                [
-                  'aoat_redirect_after_completion',
-                  'aoat_show_link_button'
-                ].includes(setting.key)
-              "
-            >
-              <input v-model="setting.value" type="checkbox" />
-            </template>
-            <template v-else-if="['available_colors'].includes(setting.key)">
-              <div v-for="(settingValue, index) in setting.value" :key="index">
-                <input
-                  :key="index"
-                  v-model="setting.value[index]"
-                  type="text"
+        <template v-for="setting in settings">
+          <tr :key="setting.key + '_title'">
+            <th class="aoat-text-left">{{ setting.label }}</th>
+          </tr>
+          <tr :key="setting.key + '_value'">
+            <td>
+              <template v-if="setting.key === 'aoat_page_for_assessments'">
+                <multiselect
+                  v-model="setting.value"
+                  :multiple="false"
+                  label="post_title"
+                  placeholder="Select one"
+                  class="aoat-w-full"
+                  track-by="ID"
+                  :options="pages"
                 />
+              </template>
+              <template
+                v-else-if="
+                  [
+                    'aoat_redirect_after_completion',
+                    'aoat_show_link_button'
+                  ].includes(setting.key)
+                "
+              >
+                <input v-model="setting.value" type="checkbox" />
+              </template>
+              <template v-else-if="['available_colors'].includes(setting.key)">
+                <div
+                  v-for="(settingValue, index) in setting.value"
+                  :key="index"
+                >
+                  <input
+                    :key="index"
+                    v-model="setting.value[index]"
+                    type="text"
+                  />
 
-                <button @click="removeColor(setting, index)">
-                  Remove color
-                </button>
-              </div>
-              <button @click="addColor(setting)">Add color</button>
-            </template>
-            <template v-else>
-              <input v-model="setting.value" type="text" />
-            </template>
-          </td>
-        </tr>
+                  <button @click="removeColor(setting, index)">
+                    Remove color
+                  </button>
+                </div>
+                <button @click="addColor(setting)">Add color</button>
+              </template>
+              <template
+                v-else-if="['aoat_email_content'].includes(setting.key)"
+              >
+                <textarea v-model="setting.value" rows="10" cols="50" />
+              </template>
+              <template v-else>
+                <input v-model="setting.value" type="text" />
+              </template>
+            </td>
+          </tr>
+        </template>
       </tbody>
     </table>
 
