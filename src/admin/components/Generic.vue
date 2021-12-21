@@ -43,6 +43,7 @@ import Column from "./Column.vue";
 import Page from "./Page.vue";
 import Paragraph from "./Paragraph.vue";
 import TextInput from "../form-elements/TextInput.vue";
+import HiddenInput from "../form-elements/HiddenInput.vue";
 import DateInput from "../form-elements/DateInput.vue";
 import TextareaInput from "../form-elements/TextareaInput.vue";
 import RadioInput from "../form-elements/RadioInput.vue";
@@ -58,6 +59,7 @@ import CountryInputReport from "../report-elements/CountryInputReport.vue";
 import RadioGridInputReport from "../report-elements/RadioGridInputReport.vue";
 import RadioInputReport from "../report-elements/RadioInputReport.vue";
 import TextInputReport from "../report-elements/TextInputReport.vue";
+import HiddenInputReport from "../report-elements/HiddenInputReport.vue";
 import TextareaInputReport from "../report-elements/TextareaInputReport.vue";
 import DateInputReport from "../report-elements/DateInputReport.vue";
 import FileUploadReport from "../report-elements/FileUploadReport.vue";
@@ -81,6 +83,7 @@ export default {
     DateInput,
     TextareaInput,
     TextInput,
+    HiddenInput,
     RadioInput,
     RadioGridInput,
     FileUpload,
@@ -91,6 +94,7 @@ export default {
     RadioGridInputReport,
     RadioInputReport,
     TextInputReport,
+    HiddenInputReport,
     TextareaInputReport,
     DateInputReport,
     FileUploadReport,
