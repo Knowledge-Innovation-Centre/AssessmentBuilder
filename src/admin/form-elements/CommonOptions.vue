@@ -340,7 +340,9 @@ export default {
       return this.getItemsRecursive(this.$store.state.form.items)
         .filter(field => !childrenKeys.includes(field.key))
         .filter(field =>
-          ["text", "select", "date", "radio", "radio_grid"].includes(field.type)
+          ["text", "hidden", "select", "date", "radio", "radio_grid"].includes(
+            field.type
+          )
         );
     },
     conditions() {

@@ -3,7 +3,7 @@
 Plugin Name: ApprenticeshipQ Online Assessment Tool
 Plugin URI: https://knowledgeinnovation.eu/
 Description: A WordPress ApprenticeshipQ Online Assessment Tool plugin
-Version: 2.2.2
+Version: 2.3.0
 Author: Jure Jager, Carmen L. Padron-Napoles, Tara Dev
 Author URI: https://knowledgeinnovation.eu/
 License: GPL2
@@ -228,7 +228,7 @@ final class Apprenticeship_Online_Assessment_Tool {
 			    ),
 			    'public'      => true,
 			    'has_archive' => true,
-			    'show_in_menu' => 'apprenticeship-online-assessment-tool'
+			    'show_in_menu' => 'apprenticeship-online-assessment-tool',
 		    )
 	    );
 	    register_post_type('aoat_report',
@@ -246,6 +246,24 @@ final class Apprenticeship_Online_Assessment_Tool {
 	    add_filter( 'admin_url', array( $this, 'aoat_change_add_new_for_form'), 10, 2 );
 
 	    add_filter('get_edit_post_link', array( $this,'get_edit_post_link_178416'), 99, 3);
+        add_filter( 'manage_aoat_assessment_posts_columns', array( $this,'set_custom_edit_aoat_assessment_columns') );
+        add_action( 'manage_aoat_assessment_posts_custom_column' , array( $this,'custom_aoat_assessment_column'), 10, 2 );
+    }
+
+    function set_custom_edit_aoat_assessment_columns($columns) {
+        $columns['form_id'] = __( 'Form', 'your_text_domain' );
+
+        return $columns;
+    }
+
+
+    function custom_aoat_assessment_column( $column, $post_id ) {
+        switch ( $column ) {
+            case 'form_id' :
+                $formId = get_post_meta( $post_id, 'form_id', 1 );
+                $form = get_post($formId);
+                echo $form->post_title;
+        }
     }
 
 	function aoat_change_add_new_for_form( $url, $path ){

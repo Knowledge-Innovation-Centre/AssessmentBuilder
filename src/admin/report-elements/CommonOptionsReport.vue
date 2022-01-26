@@ -365,6 +365,7 @@ export default {
           [
             "first_last_name",
             "text",
+            "hidden",
             "select",
             "date",
             "radio",
