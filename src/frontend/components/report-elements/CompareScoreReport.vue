@@ -176,7 +176,6 @@ export default {
       if (!aoat_config.aoatGetAssessmentsUrl) {
         return;
       }
-      console.log(this.assessmentId);
       Api.get(
         aoat_config.aoatGetAssessmentsUrl +
           "?assessment_id=" +

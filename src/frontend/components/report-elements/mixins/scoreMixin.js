@@ -165,6 +165,7 @@ export default {
             continue;
           }
           let localScore = 0;
+
           for (let option of item.optionsHorizontal) {
             let verticalOption = item.optionsVertical.find(
               optionVertical => optionVertical.id === value[option.id]

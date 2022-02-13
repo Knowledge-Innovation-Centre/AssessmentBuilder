@@ -106,6 +106,21 @@ export default {
         });
       }
 
+      const url = new URL(window.location);
+      let params = new URLSearchParams(url.search);
+
+      if (params.get("edit_assessment")) {
+        Api.get(
+          aoat_config.aoatGetAssessmentsUrl + params.get("edit_assessment")
+        ).then(result => {
+          this.$store.dispatch(
+            "updateAssessment",
+            result.data.assessment_data[0]
+          );
+          this.$store.dispatch("updateAssessmentObject", result.data);
+        });
+      }
+
       if (aoat_config.aoatGetUserUrl) {
         Api.get(aoat_config.aoatGetUserUrl).then(result => {
           this.$store.dispatch("updateUser", result.data);
@@ -129,7 +144,10 @@ export default {
             "AssessmentsInput",
             "component"
           );
-          if (this.assessmentData[assessmentInputObject.key]) {
+          if (
+            assessmentInputObject &&
+            this.assessmentData[assessmentInputObject.key]
+          ) {
             Api.get(
               aoat_config.aoatGetAssessmentsUrl +
                 this.assessmentData[assessmentInputObject.key]
@@ -153,27 +171,9 @@ export default {
         }
         this.$store.dispatch("updateSettings", settings);
       });
-    },
-
-    getAssessmentInfo() {
-      Api.get(aoat_config.aoatGetAssessmentsUrl + this.value).then(result => {
-        this.$store.dispatch(
-          "updateSelectedAssessmentForReview",
-          result.data.assessment_data[0]
-        );
-      });
     }
   }
 };
 </script>
 
-<style scoped>
-.print-settings {
-  width: 180mm;
-  max-width: 180mm;
-}
-.max-width-for-print {
-  width: 180mm;
-  max-width: 180mm;
-}
-</style>
+<style scoped></style>

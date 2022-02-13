@@ -36,6 +36,12 @@
                   <input v-model="object.placeholder" type="text" />
                 </td>
               </tr>
+              <tr v-if="typeof object.defaultValue !== 'undefined'">
+                <th>Default value:</th>
+                <td colspan="2">
+                  <input v-model="object.defaultValue" type="text" />
+                </td>
+              </tr>
               <tr v-if="typeof object.required !== 'undefined'">
                 <th>Required:</th>
                 <td colspan="2">

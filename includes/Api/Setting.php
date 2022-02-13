@@ -29,7 +29,7 @@ class Setting extends WP_REST_Controller {
             'value'=> 4,
 		],
 		[
-			'label'=> 'Page for assessment',
+			'label'=> 'Page for assessments',
             'key'=> 'aoat_page_for_assessments',
             'value'=> null,
 		],

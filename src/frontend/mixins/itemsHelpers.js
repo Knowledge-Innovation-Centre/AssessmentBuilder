@@ -109,7 +109,11 @@ export default {
         }
         return names.join(", ");
       }
-      return object.options.find(option => option.id === result).name;
+      const option = object.options.find(option => option.id === result);
+      if (!option) {
+        return null;
+      }
+      return option.name;
     },
     findByKey(items, value, key = "type") {
       for (const item of items) {

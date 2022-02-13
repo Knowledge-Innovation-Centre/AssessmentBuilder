@@ -103,6 +103,7 @@ class Form extends WP_REST_Controller {
 		    // insert post meta
 		    update_post_meta($post_id, 'form_data', $request->get_params()['formData']);
 		    update_post_meta($post_id, 'form_settings', $request->get_params()['formSettings']);
+		    update_post_meta($post_id, 'page_id', $request->get_params()['pageId']);
 	    }
 
         return rest_ensure_response( get_post($post_id) );
@@ -175,6 +176,7 @@ class Form extends WP_REST_Controller {
 	    $form= get_post($request->get_params()['id']);
 	    $form->form_data = get_post_meta($form->ID, 'form_data');
 	    $form->form_settings = get_post_meta($form->ID, 'form_settings');
+	    $form->page_id = get_post_meta($form->ID, 'page_id');
 	    $args = [
 		    'post_type' => 'aoat_report',
 		    'meta_key' => 'form_id',

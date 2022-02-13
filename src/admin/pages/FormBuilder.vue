@@ -28,6 +28,21 @@
               <input v-model="formSettings.showPageNumbers" type="checkbox" />
               Show page numbers
             </label>
+
+            <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2"
+            >
+              Select page where shortcode is inserted
+            </label>
+            <multiselect
+              v-model="pageId"
+              :multiple="false"
+              label="post_title"
+              placeholder="Select one"
+              class="aoat-w-full"
+              track-by="ID"
+              :options="pages"
+            />
           </div>
           <div>
             <template v-if="id">
@@ -186,6 +201,7 @@ import formElements from "../utils/form-elements";
 import randomValueHex from "../utils/helpers";
 import Generic from "../components/Generic.vue";
 import Loader from "../components/Loader.vue";
+import { Multiselect } from "vue-multiselect";
 
 let isDirty = false;
 
@@ -208,17 +224,20 @@ export default {
   components: {
     Drag,
     Generic,
-    Loader
+    Loader,
+    Multiselect
   },
   data() {
     return {
       loading: false,
       addedElements: [],
+      pages: [],
       title: "",
       importJson: "",
       formData: {},
       form: {},
       reports: [],
+      pageId: null,
       formSettings: {
         showPageNumbers: false
       }
@@ -308,9 +327,14 @@ export default {
         this.formData = this.form.form_data[0];
         this.title = this.form.post_title;
         this.formSettings = this.form.form_settings[0];
+        this.pageId = this.form.page_id[0];
         this.reports = this.form.reports;
 
         this.loading = false;
+      });
+
+      Api.get(aoat_config.aoatGetPagesUrl).then(result => {
+        this.pages = result.data;
       });
     },
     remove(n) {
@@ -355,6 +379,7 @@ export default {
         title: this.title,
         formData: this.formData,
         formSettings: this.formSettings,
+        pageId: this.pageId,
         id: this.id
       })
         .then(function(response) {

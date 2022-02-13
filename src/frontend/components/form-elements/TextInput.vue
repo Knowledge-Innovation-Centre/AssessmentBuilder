@@ -64,6 +64,9 @@ export default {
     },
     value: {
       get() {
+        if (!this.$store.state.assessment[this.object.key]) {
+          return this.object.defaultValue;
+        }
         return this.$store.state.assessment[this.object.key];
       },
       set(newValue) {
@@ -98,14 +101,19 @@ export default {
 
   methods: {
     setInitialData() {
-      if (this.object.type === "first_last_name") {
-        if (this.user) {
-          this.$store.dispatch("updateValue", {
-            key: this.object.key,
-            value: this.user.first_name + " " + this.user.last_name
-          });
-        }
+      if (this.object.type !== "first_last_name") {
+        return;
       }
+      if (!this.user) {
+        return;
+      }
+      if (this.$store.state.assessment[this.object.key]) {
+        return;
+      }
+      this.$store.dispatch("updateValue", {
+        key: this.object.key,
+        value: this.user.first_name + " " + this.user.last_name
+      });
     }
   }
 };

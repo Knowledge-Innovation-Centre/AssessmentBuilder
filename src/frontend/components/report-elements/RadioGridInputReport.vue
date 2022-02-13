@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :id="'radio-grid-' + object.reportItemKey">
     <div class="aoat-font-bold">{{ getLabel }}</div>
     <template v-for="graphType in object.selectedGraph">
       <div :key="graphType.key">
@@ -183,10 +183,11 @@ export default {
       );
       let options = {};
       for (let option of this.object.optionsVertical) {
-        options[option.id] = 0;
+        options[option.id + "_"] = 0;
       }
+
       Object.keys(this.value).forEach(key => {
-        options[this.value[key]]++;
+        options[this.value[key] + "_"]++;
       });
 
       let preparedArray = [];

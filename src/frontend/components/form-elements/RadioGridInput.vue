@@ -94,6 +94,9 @@ export default {
     optionsVertical() {
       return this.object.optionsVertical;
     },
+    valueFromVuex() {
+      return this.$store.state.assessment[this.object.key];
+    },
     getWidthStyle() {
       if (this.object.maxWidth) {
         return (
@@ -108,23 +111,44 @@ export default {
     value: {
       deep: true,
       handler() {
-        return this.$store.dispatch("updateValue", {
-          key: this.object.key,
-          value: this.value,
-          score: this.score
-        });
+        if (JSON.stringify(this.value) !== JSON.stringify(this.valueFromVuex)) {
+          this.updateVuex();
+        }
+      }
+    },
+    valueFromVuex: {
+      deep: true,
+      immediate: true,
+      handler() {
+        if (JSON.stringify(this.value) !== JSON.stringify(this.valueFromVuex)) {
+          this.setFromVuex();
+        }
       }
     }
   },
-  mounted() {
-    for (let optionHorizontal of this.optionsHorizontal) {
-      this.$set(this.value, optionHorizontal.id, null);
-    }
-  },
+  mounted() {},
   methods: {
-    // updateVuex() {
-    //   return this.$store.dispatch('updateValue', { key: this.object.key, value: this.value, score: this.score})
-    // }
+    updateVuex() {
+      return this.$store.dispatch("updateValue", {
+        key: this.object.key,
+        value: this.value,
+        score: this.score
+      });
+    },
+    setFromVuex() {
+      const value = {};
+      if (this.valueFromVuex) {
+        for (let [key, value1] of Object.entries(this.valueFromVuex)) {
+          value[key] = value1;
+        }
+      } else {
+        for (let optionHorizontal of this.optionsHorizontal) {
+          value[optionHorizontal.id] = null;
+        }
+      }
+
+      this.value = value;
+    }
   }
 };
 </script>

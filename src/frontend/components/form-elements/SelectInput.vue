@@ -93,7 +93,6 @@ export default {
       if (!items) {
         return "";
       }
-      console.log(items);
       // const items = JSON.parse(items);
       return items.join(", ");
     }

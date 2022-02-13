@@ -3,7 +3,7 @@
 Plugin Name: ApprenticeshipQ Online Assessment Tool
 Plugin URI: https://knowledgeinnovation.eu/
 Description: A WordPress ApprenticeshipQ Online Assessment Tool plugin
-Version: 2.3.0
+Version: 2.5.0
 Author: Jure Jager, Carmen L. Padron-Napoles, Tara Dev
 Author URI: https://knowledgeinnovation.eu/
 License: GPL2
@@ -245,13 +245,15 @@ final class Apprenticeship_Online_Assessment_Tool {
 
 	    add_filter( 'admin_url', array( $this, 'aoat_change_add_new_for_form'), 10, 2 );
 
-	    add_filter('get_edit_post_link', array( $this,'get_edit_post_link_178416'), 99, 3);
+	    add_filter('get_edit_post_link', array( $this,'get_edit_post_link_aoat_form'), 99, 3);
+	    add_filter('get_edit_post_link', array( $this,'get_edit_post_link_aoat_assessment'), 99, 3);
         add_filter( 'manage_aoat_assessment_posts_columns', array( $this,'set_custom_edit_aoat_assessment_columns') );
         add_action( 'manage_aoat_assessment_posts_custom_column' , array( $this,'custom_aoat_assessment_column'), 10, 2 );
     }
 
     function set_custom_edit_aoat_assessment_columns($columns) {
         $columns['form_id'] = __( 'Form', 'your_text_domain' );
+        $columns['author_id'] = __( 'Author', 'your_text_domain' );
 
         return $columns;
     }
@@ -263,6 +265,11 @@ final class Apprenticeship_Online_Assessment_Tool {
                 $formId = get_post_meta( $post_id, 'form_id', 1 );
                 $form = get_post($formId);
                 echo $form->post_title;
+                break;
+            case 'author_id' :
+                $assessment = get_post($post_id);
+                $author = get_the_author_meta('display_name', $assessment->post_author);
+                echo $author;
         }
     }
 
@@ -277,11 +284,26 @@ final class Apprenticeship_Online_Assessment_Tool {
 		return $url;
 	}
 
-	function get_edit_post_link_178416($link, $post_id, $context) {
+	function get_edit_post_link_aoat_form($link, $post_id, $context) {
 		global $current_screen;
 
 		if (isset($current_screen) && $current_screen->id == 'edit-aoat_form' && $context == 'display') {
 			return admin_url('admin.php?page=apprenticeship-online-assessment-tool#/forms/' . $post_id);
+		} else {
+			return $link;
+		}
+	}
+	function get_edit_post_link_aoat_assessment($link, $post_id, $context) {
+		global $current_screen;
+
+
+		if (isset($current_screen) && $current_screen->id == 'edit-aoat_assessment' && $context == 'display') {
+
+            $form_id = get_post_meta($post_id, 'form_id', true);
+            $page = get_post_meta($form_id, 'page_id', true);
+
+
+			return get_permalink($page["ID"]) . '?edit_assessment=' . $post_id;
 		} else {
 			return $link;
 		}

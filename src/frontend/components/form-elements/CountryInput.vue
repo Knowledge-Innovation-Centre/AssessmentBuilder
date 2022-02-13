@@ -51,6 +51,9 @@ export default {
     },
     value: {
       get() {
+        if (!this.$store.state.assessment[this.object.key]) {
+          return this.object.defaultValue;
+        }
         return this.$store.state.assessment[this.object.key];
       },
       set(newValue) {

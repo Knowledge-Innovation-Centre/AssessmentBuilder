@@ -1,5 +1,9 @@
 <template>
-  <div ref="topOfPage" class="aoat-overflow-hidden">
+  <div
+    ref="topOfPage"
+    class="aoat-overflow-hidden"
+    :class="exportEnabled ? 'export-enabled' : ''"
+  >
     <template v-if="!exportEnabled">
       <transition-group
         v-if="!exportEnabled"
@@ -29,13 +33,14 @@
       </div>
     </template>
 
-    <div
-      v-if="!exportEnabled"
-      class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5"
-    >
+    <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
       <template v-if="currentIndex === 0 && filteredItems.length > 1">
         <button v-if="isReport" @click="goToLastPage()">Benchmarking</button>
-        <button @click="setNextPage()">Next</button>
+        <span v-else />
+        <div>
+          <button v-if="!isReport" @click="saveTemp()">Save</button>
+          <button @click="setNextPage()">Next</button>
+        </div>
       </template>
       <template
         v-else-if="
@@ -43,7 +48,10 @@
         "
       >
         <button @click="setPreviousPage()">Back</button>
-        <button @click="setNextPage()">Next</button>
+        <div>
+          <button v-if="!isReport" @click="saveTemp()">Save</button>
+          <button @click="setNextPage()">Next</button>
+        </div>
       </template>
       <template v-else>
         <template v-if="filteredItems.length > 1">
@@ -108,6 +116,9 @@ export default {
     settings() {
       return this.$store.state.settings;
     },
+    assessmentObject() {
+      return this.$store.state.assessmentObject;
+    },
     exportEnabled() {
       return this.$store.state.exportEnabled;
     },
@@ -136,6 +147,15 @@ export default {
     getPageNumberText() {
       return "Page " + (this.currentIndex + 1);
     },
+    saveTemp() {
+      this.saveApiCall(response => {
+        this.$store.dispatch("updateAssessmentObject", response.data);
+        this.message = "Assessment successfully saved!";
+        if (this.user && this.settings.aoat_page_for_assessments) {
+          window.location.href = this.settings.aoat_page_for_assessments;
+        }
+      });
+    },
     save() {
       this.$store.dispatch("clearErrors");
       this.checkValidation(this.filteredItems[this.currentIndex].items);
@@ -144,7 +164,6 @@ export default {
         return false;
       }
 
-      let $this = this;
       this.hasReviewField = false;
       this.setTitle(this.items);
       if (this.title === "") {
@@ -157,23 +176,34 @@ export default {
           this.title = "R1 " + this.title;
         }
       }
+
+      this.saveApiCall(response => {
+        this.message = "Assessment successfully submitted!";
+        if (
+          this.user &&
+          this.settings.aoat_page_for_assessments &&
+          this.settings.aoat_redirect_after_completion
+        ) {
+          window.location.href = this.settings.aoat_page_for_assessments;
+          return;
+        }
+        window.location.href = response.data.guid;
+      });
+    },
+    saveApiCall(callbackFunction) {
       let assessmentData = this.$store.state.assessment;
+      let id = null;
+      if (this.assessmentObject) {
+        id = this.assessmentObject.ID;
+      }
       Api.post(aoat_config.aoatSaveAssessmentUrl, {
+        id: id,
         title: this.title,
         assessmentData: assessmentData,
         formId: this.$store.state.formId
       })
         .then(function(response) {
-          $this.message = "Assessment successfully submitted!";
-          if (
-            $this.user &&
-            $this.settings.aoat_page_for_assessments &&
-            $this.settings.aoat_redirect_after_completion
-          ) {
-            window.location.href = $this.settings.aoat_page_for_assessments;
-            return;
-          }
-          window.location.href = response.data.guid;
+          callbackFunction(response);
         })
         .catch(function(error) {
           console.log(error);

@@ -89,8 +89,15 @@ class Frontend {
 				// Sets up post data so you can use functions like get_the_title(), get_permalink(), etc
 				$assessments->the_post();
 
-				// This is the output for your entry so what you want to do for each post.
-				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a> - <a href="' . get_delete_post_link() . '">Delete</a> </div>';
+
+                // This is the output for your entry so what you want to do for each post.
+				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a>';
+
+                $page = get_post_meta($form->ID, 'page_id', true);
+                if (isset($page)) {
+                    $content .= ' | <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . '">Edit</a>';
+                }
+                $content .= ' | <a href="' . get_delete_post_link() . '">Delete</a> </div>';
 
 			}
 
