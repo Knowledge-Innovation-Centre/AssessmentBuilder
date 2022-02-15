@@ -54,7 +54,7 @@
         </div>
       </template>
       <template v-else>
-        <template v-if="filteredItems.length > 1">
+        <template v-if="filteredItems.length > 1" v-show="!exportEnabled">
           <div>
             <button id="prevButton" @click="setPreviousPage()">
               Back

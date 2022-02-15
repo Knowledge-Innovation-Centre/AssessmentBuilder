@@ -1,5 +1,5 @@
 <template>
-  <button id="generatePdfButton" @click="downloadPdf()">
+  <button v-if="!exportEnabled" id="generatePdfButton" @click="downloadPdf()">
     Download PDF
   </button>
 </template>
@@ -38,6 +38,9 @@ export default {
     },
     reportData() {
       return this.$store.state.report;
+    },
+    exportEnabled() {
+      return this.$store.state.exportEnabled;
     }
   },
   watch: {},
@@ -178,7 +181,7 @@ export default {
         doc.setFillColor("#000000");
         doc.setLineWidth(2);
 
-        await this.$store.dispatch("enableExport");
+        await this.$store.dispatch("disableExport");
         return doc.save();
       }, 2000);
     },

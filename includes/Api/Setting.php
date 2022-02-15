@@ -206,7 +206,7 @@ class Setting extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
     public function get_pages( WP_REST_Request $request ) {
-        return rest_ensure_response( get_pages() );
+        return rest_ensure_response( get_pages(['number' => 100]) );
     }
 
 	/**
