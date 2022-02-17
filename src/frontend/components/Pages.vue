@@ -38,7 +38,9 @@
         <button v-if="isReport" @click="goToLastPage()">Benchmarking</button>
         <span v-else />
         <div>
-          <button v-if="!isReport" @click="saveTemp()">Save</button>
+          <button v-if="!isReport && showSaveButton" @click="saveTemp()">
+            Save
+          </button>
           <button @click="setNextPage()">Next</button>
         </div>
       </template>
@@ -49,7 +51,9 @@
       >
         <button @click="setPreviousPage()">Back</button>
         <div>
-          <button v-if="!isReport" @click="saveTemp()">Save</button>
+          <button v-if="!isReport && showSaveButton" @click="saveTemp()">
+            Save
+          </button>
           <button @click="setNextPage()">Next</button>
         </div>
       </template>
@@ -130,6 +134,18 @@ export default {
     },
     selectedAssessmentForReviewId() {
       return this.$store.state.selectedAssessmentForReviewId;
+    },
+    showSaveButton() {
+      return !!this.findByTypes(this.items[this.currentPage].items, [
+        "text",
+        "textarea",
+        "first_last_name",
+        "select",
+        "date",
+        "radio",
+        "radio_grid",
+        "file_upload"
+      ]);
     }
   },
   watch: {

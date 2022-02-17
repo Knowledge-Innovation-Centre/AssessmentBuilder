@@ -129,6 +129,21 @@ export default {
         }
       }
       return null;
+    },
+    findByTypes(items, types = []) {
+      for (const item of items) {
+        if (types.includes(item.type)) {
+          return item;
+        }
+        if (!item.items) {
+          continue;
+        }
+        const found = this.findByTypes(item.items, types);
+        if (found) {
+          return found;
+        }
+      }
+      return null;
     }
   }
 };

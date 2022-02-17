@@ -7,6 +7,7 @@
 <script>
 import { jsPDF } from "jspdf";
 
+import Api from "../Api";
 import "jspdf-autotable";
 import itemsHelper from "../mixins/itemsHelpers";
 const downloadFile = (blob, fileName) => {
@@ -146,12 +147,24 @@ export default {
                   });
                   bodyIndex++;
                 }
+              } else if (["file_upload"].includes(item.type)) {
+                const value = this.getReportValue(item);
+                if (value) {
+                  let lineIndex = 1;
+                  for (let valueItem of value) {
+                    await Api.get(aoat_config.aoatGetMediaUrl + valueItem)
+                      .then(response => {
+                        body[lineIndex].push(response.data.source_url);
+                      })
+                      .catch(() => {});
+                    lineIndex++;
+                  }
+                }
               } else {
                 body[1].push(this.getReportValue(item));
               }
               colIndex++;
             }
-
             const cellWidth = Math.floor(190 / itemForPdf.length);
             const $this = this;
 
