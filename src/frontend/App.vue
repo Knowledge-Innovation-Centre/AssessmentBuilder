@@ -19,7 +19,18 @@
       </div>
     </div>
     <template v-if="exportEnabled">
-      <div class="aoat-text-center aoat-mt-10">
+      <base-progress
+        v-if="exportEnabled"
+        :percentage="downloadPercentage"
+        color="blue"
+        class="aoat-mx-2 aoat-mb-5 aoat-h-5  aoat-mt-10"
+      >
+        <span
+          class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2"
+          >{{ downloadPercentage }}%</span
+        >
+      </base-progress>
+      <div class="aoat-text-center">
         Loading PDF...please wait
       </div>
     </template>
@@ -61,6 +72,9 @@ export default {
   computed: {
     currentPage() {
       return this.$store.state.currentPage;
+    },
+    downloadPercentage() {
+      return this.$store.state.downloadPercentage;
     },
     percentage() {
       return Math.round(

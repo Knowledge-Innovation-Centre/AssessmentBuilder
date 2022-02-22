@@ -31,6 +31,9 @@ export const mutations = {
   UPDATE_CURRENT_PAGE(state, payload) {
     state.currentPage = payload;
   },
+  UPDATE_DOWNLOAD_PERCENTAGE(state, payload) {
+    state.downloadPercentage = payload;
+  },
   UPDATE_USER(state, payload) {
     Vue.set(state, "user", payload);
   },

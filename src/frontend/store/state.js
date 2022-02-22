@@ -8,6 +8,7 @@ export const state = () => ({
   formSettings: {},
   currentPage: 0,
   user: null,
+  downloadPercentage: 0,
   errors: [],
   exportEnabled: false,
   settings: {

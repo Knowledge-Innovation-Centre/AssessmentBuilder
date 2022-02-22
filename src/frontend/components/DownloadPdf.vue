@@ -1,7 +1,9 @@
 <template>
-  <button v-if="!exportEnabled" id="generatePdfButton" @click="downloadPdf()">
-    Download PDF
-  </button>
+  <div>
+    <button v-if="!exportEnabled" id="generatePdfButton" @click="downloadPdf()">
+      Download PDF
+    </button>
+  </div>
 </template>
 
 <script>
@@ -69,14 +71,21 @@ export default {
     async downloadPdf() {
       var doc = new jsPDF("portrait");
       await this.$store.dispatch("enableExport");
-
+      this.$store.dispatch("updateDownloadPercentage", 0);
       setTimeout(async () => {
+        let currentPage = 0;
         for (const page of this.reportData.items) {
           this.itemsForPdf = [];
           this.currentIndex = 0;
 
           this.getItemsFlatList(page.items);
 
+          let percentage = Math.round(
+            (currentPage / this.reportData.items.length) * 100
+          );
+
+          this.$store.dispatch("updateDownloadPercentage", percentage);
+          currentPage++;
           for (let itemForPdf of this.itemsForPdf) {
             let body = [[], []];
 

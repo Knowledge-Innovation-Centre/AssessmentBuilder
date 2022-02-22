@@ -29,6 +29,9 @@ export const actions = {
   updateCurrentPage({ commit }, payload) {
     commit("UPDATE_CURRENT_PAGE", payload);
   },
+  updateDownloadPercentage({ commit }, payload) {
+    commit("UPDATE_DOWNLOAD_PERCENTAGE", payload);
+  },
   updateUser({ commit }, payload) {
     commit("UPDATE_USER", payload);
   },
