@@ -66,13 +66,14 @@ class Frontend {
 		if (!is_user_logged_in()) {
 			return rest_ensure_response( [] );
 		}
-
+        $paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 		$args = [
 			'post_type' => 'aoat_assessment',
 			'meta_key' => 'form_id',
 			'post_status' => 'any',
 			'meta_value' => $form->ID,
 			'post_author' => $user->ID,
+            'paged' => $paged
 		];
 		$assessments = new WP_Query($args);
 
@@ -95,13 +96,16 @@ class Frontend {
 
                 $page = get_post_meta($form->ID, 'page_id', true);
                 if (isset($page)) {
-                    $content .= ' | <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . '">Edit</a>';
+                    $content .= ' <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . '"><button>Edit</button></a>';
                 }
-                $content .= ' | <a href="' . get_delete_post_link() . '">Delete</a> </div>';
+                $content .= ' <a href="' . get_delete_post_link() . '"><button>Delete</button></a> </div>';
 
 			}
 
 			// Close div wrapper around loop
+			$content .= '
+                <div class="aoat-mt-5 nav-previous alignleft">' . get_previous_posts_link( 'Older assessments' ) . '</div>
+                <div class="aoat-mt-5 nav-next alignright">' . get_next_posts_link( 'Newer assessments', $assessments->max_num_pages ) . '</div>';
 			$content .= '</div>';
 
 			// Restore data

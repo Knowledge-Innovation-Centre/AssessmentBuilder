@@ -36,13 +36,12 @@
     <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
       <template v-if="currentIndex === 0 && filteredItems.length > 1">
         <button v-if="isReport" @click="goToLastPage()">Benchmarking</button>
-        <span v-else />
-        <div>
-          <button v-if="!isReport && showSaveButton" @click="saveTemp()">
-            Save
-          </button>
-          <button @click="setNextPage()">Next</button>
-        </div>
+        <button v-else :disabled="true">Back</button>
+
+        <button v-if="!isReport && showSaveButton" @click="saveTemp()">
+          Save
+        </button>
+        <button @click="setNextPage()">Next</button>
       </template>
       <template
         v-else-if="
@@ -50,12 +49,11 @@
         "
       >
         <button @click="setPreviousPage()">Back</button>
-        <div>
-          <button v-if="!isReport && showSaveButton" @click="saveTemp()">
-            Save
-          </button>
-          <button @click="setNextPage()">Next</button>
-        </div>
+
+        <button v-if="!isReport && showSaveButton" @click="saveTemp()">
+          Save
+        </button>
+        <button @click="setNextPage()">Next</button>
       </template>
       <template v-else>
         <template v-if="filteredItems.length > 1" v-show="!exportEnabled">
@@ -144,6 +142,7 @@ export default {
         "date",
         "radio",
         "radio_grid",
+        "radio_loc",
         "file_upload"
       ]);
     }

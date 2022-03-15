@@ -66,6 +66,19 @@
                   <input v-model="object.isUrl" type="checkbox" />
                 </td>
               </tr>
+              <tr
+                v-if="
+                  typeof object.copyTextFromInitialAssessment !== 'undefined'
+                "
+              >
+                <th>Copy text from initial assessment:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.copyTextFromInitialAssessment"
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.showTitle !== 'undefined'">
                 <th>Show title:</th>
                 <td colspan="2">

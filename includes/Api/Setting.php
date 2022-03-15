@@ -43,6 +43,11 @@ class Setting extends WP_REST_Controller {
             'key'=> 'aoat_show_link_button',
             'value'=> false,
 		],
+        [
+            'label'=> 'Use LOC',
+            'key'=> 'aoat_use_loc',
+            'value'=> false,
+        ],
 		[
 			'label'=> 'Available colors:',
             'key'=> 'available_colors',

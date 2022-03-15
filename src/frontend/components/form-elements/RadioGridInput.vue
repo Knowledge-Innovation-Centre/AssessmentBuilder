@@ -46,6 +46,7 @@
               <small
                 v-if="
                   selectedAssessmentForReview &&
+                    selectedAssessmentForReview[object.key] &&
                     selectedAssessmentForReview[object.key][
                       optionHorizontal.id
                     ] === optionVertical.id

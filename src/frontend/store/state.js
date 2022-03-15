@@ -17,6 +17,7 @@ export const state = () => ({
     aoat_max_items_per_column: 4,
     aoat_page_for_assessments: null,
     aoat_redirect_after_completion: false,
+    aoat_use_loc: false,
     aoat_show_link_button: false,
     available_colors: [
       "#1FBC9C",

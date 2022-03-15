@@ -18,6 +18,7 @@ import HiddenInput from "./form-elements/HiddenInput.vue";
 import DateInput from "./form-elements/DateInput.vue";
 import TextareaInput from "./form-elements/TextareaInput.vue";
 import SelectInput from "./form-elements/SelectInput.vue";
+import LOCSelectInput from "./form-elements/LOCSelectInput.vue";
 import CountryInput from "./form-elements/CountryInput.vue";
 import RadioGridInput from "./form-elements/RadioGridInput.vue";
 import RadioInput from "./form-elements/RadioInput.vue";
@@ -25,6 +26,7 @@ import AssessmentsInput from "./form-elements/AssessmentsInput.vue";
 import Form from "./form-elements/Form.vue";
 import Report from "./report-elements/Report.vue";
 import SelectInputReport from "./report-elements/SelectInputReport.vue";
+import LOCSelectInputReport from "./report-elements/LOCSelectInputReport.vue";
 import CountryInputReport from "./report-elements/CountryInputReport.vue";
 import RadioGridInputReport from "./report-elements/RadioGridInputReport.vue";
 import RadioInputReport from "./report-elements/RadioInputReport.vue";
@@ -47,6 +49,7 @@ export default {
     Page,
     Paragraph,
     SelectInput,
+    LOCSelectInput,
     CountryInput,
     TextareaInput,
     TextInput,
@@ -58,6 +61,7 @@ export default {
     Form,
     Report,
     SelectInputReport,
+    LOCSelectInputReport,
     CountryInputReport,
     RadioGridInputReport,
     RadioInputReport,

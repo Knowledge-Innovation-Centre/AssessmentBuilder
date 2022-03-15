@@ -67,6 +67,37 @@ export default {
       return "";
     }
   },
-  methods: {}
+  watch: {
+    selectedAssessmentForReview: {
+      deep: true,
+      handler() {
+        this.setDataFromInitialData();
+      }
+    }
+  },
+  mounted() {
+    this.setDataFromInitialData();
+  },
+  methods: {
+    setDataFromInitialData() {
+      if (!this.selectedAssessmentForReview) {
+        return;
+      }
+      if (!this.selectedAssessmentForReview[this.object.key]) {
+        return;
+      }
+      if (this.$store.state.assessment[this.object.key]) {
+        return;
+      }
+      if (!this.object.copyTextFromInitialAssessment) {
+        return;
+      }
+
+      this.$store.dispatch("updateValue", {
+        key: this.object.key,
+        value: this.selectedAssessmentForReview[this.object.key]
+      });
+    }
+  }
 };
 </script>

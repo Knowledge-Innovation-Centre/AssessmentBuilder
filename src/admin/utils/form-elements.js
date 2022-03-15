@@ -22,7 +22,8 @@ export default [
     maxWidth: null,
     maxWidthUnit: "px",
     includeInAssessmentTitle: false,
-    isUrl: false
+    isUrl: false,
+    copyTextFromInitialAssessment: false
   },
   {
     key: randomValueHex(15),
@@ -86,7 +87,8 @@ export default [
     placeholder: "",
     maxWidth: null,
     maxWidthUnit: "px",
-    includeInAssessmentTitle: false
+    includeInAssessmentTitle: false,
+    copyTextFromInitialAssessment: false
   },
   {
     key: randomValueHex(15),
@@ -101,6 +103,31 @@ export default [
     canRemove: true,
     component: "SelectInput",
     reportComponent: "SelectInputReport",
+    options: [],
+    disableForScoring: false,
+    hidden: false,
+    hideInForm: false,
+    class: "",
+    placeholder: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    includeInAssessmentTitle: false,
+    multiple: false,
+    scoreGraphColor: ""
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
+    name: "LOC dimensions select input",
+    type: "radio_loc",
+    defaultValue: null,
+    label: "",
+    reportLabel: "",
+    conditions: [],
+    required: false,
+    canRemove: true,
+    component: "LOCSelectInput",
+    reportComponent: "LOCSelectInputReport",
     options: [],
     disableForScoring: false,
     hidden: false,

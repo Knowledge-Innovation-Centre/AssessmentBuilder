@@ -43,6 +43,21 @@
               track-by="ID"
               :options="pages"
             />
+
+            <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2"
+            >
+              Select page of catalog items
+            </label>
+            <multiselect
+              v-model="pageCatalogId"
+              :multiple="false"
+              label="post_title"
+              placeholder="Select one"
+              class="aoat-w-full"
+              track-by="ID"
+              :options="pages"
+            />
           </div>
           <div>
             <template v-if="id">
@@ -238,6 +253,7 @@ export default {
       form: {},
       reports: [],
       pageId: null,
+      pageCatalogId: null,
       formSettings: {
         showPageNumbers: false
       }
@@ -328,6 +344,7 @@ export default {
         this.title = this.form.post_title;
         this.formSettings = this.form.form_settings[0];
         this.pageId = this.form.page_id[0];
+        // this.pageCatalogId = this.form.page_catalog_id?[0] ?? null;
         this.reports = this.form.reports;
 
         this.loading = false;
@@ -380,6 +397,7 @@ export default {
         formData: this.formData,
         formSettings: this.formSettings,
         pageId: this.pageId,
+        pageCatalogId: this.pageCatalogId,
         id: this.id
       })
         .then(function(response) {

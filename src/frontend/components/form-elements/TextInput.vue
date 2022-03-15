@@ -91,6 +91,12 @@ export default {
       handler() {
         this.setInitialData();
       }
+    },
+    selectedAssessmentForReview: {
+      deep: true,
+      handler() {
+        this.setDataFromInitialData();
+      }
     }
   },
   mounted() {
@@ -102,6 +108,7 @@ export default {
   methods: {
     setInitialData() {
       if (this.object.type !== "first_last_name") {
+        this.setDataFromInitialData();
         return;
       }
       if (!this.user) {
@@ -113,6 +120,25 @@ export default {
       this.$store.dispatch("updateValue", {
         key: this.object.key,
         value: this.user.first_name + " " + this.user.last_name
+      });
+    },
+    setDataFromInitialData() {
+      if (!this.selectedAssessmentForReview) {
+        return;
+      }
+      if (!this.selectedAssessmentForReview[this.object.key]) {
+        return;
+      }
+      if (this.$store.state.assessment[this.object.key]) {
+        return;
+      }
+      if (!this.object.copyTextFromInitialAssessment) {
+        return;
+      }
+
+      this.$store.dispatch("updateValue", {
+        key: this.object.key,
+        value: this.selectedAssessmentForReview[this.object.key]
       });
     }
   }

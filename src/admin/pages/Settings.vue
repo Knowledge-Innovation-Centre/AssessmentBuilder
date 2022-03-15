@@ -24,7 +24,8 @@
                 v-else-if="
                   [
                     'aoat_redirect_after_completion',
-                    'aoat_show_link_button'
+                    'aoat_show_link_button',
+                    'aoat_use_loc'
                   ].includes(setting.key)
                 "
               >

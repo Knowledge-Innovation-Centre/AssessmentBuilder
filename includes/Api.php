@@ -35,6 +35,9 @@ class Api extends WP_REST_Controller {
         if ( !class_exists( __NAMESPACE__ . '\Api\Setting'  ) ) {
             require_once __DIR__ . '/Api/Setting.php';
         }
+        if ( !class_exists( __NAMESPACE__ . '\Api\SubsetItem'  ) ) {
+            require_once __DIR__ . '/Api/SubsetItem.php';
+        }
     }
 
     /**
@@ -47,6 +50,7 @@ class Api extends WP_REST_Controller {
         (new Api\Assessment())->register_routes();
         (new Api\Report())->register_routes();
         (new Api\Setting())->register_routes();
+        (new Api\SubsetItem())->register_routes();
     }
 
 }

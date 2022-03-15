@@ -73,6 +73,7 @@ class Admin {
 	    	'aoatSaveSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings/save"),
 	    	'aoatGetSettingsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
 	    	'aoatGetPagesUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings/pages?per_page=3"),
+            'aoatGetSubsetItemsUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/subset_items"),
 	    ];
 	    wp_localize_script( 'apprenticeship-online-assessment-tool-admin', 'aoat_config', $data );
     }

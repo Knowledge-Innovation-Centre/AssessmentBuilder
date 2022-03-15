@@ -102,6 +102,12 @@
                   >
                     export.xlsx
                   </button>
+                  <button
+                    class="aoat-bg-white hover:aoat-bg-blue-300 aoat-cursor-pointer aoat-text-blue-700 aoat-font-bold aoat-py-2 aoat-px-4 aoat-rounded aoat-border-none"
+                    @click="exportExcel(true)"
+                  >
+                    Dump DB
+                  </button>
                 </h3>
               </div>
             </div>
@@ -165,10 +171,15 @@
                   </th>
                   <th
                     v-for="scoreLabel in scoreLabels"
-                    :key="scoreLabel"
+                    :key="scoreLabel.key"
+                    :colspan="
+                      !showScores && scoreLabel.optionsHorizontal
+                        ? scoreLabel.optionsHorizontal.length
+                        : 1
+                    "
                     class="aoat-text-right aoat-p-3 aoat-px-5"
                   >
-                    {{ scoreLabel }}
+                    {{ getItemLabel(scoreLabel) }}
                   </th>
                   <th
                     class="aoat-text-right aoat-p-3 aoat-px-5"
@@ -210,13 +221,31 @@
                   <th class="aoat-px-5 aoat-text-left">
                     {{ assessment.user }}
                   </th>
-                  <td
-                    v-for="(scoreValue, reportKey) in scoreValuesDefault"
-                    :key="reportKey"
-                    class="aoat-px-5 aoat-text-right"
-                  >
-                    {{ scoreValue[assessment.ID] }}
-                  </td>
+                  <template v-if="showScores">
+                    <td
+                      v-for="(scoreValue, reportKey) in scoreValuesDefault"
+                      :key="reportKey"
+                      class="aoat-px-5 aoat-text-right"
+                    >
+                      {{ scoreValue[assessment.ID] }}
+                    </td>
+                  </template>
+                  <template v-else>
+                    <template
+                      v-for="(scoreValue, reportKey) in scoreValuesTextDefault"
+                    >
+                      <td
+                        v-for="(scoreValueInner, index) in scoreValue[
+                          assessment.ID
+                        ]"
+                        :key="reportKey + '_' + index"
+                        class="aoat-px-5 aoat-text-right"
+                      >
+                        {{ scoreValueInner }}
+                      </td>
+                    </template>
+                  </template>
+
                   <th class="aoat-px-5 aoat-text-right">
                     {{ assessmentsScores[assessment.ID.toString()].score }} /
                     {{ assessmentsScores[assessment.ID.toString()].totalScore }}
@@ -257,7 +286,7 @@
           >
             <h3>Legend</h3>
             <div v-for="(scoreLabel, index) in scoreLabels" :key="index">
-              {{ index + 1 }}: {{ scoreLabel }}
+              {{ index + 1 }}: {{ getItemLabel(scoreLabel) }}
             </div>
           </div>
           <div
@@ -325,9 +354,11 @@ export default {
       activeTab: 1,
       selectedForm: null,
       selectedUser: null,
+      showScores: true,
       assessments: [],
       scoreLabels: [],
       scoreValuesDefault: {},
+      scoreValuesTextDefault: {},
       uniqueUsers: {},
       scoreValues: {
         default: {},
@@ -520,12 +551,18 @@ export default {
         this.forms = result.data;
       });
     },
-    exportExcel() {
-      let wb = XLSX.utils.table_to_book(
-        document.getElementById("table-to-export")
-      );
-      /* generate file and force a download*/
-      XLSX.writeFile(wb, "export.xlsx");
+    exportExcel(exportText = false) {
+      if (exportText) {
+        this.showScores = false;
+      }
+      this.$nextTick(async () => {
+        let wb = await XLSX.utils.table_to_book(
+          document.getElementById("table-to-export")
+        );
+        /* generate file and force a download*/
+        await XLSX.writeFile(wb, "export.xlsx");
+        this.showScores = true;
+      });
     },
     setScoring() {
       this.scoreLabels = [];
@@ -643,7 +680,7 @@ export default {
           !this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)
         ) {
           this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
-          this.scoreLabels.push(this.getItemLabel(item));
+          this.scoreLabels.push(item);
         }
 
         let value = assessment.assessment_data[0][item.reportItemKey];
@@ -655,12 +692,14 @@ export default {
         }
         if (!this.scoreValuesDefault[item.reportItemKey]) {
           this.scoreValuesDefault[item.reportItemKey] = {};
+          this.scoreValuesTextDefault[item.reportItemKey] = {};
         }
         if (!this.scoreValues[group][item.reportItemKey][assessmentId]) {
           this.scoreValues[group][item.reportItemKey][assessmentId] = 0;
         }
         if (!this.scoreValuesDefault[item.reportItemKey][assessmentId]) {
           this.scoreValuesDefault[item.reportItemKey][assessmentId] = 0;
+          this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [];
         }
         if (!this.checkConditions(item, assessment)) {
           continue;
@@ -670,6 +709,7 @@ export default {
           continue;
         }
         let localScore = 0;
+        let localText = [];
         let maxScore = 0;
 
         if (item.type === "radio_grid") {
@@ -686,6 +726,7 @@ export default {
               optionVertical => optionVertical.id === value[option.id]
             );
             if (verticalOption) {
+              localText.push(option.name + ":" + verticalOption.name);
               localScore += parseInt(verticalOption.score);
             }
           }
@@ -703,12 +744,16 @@ export default {
           );
 
           if (verticalOption) {
+            localText.push(verticalOption.name);
             localScore += parseInt(verticalOption.score);
           }
         }
         this.assessmentsScores[assessmentId].score += localScore;
         this.scoreValues[group][item.reportItemKey][assessmentId] = localScore;
         this.scoreValuesDefault[item.reportItemKey][assessmentId] = localScore;
+        this.scoreValuesTextDefault[item.reportItemKey][
+          assessmentId
+        ] = localText;
       }
 
       return true;
