@@ -38,6 +38,9 @@ export const actions = {
   addError({ commit }, payload) {
     commit("ADD_ERROR", payload);
   },
+  updateQueryParameterKey({ commit }, payload) {
+    commit("UPDATE_QUERY_PARAMETER_KEY", payload);
+  },
   clearErrors({ commit }) {
     commit("CLEAR_ERRORS");
   },

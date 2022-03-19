@@ -46,6 +46,9 @@ export const mutations = {
   ENABLE_EXPORT(state) {
     state.exportEnabled = true;
   },
+  UPDATE_QUERY_PARAMETER_KEY(state, payload) {
+    state.queryParameterKey = payload;
+  },
   DISABLE_EXPORT(state) {
     state.exportEnabled = false;
   },

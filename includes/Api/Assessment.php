@@ -104,6 +104,7 @@ class Assessment extends WP_REST_Controller {
 		    // insert post meta
 		    update_post_meta($post_id, 'assessment_data', $assessmentData);
 		    update_post_meta($post_id, 'form_id', $request->get_params()['formId']);
+		    update_post_meta($post_id, 'query_parameter_key', $request->get_params()['queryParameterKey']);
 		    foreach($assessmentData as $key => $value) {
 		        update_post_meta($post_id, 'assessment_' . $key, $value);
 		    }

@@ -215,7 +215,8 @@ export default {
         id: id,
         title: this.title,
         assessmentData: assessmentData,
-        formId: this.$store.state.formId
+        formId: this.$store.state.formId,
+        queryParameterKey: this.$store.state.queryParameterKey
       })
         .then(function(response) {
           callbackFunction(response);

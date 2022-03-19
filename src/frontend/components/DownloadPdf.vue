@@ -131,30 +131,32 @@ export default {
               } else if (["paragraph"].includes(item.type)) {
                 const str = item.label;
 
-                const splitString = str.match(/<p (.*?)>.*?<\/p>/g);
+                const splitString = str.match(/<p(.*?)>.*?<\/p>/g);
 
                 let bodyIndex = 0;
-                for (const splitStringItem of splitString) {
-                  const div = document.createElement("div");
-                  div.innerHTML = splitStringItem;
+                if (splitString) {
+                  for (const splitStringItem of splitString) {
+                    const div = document.createElement("div");
+                    div.innerHTML = splitStringItem;
 
-                  const content = div.textContent || div.innerText || "";
-                  const styles = {};
-                  if (splitStringItem.includes("<strong>")) {
-                    styles.fontStyle = "bold";
-                  }
-                  if (splitStringItem.includes("text-align: center;")) {
-                    styles.halign = "center";
-                  }
+                    const content = div.textContent || div.innerText || "";
+                    const styles = {};
+                    if (splitStringItem.includes("<strong>")) {
+                      styles.fontStyle = "bold";
+                    }
+                    if (splitStringItem.includes("text-align: center;")) {
+                      styles.halign = "center";
+                    }
 
-                  if (!body[bodyIndex]) {
-                    body[bodyIndex] = [];
+                    if (!body[bodyIndex]) {
+                      body[bodyIndex] = [];
+                    }
+                    body[bodyIndex].push({
+                      content,
+                      styles
+                    });
+                    bodyIndex++;
                   }
-                  body[bodyIndex].push({
-                    content,
-                    styles
-                  });
-                  bodyIndex++;
                 }
               } else if (["file_upload"].includes(item.type)) {
                 const value = this.getReportValue(item);

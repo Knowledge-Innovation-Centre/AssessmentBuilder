@@ -24,6 +24,13 @@ export default {
 
         if (show !== "1") {
           return false;
+        } else {
+          if (!this.$store.state.queryParameterField) {
+            void this.$store.dispatch(
+              "updateQueryParameterKey",
+              item.queryParameterField
+            );
+          }
         }
       }
 

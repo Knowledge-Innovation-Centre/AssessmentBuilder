@@ -90,13 +90,16 @@ class Frontend {
 				// Sets up post data so you can use functions like get_the_title(), get_permalink(), etc
 				$assessments->the_post();
 
+                $queryParameterKey = get_post_meta(get_the_ID() , 'query_parameter_key', true);
+
 
                 // This is the output for your entry so what you want to do for each post.
 				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a>';
 
                 $page = get_post_meta($form->ID, 'page_id', true);
+
                 if (isset($page)) {
-                    $content .= ' <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . '"><button>Edit</button></a>';
+                    $content .= ' <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . ($queryParameterKey ? '&' . $queryParameterKey .'=1': '') . '"><button>Edit</button></a>';
                 }
                 $content .= ' <a href="' . get_delete_post_link() . '"><button>Delete</button></a> </div>';
 
@@ -104,8 +107,8 @@ class Frontend {
 
 			// Close div wrapper around loop
 			$content .= '
-                <div class="aoat-mt-5 nav-previous alignleft">' . get_previous_posts_link( 'Older assessments' ) . '</div>
-                <div class="aoat-mt-5 nav-next alignright">' . get_next_posts_link( 'Newer assessments', $assessments->max_num_pages ) . '</div>';
+                <div class="aoat-mt-5 nav-previous alignleft">' . get_previous_posts_link( 'Newer' ) . '</div>
+                <div class="aoat-mt-5 nav-next alignright">' . get_next_posts_link( 'Older', $assessments->max_num_pages ) . '</div>';
 			$content .= '</div>';
 
 			// Restore data
