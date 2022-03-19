@@ -153,31 +153,8 @@ export default {
         }
 
         if (item.type === "radio_grid") {
-          for (let option of item.optionsVertical) {
-            if (maxScore < option.score) {
-              maxScore = parseInt(option.score);
-            }
-          }
-          this.totalScore += maxScore * item.optionsHorizontal.length;
-          totalScore += maxScore * item.optionsHorizontal.length;
-
-          if (!value) {
-            continue;
-          }
-          let localScore = 0;
-
-          for (let option of item.optionsHorizontal) {
-            let verticalOption = item.optionsVertical.find(
-              optionVertical => optionVertical.id === value[option.id]
-            );
-            if (verticalOption) {
-              this.score += parseInt(verticalOption.score);
-              score += parseInt(verticalOption.score);
-              localScore += parseInt(verticalOption.score);
-            }
-          }
-          this.colors.push(this.getScoreGraphColor(item));
-          this.graphArray.push(localScore);
+          totalScore += this.updateMaxScoreRadioGrid(item);
+          score += this.getRadioGridScore(item, value);
         } else if (item.options) {
           let localScore = 0;
           if (!value) {
@@ -233,6 +210,37 @@ export default {
         score,
         totalScore
       };
+    },
+    updateMaxScoreRadioGrid(item) {
+      let maxScore = 0;
+      for (let option of item.optionsVertical) {
+        if (maxScore < option.score) {
+          maxScore = parseInt(option.score);
+        }
+      }
+      maxScore = maxScore * item.optionsHorizontal.length;
+      this.totalScore += maxScore;
+      return maxScore;
+    },
+    getRadioGridScore(item, value) {
+      if (!value) {
+        return 0;
+      }
+      let localScore = 0;
+
+      for (let option of item.optionsHorizontal) {
+        let verticalOption = item.optionsVertical.find(
+          optionVertical => optionVertical.id === value[option.id]
+        );
+        if (verticalOption) {
+          this.score += parseInt(verticalOption.score);
+          localScore += parseInt(verticalOption.score);
+        }
+      }
+      this.colors.push(this.getScoreGraphColor(item));
+      this.graphArray.push(localScore);
+
+      return localScore;
     },
 
     getItemLabel(item) {

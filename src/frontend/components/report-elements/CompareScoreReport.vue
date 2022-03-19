@@ -7,7 +7,7 @@
             Report
           </th>
           <th
-            v-for="(page, index) of currentResult.pages"
+            v-for="(page, index) of dimensions"
             :key="index"
             class="aoat-whitespace-no-wrap"
           >
@@ -164,6 +164,9 @@ export default {
     },
     assessmentId() {
       return this.assessmentObject.ID;
+    },
+    dimensions() {
+      return this.currentResult.pages;
     }
   },
 
@@ -456,16 +459,21 @@ export default {
         totalScore: 0
       };
 
-      for (let page of this.reportData.items) {
+      for (let page of this.filterByTypes(this.reportData.items, [
+        "radio_grid"
+      ])) {
         if (page.excludeForScoreComparing) {
           index++;
           continue;
         }
         this.alreadyIncludedElementsForScores = [];
 
+        let value = assessmentData[page.reportItemKey];
         let onePage = {
           title: "D. " + index,
-          ...this.calculateScore(page.items, assessmentData)
+
+          score: this.getRadioGridScore(page, value),
+          totalScore: this.updateMaxScoreRadioGrid(page)
         };
 
         totalScorePage.score += onePage.score;

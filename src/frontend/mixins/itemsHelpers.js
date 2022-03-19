@@ -151,6 +151,23 @@ export default {
         }
       }
       return null;
+    },
+    filterByTypes(items, types = []) {
+      let foundedItems = [];
+      for (const item of items) {
+        if (types.includes(item.type)) {
+          foundedItems.push(item);
+          continue;
+        }
+        if (!item.items) {
+          continue;
+        }
+        foundedItems = foundedItems.concat(
+          this.filterByTypes(item.items, types)
+        );
+      }
+
+      return foundedItems;
     }
   }
 };
