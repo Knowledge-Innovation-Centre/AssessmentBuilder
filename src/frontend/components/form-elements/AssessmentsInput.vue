@@ -79,16 +79,36 @@ export default {
           "?assessment_id=" +
           this.$store.state.formId
       ).then(result => {
-        this.options = result.data.filter(dataItem => {
-          return !dataItem.assessment_data[this.object.key];
-        });
+        this.options = result.data
+          .filter(dataItem => {
+            return !dataItem.assessment_data[this.object.key];
+          })
+          .sort((a, b) => {
+            const nameA = a.post_title
+              .replace("R1 ", "")
+              .replace("R2 ", "")
+              .toLowerCase(); // ignore upper and lowercase
+            const nameB = b.post_title
+              .replace("R1 ", "")
+              .replace("R2 ", "")
+              .toLowerCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            // names must be equal
+            return 0;
+          });
       });
     },
     getAssessmentInfo() {
       Api.get(aoat_config.aoatGetAssessmentsUrl + this.value).then(result => {
         this.$store.dispatch(
           "updateSelectedAssessmentForReview",
-          result.data.assessment_data[0]
+          result.data.assessment_data
         );
         this.$store.dispatch(
           "updateSelectedAssessmentForReviewId",

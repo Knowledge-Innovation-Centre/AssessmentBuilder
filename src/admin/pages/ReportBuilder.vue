@@ -233,9 +233,9 @@ export default {
       this.loading = true;
       Api.get(aoat_config.aoatGetFormUrl + this.formId).then(result => {
         this.form = result.data;
-        this.formData = result.data.form_data[0];
+        this.formData = result.data.form_data;
         this.formTitle = this.form.post_title;
-        this.formSettings = this.form.form_settings[0];
+        this.formSettings = this.form.form_settings;
       });
 
       Api.get(aoat_config.aoatGetSettingsUrl).then(result => {
@@ -268,9 +268,9 @@ export default {
       }
       Api.get(aoat_config.aoatGetReportUrl + this.reportId).then(result => {
         this.report = result.data;
-        this.reportData = result.data.report_data[0];
+        this.reportData = result.data.report_data;
         this.title = this.report.post_title;
-        this.reportSettings = this.report.report_settings[0];
+        this.reportSettings = this.report.report_settings;
         this.loading = false;
       });
     },

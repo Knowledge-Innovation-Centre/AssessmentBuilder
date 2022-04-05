@@ -46,14 +46,14 @@ export default {
       return this.$store.state.selectedAssessmentForReview;
     },
     formData() {
-      return this.$store.state.assessmentObject.form.form_data[0];
+      return this.$store.state.assessmentObject.form.form_data;
     },
     isUrl() {
       const formObject = this.getFormItemData(
         this.formData.items,
         this.object.reportItemKey
       );
-      return !!formObject.isUrl;
+      return !!formObject?.isUrl ?? false;
     }
   }
 };

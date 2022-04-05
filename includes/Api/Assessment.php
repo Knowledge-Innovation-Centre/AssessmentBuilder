@@ -105,6 +105,7 @@ class Assessment extends WP_REST_Controller {
 		    update_post_meta($post_id, 'assessment_data', $assessmentData);
 		    update_post_meta($post_id, 'form_id', $request->get_params()['formId']);
 		    update_post_meta($post_id, 'query_parameter_key', $request->get_params()['queryParameterKey']);
+		    update_post_meta($post_id, 'loc_filter', $request->get_params()['locFilter']);
 		    foreach($assessmentData as $key => $value) {
 		        update_post_meta($post_id, 'assessment_' . $key, $value);
 		    }
@@ -147,9 +148,9 @@ class Assessment extends WP_REST_Controller {
 	 */
     public function get_assessment( WP_REST_Request $request ) {
 	    $assessment= get_post($request->get_params()['id']);
-	    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+	    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data', true);
 
-	    $formId = get_post_meta($assessment->ID, 'form_id');
+	    $formId = get_post_meta($assessment->ID, 'form_id', true);
 
 
 	    $args = [
@@ -170,10 +171,10 @@ class Assessment extends WP_REST_Controller {
 
 	    $assessment->form = $query[0] ?? null;
 	    if ($assessment->report) {
-	        $assessment->report->report_data = get_post_meta($assessment->report->ID, 'report_data');
+	        $assessment->report->report_data = get_post_meta($assessment->report->ID, 'report_data', true);
 	    }
 	    if ($assessment->form) {
-	        $assessment->form->form_data = get_post_meta($assessment->form->ID, 'form_data');
+	        $assessment->form->form_data = get_post_meta($assessment->form->ID, 'form_data', true);
 	    }
 
         return rest_ensure_response( $assessment );

@@ -103,7 +103,6 @@ class Form extends WP_REST_Controller {
 		    // insert post meta
 		    update_post_meta($post_id, 'form_data', $request->get_params()['formData']);
 		    update_post_meta($post_id, 'form_settings', $request->get_params()['formSettings']);
-		    update_post_meta($post_id, 'page_id', $request->get_params()['pageId']);
 	    }
 
         return rest_ensure_response( get_post($post_id) );
@@ -144,7 +143,7 @@ class Form extends WP_REST_Controller {
 	    $forms = get_posts($args);
 
 	    foreach ($forms as $key => $form) {
-		    $forms[$key]->form_data = get_post_meta($form->ID, 'form_data');
+		    $forms[$key]->form_data = get_post_meta($form->ID, 'form_data', true);
 	    }
 
         return rest_ensure_response( $forms );
@@ -174,9 +173,8 @@ class Form extends WP_REST_Controller {
 	 */
     public function get_form( WP_REST_Request $request ) {
 	    $form= get_post($request->get_params()['id']);
-	    $form->form_data = get_post_meta($form->ID, 'form_data');
-	    $form->form_settings = get_post_meta($form->ID, 'form_settings');
-	    $form->page_id = get_post_meta($form->ID, 'page_id');
+	    $form->form_data = get_post_meta($form->ID, 'form_data', true);
+	    $form->form_settings = get_post_meta($form->ID, 'form_settings', true);
 	    $args = [
 		    'post_type' => 'aoat_report',
 		    'meta_key' => 'form_id',
@@ -214,7 +212,7 @@ class Form extends WP_REST_Controller {
 
 
 	    foreach ($assessments as $assessment) {
-		    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data');
+		    $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data', true);
 
 		    $assessment->user = 'No user';
 		    if ($assessment->post_author && $user= get_userdata( $assessment->post_author )) {

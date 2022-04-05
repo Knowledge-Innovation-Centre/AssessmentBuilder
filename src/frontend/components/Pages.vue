@@ -118,6 +118,9 @@ export default {
     settings() {
       return this.$store.state.settings;
     },
+    assessmentData() {
+      return this.$store.state.assessment;
+    },
     assessmentObject() {
       return this.$store.state.assessmentObject;
     },
@@ -132,6 +135,9 @@ export default {
     },
     selectedAssessmentForReviewId() {
       return this.$store.state.selectedAssessmentForReviewId;
+    },
+    formSettings() {
+      return this.$store.state.formSettings;
     },
     showSaveButton() {
       return !!this.findByTypes(this.items[this.currentPage].items, [
@@ -165,7 +171,16 @@ export default {
     saveTemp() {
       this.saveApiCall(response => {
         this.$store.dispatch("updateAssessmentObject", response.data);
+
         this.message = "Assessment successfully saved!";
+
+        this.checkAndSetTitle();
+        if (this.formSettings.pageCatalog) {
+          let url = new URL(this.formSettings.pageCatalog.guid);
+          url.searchParams.set("dimensions", this.getLocFilter().join(","));
+          window.location.href = url.href;
+          return;
+        }
         if (this.user && this.settings.aoat_page_for_assessments) {
           window.location.href = this.settings.aoat_page_for_assessments;
         }
@@ -179,21 +194,15 @@ export default {
         return false;
       }
 
-      this.hasReviewField = false;
-      this.setTitle(this.items);
-      if (this.title === "") {
-        this.title = "Assessment " + new Date().toLocaleString();
-      }
-      if (this.hasReviewField) {
-        if (this.selectedAssessmentForReviewId) {
-          this.title = "R2 " + this.title;
-        } else {
-          this.title = "R1 " + this.title;
-        }
-      }
-
+      this.checkAndSetTitle();
       this.saveApiCall(response => {
         this.message = "Assessment successfully submitted!";
+        if (this.formSettings.pageCatalog) {
+          let url = new URL(this.formSettings.pageCatalog.guid);
+          url.searchParams.set("dimensions", this.getLocFilter().join(","));
+          window.location.href = url.href;
+          return;
+        }
         if (
           this.user &&
           this.settings.aoat_page_for_assessments &&
@@ -206,7 +215,6 @@ export default {
       });
     },
     saveApiCall(callbackFunction) {
-      let assessmentData = this.$store.state.assessment;
       let id = null;
       if (this.assessmentObject) {
         id = this.assessmentObject.ID;
@@ -214,8 +222,9 @@ export default {
       Api.post(aoat_config.aoatSaveAssessmentUrl, {
         id: id,
         title: this.title,
-        assessmentData: assessmentData,
+        assessmentData: this.assessmentData,
         formId: this.$store.state.formId,
+        locFilter: this.getLocFilter(),
         queryParameterKey: this.$store.state.queryParameterKey
       })
         .then(function(response) {
@@ -224,6 +233,22 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
+    },
+    getLocFilter() {
+      const locItems = this.filterByTypes(this.filteredItems, ["radio_loc"]);
+
+      let dimensions = [];
+      for (const locItem of locItems) {
+        const option = locItem.options.find(
+          option => option.id === this.assessmentData[locItem.key]
+        );
+        if (option) {
+          dimensions = dimensions.concat(
+            option.dimensions.map(dimension => dimension.ID)
+          );
+        }
+      }
+      return dimensions;
     },
     setPreviousPage() {
       this.clickedForward = false;
@@ -259,6 +284,20 @@ export default {
       this.scrollToElement();
     },
 
+    checkAndSetTitle() {
+      this.hasReviewField = false;
+      this.setTitle(this.items);
+      if (this.title === "") {
+        this.title = "Assessment " + new Date().toLocaleString();
+      }
+      if (this.hasReviewField) {
+        if (this.selectedAssessmentForReviewId) {
+          this.title = "R2 " + this.title;
+        } else {
+          this.title = "R1 " + this.title;
+        }
+      }
+    },
     setTitle(items) {
       for (let item of items) {
         if (item.component === "AssessmentsInput") {
@@ -273,9 +312,8 @@ export default {
       }
     },
     getValue(key) {
-      let assessment = this.$store.state.assessment;
-      if (assessment[key]) {
-        return assessment[key];
+      if (this.assessmentData[key]) {
+        return this.assessmentData[key];
       }
 
       return "";
@@ -298,7 +336,7 @@ export default {
           continue;
         }
 
-        let value = this.$store.state.assessment[item.key];
+        let value = this.assessmentData[item.key];
 
         if (item.type === "radio_grid") {
           for (let option of item.optionsHorizontal) {

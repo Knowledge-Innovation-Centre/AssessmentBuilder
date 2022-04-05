@@ -98,7 +98,7 @@
                 >
                   <button
                     class="aoat-bg-white hover:aoat-bg-blue-300 aoat-cursor-pointer aoat-text-blue-700 aoat-font-bold aoat-py-2 aoat-px-4 aoat-rounded aoat-border-none"
-                    @click="exportExcel"
+                    @click="exportExcel()"
                   >
                     export.xlsx
                   </button>
@@ -169,18 +169,29 @@
                   >
                     User
                   </th>
-                  <th
-                    v-for="scoreLabel in scoreLabels"
-                    :key="scoreLabel.key"
-                    :colspan="
-                      !showScores && scoreLabel.optionsHorizontal
-                        ? scoreLabel.optionsHorizontal.length
-                        : 1
-                    "
-                    class="aoat-text-right aoat-p-3 aoat-px-5"
-                  >
-                    {{ getItemLabel(scoreLabel) }}
-                  </th>
+                  <template v-if="showText">
+                    <th
+                      v-for="scoreLabel in scoreLabelsForText"
+                      :key="scoreLabel.key"
+                      :colspan="
+                        scoreLabel.optionsHorizontal
+                          ? scoreLabel.optionsHorizontal.length
+                          : 1
+                      "
+                      class="aoat-text-right aoat-p-3 aoat-px-5"
+                    >
+                      {{ getItemLabel(scoreLabel) }}
+                    </th>
+                  </template>
+                  <template v-else>
+                    <th
+                      v-for="scoreLabel in scoreLabels"
+                      :key="scoreLabel.key"
+                      class="aoat-text-right aoat-p-3 aoat-px-5"
+                    >
+                      {{ getItemLabel(scoreLabel) }}
+                    </th>
+                  </template>
                   <th
                     class="aoat-text-right aoat-p-3 aoat-px-5"
                     style="min-width: 100px; width: 200px;"
@@ -221,7 +232,7 @@
                   <th class="aoat-px-5 aoat-text-left">
                     {{ assessment.user }}
                   </th>
-                  <template v-if="showScores">
+                  <template v-if="!showText">
                     <td
                       v-for="(scoreValue, reportKey) in scoreValuesDefault"
                       :key="reportKey"
@@ -252,7 +263,7 @@
                   </th>
                 </tr>
               </tbody>
-              <tfoot>
+              <tfoot v-if="!showText">
                 <tr
                   v-for="(scoreValueItems, groupKey) in scoreValues"
                   :key="groupKey"
@@ -354,9 +365,10 @@ export default {
       activeTab: 1,
       selectedForm: null,
       selectedUser: null,
-      showScores: true,
+      showText: false,
       assessments: [],
       scoreLabels: [],
+      scoreLabelsForText: [],
       scoreValuesDefault: {},
       scoreValuesTextDefault: {},
       uniqueUsers: {},
@@ -553,7 +565,7 @@ export default {
     },
     exportExcel(exportText = false) {
       if (exportText) {
-        this.showScores = false;
+        this.showText = true;
       }
       this.$nextTick(async () => {
         let wb = await XLSX.utils.table_to_book(
@@ -561,11 +573,12 @@ export default {
         );
         /* generate file and force a download*/
         await XLSX.writeFile(wb, "export.xlsx");
-        this.showScores = true;
+        this.showText = false;
       });
     },
     setScoring() {
       this.scoreLabels = [];
+      this.scoreLabelsForText = [];
       this.scoreValues = {
         default: {},
         group1: {},
@@ -589,7 +602,7 @@ export default {
         this.assessmentsScores[assessmentId].score = 0;
         this.assessmentsScores[assessmentId].date = assessment.post_date;
         this.alreadyIncludedElementsForScores[assessment.ID.toString()] = [];
-        this.calculateScore(this.selectedForm.form_data[0].items, assessment);
+        this.calculateScore(this.selectedForm.form_data.items, assessment);
       }
 
       Object.keys(this.groups).forEach(groupIndex => {
@@ -649,9 +662,136 @@ export default {
       this.updateData++;
     },
 
-    calculateScore(items, assessment) {
+    calculateScoreItem(item, assessment) {
       let assessmentId = assessment.ID.toString();
+      if (
+        this.alreadyIncludedElementsForScores[assessmentId].includes(
+          item.reportItemKey
+        )
+      ) {
+        return;
+      }
+      this.alreadyIncludedElementsForScores[assessmentId].push(
+        item.reportItemKey
+      );
 
+      if (!this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)) {
+        this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
+        this.scoreLabels.push(item);
+        this.scoreLabelsForText.push(item);
+      }
+
+      let value = assessment.assessment_data[item.reportItemKey];
+
+      let group = this.getGroupKey(assessmentId);
+
+      if (!this.scoreValues[group][item.reportItemKey]) {
+        this.scoreValues[group][item.reportItemKey] = {};
+      }
+      if (!this.scoreValuesDefault[item.reportItemKey]) {
+        this.scoreValuesDefault[item.reportItemKey] = {};
+        this.scoreValuesTextDefault[item.reportItemKey] = {};
+      }
+      if (!this.scoreValues[group][item.reportItemKey][assessmentId]) {
+        this.scoreValues[group][item.reportItemKey][assessmentId] = 0;
+      }
+      if (!this.scoreValuesDefault[item.reportItemKey][assessmentId]) {
+        this.scoreValuesDefault[item.reportItemKey][assessmentId] = 0;
+        this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [];
+      }
+      if (!this.checkConditions(item, assessment)) {
+        return;
+      }
+
+      if (!value) {
+        return;
+      }
+      let localScore = 0;
+      let localText = [];
+      let maxScore = 0;
+
+      if (item.type === "radio_grid") {
+        for (let option of item.optionsVertical) {
+          if (maxScore < option.score) {
+            maxScore = parseInt(option.score);
+          }
+        }
+        this.assessmentsScores[assessmentId].totalScore +=
+          maxScore * item.optionsHorizontal.length;
+
+        for (let option of item.optionsHorizontal) {
+          let verticalOption = item.optionsVertical.find(
+            optionVertical => optionVertical.id === value[option.id]
+          );
+          if (verticalOption) {
+            localText.push(option.name + ":" + verticalOption.name);
+            localScore += parseInt(verticalOption.score);
+          }
+        }
+      } else if (item.options) {
+        for (let option of item.options) {
+          if (maxScore < option.score) {
+            maxScore = parseInt(option.score);
+          }
+        }
+
+        this.assessmentsScores[assessmentId].totalScore += maxScore;
+
+        let verticalOption = item.options.find(
+          optionVertical => optionVertical.id === value
+        );
+
+        if (verticalOption) {
+          localText.push(verticalOption.name);
+          localScore += parseInt(verticalOption.score);
+        }
+      }
+      this.assessmentsScores[assessmentId].score += localScore;
+      this.scoreValues[group][item.reportItemKey][assessmentId] = localScore;
+      this.scoreValuesDefault[item.reportItemKey][assessmentId] = localScore;
+      this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = localText;
+    },
+    setTextForPrint(item, assessment) {
+      let assessmentId = assessment.ID.toString();
+      let group = this.getGroupKey(assessmentId);
+
+      if (
+        [
+          "part_score",
+          "total_score",
+          "total_score_graph",
+          "compare_score",
+          "column",
+          "row",
+          "page",
+          "paragraph",
+          "file_upload"
+        ].includes(item.type)
+      ) {
+        return;
+      }
+
+      if (item)
+        if (
+          !this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)
+        ) {
+          this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
+          this.scoreLabelsForText.push(item);
+        }
+      if (!this.scoreValuesTextDefault[item.reportItemKey]) {
+        this.scoreValuesTextDefault[item.reportItemKey] = {};
+      }
+      if (!this.scoreValuesTextDefault[item.reportItemKey][assessmentId]) {
+        this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [];
+      }
+      let value = assessment.assessment_data[item.reportItemKey];
+      if (!value) {
+        value = "/";
+      }
+      this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [value];
+    },
+
+    calculateScore(items, assessment) {
       for (let item of items) {
         if (item.items) {
           this.calculateScore(item.items, assessment);
@@ -663,97 +803,11 @@ export default {
         }
 
         if (!item.options && !item.optionsVertical) {
-          continue;
-        }
-        if (
-          this.alreadyIncludedElementsForScores[assessmentId].includes(
-            item.reportItemKey
-          )
-        ) {
-          continue;
-        }
-        this.alreadyIncludedElementsForScores[assessmentId].push(
-          item.reportItemKey
-        );
-
-        if (
-          !this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)
-        ) {
-          this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
-          this.scoreLabels.push(item);
-        }
-
-        let value = assessment.assessment_data[0][item.reportItemKey];
-
-        let group = this.getGroupKey(assessmentId);
-
-        if (!this.scoreValues[group][item.reportItemKey]) {
-          this.scoreValues[group][item.reportItemKey] = {};
-        }
-        if (!this.scoreValuesDefault[item.reportItemKey]) {
-          this.scoreValuesDefault[item.reportItemKey] = {};
-          this.scoreValuesTextDefault[item.reportItemKey] = {};
-        }
-        if (!this.scoreValues[group][item.reportItemKey][assessmentId]) {
-          this.scoreValues[group][item.reportItemKey][assessmentId] = 0;
-        }
-        if (!this.scoreValuesDefault[item.reportItemKey][assessmentId]) {
-          this.scoreValuesDefault[item.reportItemKey][assessmentId] = 0;
-          this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [];
-        }
-        if (!this.checkConditions(item, assessment)) {
+          this.setTextForPrint(item, assessment);
           continue;
         }
 
-        if (!value) {
-          continue;
-        }
-        let localScore = 0;
-        let localText = [];
-        let maxScore = 0;
-
-        if (item.type === "radio_grid") {
-          for (let option of item.optionsVertical) {
-            if (maxScore < option.score) {
-              maxScore = parseInt(option.score);
-            }
-          }
-          this.assessmentsScores[assessmentId].totalScore +=
-            maxScore * item.optionsHorizontal.length;
-
-          for (let option of item.optionsHorizontal) {
-            let verticalOption = item.optionsVertical.find(
-              optionVertical => optionVertical.id === value[option.id]
-            );
-            if (verticalOption) {
-              localText.push(option.name + ":" + verticalOption.name);
-              localScore += parseInt(verticalOption.score);
-            }
-          }
-        } else if (item.options) {
-          for (let option of item.options) {
-            if (maxScore < option.score) {
-              maxScore = parseInt(option.score);
-            }
-          }
-
-          this.assessmentsScores[assessmentId].totalScore += maxScore;
-
-          let verticalOption = item.options.find(
-            optionVertical => optionVertical.id === value
-          );
-
-          if (verticalOption) {
-            localText.push(verticalOption.name);
-            localScore += parseInt(verticalOption.score);
-          }
-        }
-        this.assessmentsScores[assessmentId].score += localScore;
-        this.scoreValues[group][item.reportItemKey][assessmentId] = localScore;
-        this.scoreValuesDefault[item.reportItemKey][assessmentId] = localScore;
-        this.scoreValuesTextDefault[item.reportItemKey][
-          assessmentId
-        ] = localText;
+        this.calculateScoreItem(item, assessment);
       }
 
       return true;

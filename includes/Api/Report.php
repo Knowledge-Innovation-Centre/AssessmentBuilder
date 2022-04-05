@@ -171,9 +171,9 @@ class Report extends WP_REST_Controller {
 	 */
     public function get_report( WP_REST_Request $request ) {
 	    $report= get_post($request->get_params()['id']);
-	    $report->report_data = get_post_meta($report->ID, 'report_data');
-	    $report->report_settings = get_post_meta($report->ID, 'report_settings');
-	    $report->form_id = get_post_meta($report->ID, 'form_id');
+	    $report->report_data = get_post_meta($report->ID, 'report_data', true);
+	    $report->report_settings = get_post_meta($report->ID, 'report_settings', true);
+	    $report->form_id = get_post_meta($report->ID, 'form_id', true);
 
         return rest_ensure_response( $report );
     }
@@ -236,7 +236,7 @@ class Report extends WP_REST_Controller {
     public function activate_report( WP_REST_Request $request ) {
 	    $post_id = $request->get_params()['id'];
 	    $post = get_post($post_id);
-	    $formId = get_post_meta($post->ID, 'form_id');
+	    $formId = get_post_meta($post->ID, 'form_id', true);
 
 	    $args = array(
 		    'post_type' => 'aoat_report',

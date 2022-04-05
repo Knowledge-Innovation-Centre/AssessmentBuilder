@@ -205,6 +205,11 @@ export default {
     },
     checkPassedItems(items) {
       for (const item of items) {
+        if (
+          !this.checkConditions(item, this.assessmentObject.assessment_data)
+        ) {
+          continue;
+        }
         if (item.items) {
           if (!this.checkPassedItems(item.items)) {
             return false;
@@ -221,8 +226,9 @@ export default {
           reviewedScoreSum += +item.optionsVertical.find(
             optionVertical =>
               optionVertical.id ===
-              (this.assessmentObject.assessment_data[0][item.reportItemKey] ??
-                {})[optionHorizontal.id]
+              (this.assessmentObject.assessment_data[item.reportItemKey] ?? {})[
+                optionHorizontal.id
+              ]
           ).score;
         }
         if (reviewedScoreSum < item.minScore) {

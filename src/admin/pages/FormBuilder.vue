@@ -35,7 +35,7 @@
               Select page where shortcode is inserted
             </label>
             <multiselect
-              v-model="pageId"
+              v-model="formSettings.pageForm"
               :multiple="false"
               label="post_title"
               placeholder="Select one"
@@ -50,7 +50,7 @@
               Select page of catalog items
             </label>
             <multiselect
-              v-model="pageCatalogId"
+              v-model="formSettings.pageCatalog"
               :multiple="false"
               label="post_title"
               placeholder="Select one"
@@ -252,10 +252,10 @@ export default {
       formData: {},
       form: {},
       reports: [],
-      pageId: null,
-      pageCatalogId: null,
       formSettings: {
-        showPageNumbers: false
+        showPageNumbers: false,
+        pageForm: null,
+        pageCatalog: null
       }
     };
   },
@@ -340,11 +340,9 @@ export default {
       }
       Api.get(aoat_config.aoatGetFormUrl + this.id).then(result => {
         this.form = result.data;
-        this.formData = this.form.form_data[0];
+        this.formData = this.form.form_data;
         this.title = this.form.post_title;
-        this.formSettings = this.form.form_settings[0];
-        this.pageId = this.form.page_id[0];
-        // this.pageCatalogId = this.form.page_catalog_id?[0] ?? null;
+        this.formSettings = this.form.form_settings;
         this.reports = this.form.reports;
 
         this.loading = false;
@@ -396,8 +394,6 @@ export default {
         title: this.title,
         formData: this.formData,
         formSettings: this.formSettings,
-        pageId: this.pageId,
-        pageCatalogId: this.pageCatalogId,
         id: this.id
       })
         .then(function(response) {

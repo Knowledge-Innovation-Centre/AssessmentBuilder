@@ -111,12 +111,9 @@ export default {
       if (aoat_config.aoatGetFormUrl) {
         Api.get(aoat_config.aoatGetFormUrl).then(result => {
           this.form = result.data;
-          this.formData = result.data.form_data[0];
+          this.formData = result.data.form_data;
           this.$store.dispatch("updateFormId", this.form.ID);
-          this.$store.dispatch(
-            "updateFormSettings",
-            this.form.form_settings[0]
-          );
+          this.$store.dispatch("updateFormSettings", this.form.form_settings);
         });
       }
 
@@ -127,10 +124,7 @@ export default {
         Api.get(
           aoat_config.aoatGetAssessmentsUrl + params.get("edit_assessment")
         ).then(result => {
-          this.$store.dispatch(
-            "updateAssessment",
-            result.data.assessment_data[0]
-          );
+          this.$store.dispatch("updateAssessment", result.data.assessment_data);
           this.$store.dispatch("updateAssessmentObject", result.data);
         });
       }
@@ -145,16 +139,16 @@ export default {
         Api.get(aoat_config.aoatGetAssessmentUrl).then(result => {
           this.assessment = result.data;
           this.$store.dispatch("updateAssessmentObject", this.assessment);
-          this.assessmentData = this.assessment.assessment_data[0];
+          this.assessmentData = this.assessment.assessment_data;
           this.report = this.assessment.report;
           if (this.report) {
-            this.reportData = this.assessment.report.report_data[0];
+            this.reportData = this.assessment.report.report_data;
             this.$store.dispatch("updateReport", this.reportData);
           }
           this.$store.dispatch("updateAssessment", this.assessmentData);
 
           const assessmentInputObject = this.findByKey(
-            this.assessment.form.form_data[0].items,
+            this.assessment.form.form_data.items,
             "AssessmentsInput",
             "component"
           );
@@ -168,7 +162,7 @@ export default {
             ).then(result => {
               this.$store.dispatch(
                 "updateSelectedAssessmentForReview",
-                result.data.assessment_data[0]
+                result.data.assessment_data
               );
               this.$store.dispatch(
                 "updateSelectedAssessmentForReviewId",
