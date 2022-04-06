@@ -174,7 +174,6 @@ export default {
 
         this.message = "Assessment successfully saved!";
 
-        this.checkAndSetTitle();
         if (this.formSettings.pageCatalog) {
           let url = new URL(this.formSettings.pageCatalog.guid);
           url.searchParams.set("dimensions", this.getLocFilter().join(","));
@@ -194,7 +193,6 @@ export default {
         return false;
       }
 
-      this.checkAndSetTitle();
       this.saveApiCall(response => {
         this.message = "Assessment successfully submitted!";
         if (this.formSettings.pageCatalog) {
@@ -219,6 +217,7 @@ export default {
       if (this.assessmentObject) {
         id = this.assessmentObject.ID;
       }
+      this.checkAndSetTitle();
       Api.post(aoat_config.aoatSaveAssessmentUrl, {
         id: id,
         title: this.title,
