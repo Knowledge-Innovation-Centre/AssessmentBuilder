@@ -697,7 +697,7 @@ export default {
       }
       if (!this.scoreValuesDefault[item.reportItemKey][assessmentId]) {
         this.scoreValuesDefault[item.reportItemKey][assessmentId] = 0;
-        this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = [];
+        this.scoreValuesTextDefault[item.reportItemKey][assessmentId] = ["/"];
       }
       if (!this.checkConditions(item, assessment)) {
         return;
