@@ -96,10 +96,11 @@ class Frontend {
                 // This is the output for your entry so what you want to do for each post.
 				$content .= '<div><a href="' . get_the_permalink() . '">' . get_the_title() . '</a>';
 
-                $page = get_post_meta($form->ID, 'page_id', true);
+                $page = get_post_meta($form->ID, 'form_settings', true);
 
-                if (isset($page)) {
-                    $content .= ' <a href="' . get_permalink($page["ID"]) . '?edit_assessment=' . get_the_ID() . ($queryParameterKey ? '&' . $queryParameterKey .'=1': '') . '"><button>Edit</button></a>';
+
+                if (isset($page["pageForm"])) {
+                    $content .= ' <a href="' . get_permalink($page["pageForm"]["ID"]) . '?edit_assessment=' . get_the_ID() . ($queryParameterKey ? '&' . $queryParameterKey .'=1': '') . '"><button>Edit</button></a>';
                 }
                 $content .= ' <a href="' . get_delete_post_link() . '"><button>Delete</button></a> </div>';
 
