@@ -141,9 +141,27 @@
       <!--          :form-items="selectedForm.form_data[0].items"-->
       <!--        />-->
       <!--      </div>-->
-      <div class="aoat-w-full aoat-px-2 ">
+      <loader :loading="loading" />
+      <div v-if="!loading" class="aoat-w-full aoat-px-2 ">
         <!--        <advanced-reports />-->
         <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
+          <div
+            class="aoat-flex aoat-justify-between aoat-items-center aoat-mt-5"
+          >
+            <pagination
+              :limit="limit"
+              :offset="offset"
+              :nb-hits="nbHits"
+              @update-offset="updateOffset($event)"
+            /><select v-model="limit" class="aoat-w-20-important">
+              <option :value="10">10</option>
+              <option :value="20">20</option>
+              <option :value="50">50</option>
+              <option :value="100">100</option>
+              <option :value="9999">all</option>
+            </select>
+          </div>
+
           <div
             class="aoat-overflow-auto aoat-rounded aoat-bg-white aoat-shadow-md aoat-relative wrapper"
           >
@@ -347,13 +365,17 @@ import LineChart from "../../frontend/components/report-elements/LineChart";
 import SimpleReport from "../../admin/components/SimpleReport.vue";
 import scoreMixin from "../../frontend/components/report-elements/mixins/scoreMixin";
 import XLSX from "xlsx";
+import Pagination from "../components/Pagination.vue";
+import Loader from "../components/Loader.vue";
 
 export default {
   name: "Reports",
 
   components: {
+    Pagination,
     LineChart,
-    SimpleReport
+    SimpleReport,
+    Loader
   },
 
   mixins: [scoreMixin],
@@ -363,6 +385,10 @@ export default {
       forms: [],
       updateData: 0,
       activeTab: 1,
+      limit: 20,
+      offset: 0,
+      nbHits: 0,
+      loading: false,
       selectedForm: null,
       selectedUser: null,
       showText: false,
@@ -538,18 +564,11 @@ export default {
   },
 
   watch: {
+    limit() {
+      this.loadAssessments();
+    },
     async selectedForm() {
-      await Api.get(
-        aoat_config.aoatGetFormUrl + this.selectedForm.ID + "/assessments"
-      ).then(result => {
-        this.assessments = result.data;
-        this.$set(
-          this.groupsToAverage,
-          "default",
-          this.assessments.map(assessment => assessment.ID.toString())
-        );
-        this.setScoring();
-      });
+      this.loadAssessments();
     }
   },
 
@@ -562,6 +581,33 @@ export default {
       await Api.get(aoat_config.aoatGetFormUrl).then(result => {
         this.forms = result.data;
       });
+    },
+    async loadAssessments() {
+      this.loading = true;
+      let page = this.offset / this.limit;
+      if (page == 0) {
+        page = 1;
+      }
+      await Api.get(
+        aoat_config.aoatGetFormUrl + this.selectedForm.ID + `/assessments_count`
+      ).then(result => {
+        console.log(result.data);
+        this.nbHits = result.data;
+      });
+      await Api.get(
+        aoat_config.aoatGetFormUrl +
+          this.selectedForm.ID +
+          `/assessments?page=${page}&posts_per_page=${this.limit}`
+      ).then(result => {
+        this.assessments = result.data;
+        this.$set(
+          this.groupsToAverage,
+          "default",
+          this.assessments.map(assessment => assessment.ID.toString())
+        );
+        this.setScoring();
+      });
+      this.loading = false;
     },
     exportExcel(exportText = false) {
       if (exportText) {
@@ -867,6 +913,11 @@ export default {
       return (
         "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.5)"
       );
+    },
+
+    updateOffset(offset) {
+      this.offset = offset;
+      this.loadAssessments();
     }
   }
 };

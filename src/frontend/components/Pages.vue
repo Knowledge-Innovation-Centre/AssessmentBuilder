@@ -33,6 +33,10 @@
       </div>
     </template>
 
+    <div v-if="editing" class="aoat-text-center aoat-text-red-500">
+      You are editing!
+    </div>
+
     <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
       <template v-if="currentIndex === 0 && filteredItems.length > 1">
         <button v-if="isReport" @click="goToLastPage()">Benchmarking</button>
@@ -114,6 +118,12 @@ export default {
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    editing() {
+      const url = new URL(window.location);
+      let params = new URLSearchParams(url.search);
+
+      return !!params.get("edit_assessment");
     },
     settings() {
       return this.$store.state.settings;

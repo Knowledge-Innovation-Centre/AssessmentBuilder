@@ -2,6 +2,7 @@
 namespace ApprenticeshipOnlineAssessmentTool\Api;
 
 use WP_Error;
+use WP_Query;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -68,6 +69,18 @@ class Form extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_form_assessments' ],
+                    'permission_callback' => [ $this, 'get_form_permissions_check' ],
+                    'args'                => $this->get_collection_params(),
+                ]
+            ]
+        );
+        register_rest_route(
+            $this->namespace,
+            '/forms/(?P<id>\d+)/assessments_count',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_form_assessments_count' ],
                     'permission_callback' => [ $this, 'get_form_permissions_check' ],
                     'args'                => $this->get_collection_params(),
                 ]
@@ -199,14 +212,19 @@ class Form extends WP_REST_Controller {
 	 */
     public function get_form_assessments( WP_REST_Request $request ) {
 	    $form= get_post($request->get_params()['id']);
+
+        $page = $request->get_params()['page'] ?? 1;
+        $posts_per_page = $request->get_params()['posts_per_page'] ?? -1;
+
 	    $args = [
+            'paged' => $page,
+            'posts_per_page' => $posts_per_page,
 		    'post_type' => 'aoat_assessment',
 		    'meta_key' => 'form_id',
 		    'post_status' => 'any',
 		    'meta_value' => $form->ID,
 		    'orderby' => 'ID',
 		    'order' => 'ASC',
-		    'numberposts' => -1,
 	    ];
 	    $assessments = get_posts($args);
 
@@ -221,6 +239,31 @@ class Form extends WP_REST_Controller {
 	    }
 
         return rest_ensure_response( $assessments );
+    }
+	/**
+	 * Retrieves a collection of items.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+    public function get_form_assessments_count( WP_REST_Request $request ) {
+	    $form= get_post($request->get_params()['id']);
+
+
+	    $args = [
+		    'post_type' => 'aoat_assessment',
+		    'meta_key' => 'form_id',
+		    'post_status' => 'any',
+		    'meta_value' => $form->ID,
+		    'orderby' => 'ID',
+		    'order' => 'ASC',
+            'posts_per_page' => -1,
+	    ];
+	    $assessments = new WP_Query($args);
+
+
+        return rest_ensure_response( $assessments->post_count );
     }
 
 	/**
