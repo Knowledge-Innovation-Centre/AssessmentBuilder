@@ -35,7 +35,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="2" style="text-align: center">
+          <td colspan="4" style="text-align: center">
             <button @click="addOption()">+</button>
           </td>
         </tr>

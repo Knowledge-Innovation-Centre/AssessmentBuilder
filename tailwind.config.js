@@ -53,7 +53,8 @@ module.exports = {
       "8": "2rem",
       "10": "2.5rem",
       "12": "3rem",
-      "32": "8rem"
+      "32": "8rem",
+      "64": "16rem"
     },
     backgroundColor: theme => theme("colors"),
     backgroundImage: {

@@ -145,6 +145,15 @@
       <div v-if="!loading" class="aoat-w-full aoat-px-2 ">
         <!--        <advanced-reports />-->
         <div class="aoat-rounded aoat-shadow-sm aoat-mb-4">
+          <multiselect
+            v-if="selectedForm"
+            v-model="selectedFields"
+            :multiple="true"
+            label="name"
+            track-by="key"
+            class="aoat-w-full"
+            :options="getItemsRecursive(selectedForm.form_data.items)"
+          />
           <div
             class="aoat-flex aoat-justify-between aoat-items-center aoat-mt-5"
           >
@@ -186,6 +195,13 @@
                     style="min-width: 200px; width: 200px;"
                   >
                     User
+                  </th>
+                  <th
+                    v-for="scoreLabel in scoreLabelsForSelectedFields"
+                    :key="scoreLabel.key"
+                    class="aoat-text-right aoat-p-3 aoat-px-5"
+                  >
+                    {{ getItemLabel(scoreLabel) }}
                   </th>
                   <template v-if="showText">
                     <th
@@ -250,6 +266,28 @@
                   <th class="aoat-px-5 aoat-text-left">
                     {{ assessment.user }}
                   </th>
+
+                  <td
+                    v-for="scoreLabel in scoreLabelsForSelectedFields"
+                    :key="scoreLabel.key"
+                    class="aoat-text-right aoat-p-3 aoat-px-5"
+                  >
+                    {{ getValue(assessment.assessment_data, scoreLabel) }}
+                  </td>
+                  <template
+                    v-for="(scoreValue,
+                    reportKey) in scoreLabelsForSelectedFields"
+                  >
+                    <td
+                      v-for="(scoreValueInner, index) in scoreValue[
+                        assessment.ID
+                      ]"
+                      :key="reportKey + '_' + index"
+                      class="aoat-px-5 aoat-text-right"
+                    >
+                      {{ scoreValueInner }}
+                    </td>
+                  </template>
                   <template v-if="!showText">
                     <td
                       v-for="(scoreValue, reportKey) in scoreValuesDefault"
@@ -288,7 +326,10 @@
                   class=""
                 >
                   <th class="aoat-text-left aoat-p-3 aoat-px-5" />
-                  <th class="aoat-text-left aoat-p-3 aoat-px-5" />
+                  <th
+                    class="aoat-text-left aoat-p-3 aoat-px-5"
+                    :colspan="scoreLabelsForSelectedFields.length + 1"
+                  />
                   <th class="aoat-text-left aoat-p-3 aoat-px-5">
                     {{ getGroupName(groupKey) }}
                   </th>
@@ -367,6 +408,7 @@ import scoreMixin from "../../frontend/components/report-elements/mixins/scoreMi
 import XLSX from "xlsx";
 import Pagination from "../components/Pagination.vue";
 import Loader from "../components/Loader.vue";
+import { Multiselect } from "vue-multiselect";
 
 export default {
   name: "Reports",
@@ -375,7 +417,8 @@ export default {
     Pagination,
     LineChart,
     SimpleReport,
-    Loader
+    Loader,
+    Multiselect
   },
 
   mixins: [scoreMixin],
@@ -395,6 +438,8 @@ export default {
       assessments: [],
       scoreLabels: [],
       scoreLabelsForText: [],
+      scoreLabelsForSelectedFields: [],
+      selectedFields: [],
       scoreValuesDefault: {},
       scoreValuesTextDefault: {},
       uniqueUsers: {},
@@ -569,6 +614,9 @@ export default {
     },
     async selectedForm() {
       this.loadAssessments();
+    },
+    selectedFields() {
+      this.setScoring();
     }
   },
 
@@ -577,6 +625,18 @@ export default {
   },
 
   methods: {
+    getItemsRecursive(items) {
+      for (let item of items) {
+        if (item.items) {
+          items = items.concat(this.getItemsRecursive(item.items));
+        }
+      }
+      return items.filter(item =>
+        ["text", "hidden", "first_last_name", "select", "date"].includes(
+          item.type
+        )
+      );
+    },
     async loadData() {
       await Api.get(aoat_config.aoatGetFormUrl).then(result => {
         this.forms = result.data;
@@ -591,7 +651,6 @@ export default {
       await Api.get(
         aoat_config.aoatGetFormUrl + this.selectedForm.ID + `/assessments_count`
       ).then(result => {
-        console.log(result.data);
         this.nbHits = result.data;
       });
       await Api.get(
@@ -625,6 +684,7 @@ export default {
     setScoring() {
       this.scoreLabels = [];
       this.scoreLabelsForText = [];
+      this.scoreLabelsForSelectedFields = [];
       this.scoreValues = {
         default: {},
         group1: {},
@@ -710,6 +770,7 @@ export default {
 
     calculateScoreItem(item, assessment) {
       let assessmentId = assessment.ID.toString();
+
       if (
         this.alreadyIncludedElementsForScores[assessmentId].includes(
           item.reportItemKey
@@ -720,7 +781,6 @@ export default {
       this.alreadyIncludedElementsForScores[assessmentId].push(
         item.reportItemKey
       );
-
       if (!this.alreadyIncludedElementsForLabels.includes(item.reportItemKey)) {
         this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
         this.scoreLabels.push(item);
@@ -823,6 +883,10 @@ export default {
         ) {
           this.alreadyIncludedElementsForLabels.push(item.reportItemKey);
           this.scoreLabelsForText.push(item);
+
+          if (this.selectedFields.includes(item.key)) {
+            this.scoreLabelsForSelectedFields.push(item);
+          }
         }
       if (!this.scoreValuesTextDefault[item.reportItemKey]) {
         this.scoreValuesTextDefault[item.reportItemKey] = {};
@@ -843,7 +907,16 @@ export default {
           this.calculateScore(item.items, assessment);
           continue;
         }
-
+        if (
+          this.selectedFields
+            .map(selectedField => selectedField.reportItemKey)
+            .includes(item.key) &&
+          !this.scoreLabelsForSelectedFields
+            .map(selectedField => selectedField.reportItemKey)
+            .includes(item.reportItemKey)
+        ) {
+          this.scoreLabelsForSelectedFields.push(item);
+        }
         if (item.disableForScoring) {
           continue;
         }
@@ -918,6 +991,12 @@ export default {
     updateOffset(offset) {
       this.offset = offset;
       this.loadAssessments();
+    },
+    getValue(assessment, item) {
+      if (!assessment[item.key]) {
+        return item.defaultValue;
+      }
+      return assessment[item.key];
     }
   }
 };

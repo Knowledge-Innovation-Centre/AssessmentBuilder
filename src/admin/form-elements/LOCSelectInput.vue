@@ -22,10 +22,10 @@
           <td class="aoat-w-32">
             <input v-model="option.id" type="text" class="aoat-w-full" />
           </td>
-          <td>
+          <td class="aoat-w-64">
             <input v-model="option.name" type="text" class="aoat-w-full" />
           </td>
-          <td class="aoat-w-12">
+          <td>
             <multiselect
               :value="option.dimensions"
               :multiple="true"
@@ -51,7 +51,7 @@
       </tbody>
       <tfoot>
         <tr>
-          <td colspan="2" style="text-align: center">
+          <td colspan="4" style="text-align: center">
             <button @click="addOption()">+</button>
           </td>
         </tr>
