@@ -645,6 +645,7 @@ export default {
     async loadAssessments() {
       this.loading = true;
       let page = this.offset / this.limit;
+      page++;
       if (page == 0) {
         page = 1;
       }
