@@ -117,11 +117,11 @@ export default {
                 images[colIndex] = {
                   data: this.getRadioGridData(item)
                 };
+                body[1].push("");
+                colImageIndexesToChange.push(colIndex);
                 if (canvas) {
                   var dataURL = canvas.toDataURL();
 
-                  body[1].push("");
-                  colImageIndexesToChange.push(colIndex);
                   images[colIndex].imageData = dataURL;
                   images[colIndex].width = canvas.width;
                   images[colIndex].height = canvas.height;
@@ -212,6 +212,7 @@ export default {
     drawTableAndImage(doc, data, images, cellWidth) {
       let height1 = 0;
       let currentRowIndex = -1;
+
       doc.autoTable({
         startY: data.cell.y + 10,
         tableWidth: data.cell.width - 10,
@@ -232,21 +233,25 @@ export default {
         }
       });
 
-      const cellHeight =
-        cellWidth *
-        (images[data.column.index].height / images[data.column.index].width);
-      data.row.height = cellHeight + height1 + 30;
+      if (images[data.column.index].imageData) {
+        const cellHeight =
+          cellWidth *
+          (images[data.column.index].height / images[data.column.index].width);
 
-      doc.addImage(
-        images[data.column.index].imageData,
-        "JPEG",
-        data.cell.x,
-        data.cell.y + height1 + 30,
-        cellWidth,
-        cellHeight,
-        null,
-        "FAST"
-      );
+        doc.addImage(
+          images[data.column.index].imageData,
+          "JPEG",
+          data.cell.x,
+          data.cell.y + height1 + 30,
+          cellWidth,
+          cellHeight,
+          null,
+          "FAST"
+        );
+        data.row.height = cellHeight + height1 + 30;
+      } else {
+        data.row.height = height1 + 15;
+      }
     },
     getRadioGridData(object) {
       const value = this.getReportValue(object);
@@ -278,7 +283,7 @@ export default {
         const selectedVerticalOption = object.optionsVertical.find(
           optionVertical => optionVertical.id === value[optionHorizontal.id]
         );
-        bodyItem.end = selectedVerticalOption.score;
+        bodyItem.end = selectedVerticalOption?.score ?? 0;
 
         for (const optionVertical of object.optionsVertical) {
           const text = "";
