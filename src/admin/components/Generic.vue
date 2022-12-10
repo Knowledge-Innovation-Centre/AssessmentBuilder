@@ -56,6 +56,7 @@ import FileUpload from "../form-elements/FileUpload.vue";
 import Form from "../form-elements/Form.vue";
 import Report from "../report-elements/Report.vue";
 import SelectInputReport from "../report-elements/SelectInputReport.vue";
+import LOCSelectInputReport from "../report-elements/LOCSelectInputReport.vue";
 import CountryInputReport from "../report-elements/CountryInputReport.vue";
 import RadioGridInputReport from "../report-elements/RadioGridInputReport.vue";
 import RadioInputReport from "../report-elements/RadioInputReport.vue";
@@ -68,6 +69,7 @@ import PartScoreReport from "../report-elements/PartScoreReport.vue";
 import TotalScoreReport from "../report-elements/TotalScoreReport.vue";
 import CompareScoreReport from "../report-elements/CompareScoreReport.vue";
 import LegendReport from "../report-elements/LegendReport.vue";
+import LOCItemsReport from "../report-elements/LOCItemsReport.vue";
 import CommonOptions from "../form-elements/CommonOptions.vue";
 import CommonOptionsReport from "../report-elements/CommonOptionsReport.vue";
 
@@ -92,6 +94,7 @@ export default {
     Form,
     Report,
     SelectInputReport,
+    LOCSelectInputReport,
     CountryInputReport,
     RadioGridInputReport,
     RadioInputReport,
@@ -104,6 +107,7 @@ export default {
     TotalScoreReport,
     CompareScoreReport,
     LegendReport,
+    LOCItemsReport,
     CommonOptions,
     CommonOptionsReport
   },

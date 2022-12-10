@@ -168,6 +168,25 @@ export default {
       }
 
       return foundedItems;
+    },
+    getLocDimensions(assessmentData = null) {
+      if (!assessmentData) {
+        assessmentData = this.assessmentData;
+      }
+      const locItems = this.filterByTypes(this.filteredItems, ["radio_loc"]);
+
+      let dimensions = [];
+      for (const locItem of locItems) {
+        const option = locItem.options.find(
+          option => option.id === assessmentData[locItem.key]
+        );
+        if (option) {
+          dimensions = dimensions.concat(
+            option.dimensions.map(dimension => dimension.ID)
+          );
+        }
+      }
+      return dimensions;
     }
   }
 };

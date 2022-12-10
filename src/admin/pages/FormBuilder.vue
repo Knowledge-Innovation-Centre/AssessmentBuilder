@@ -13,7 +13,7 @@
               Creating new form
             </h2>
             <label
-              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2"
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
             >
               Title
             </label>
@@ -30,9 +30,9 @@
             </label>
 
             <label
-              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2"
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
             >
-              Select page where shortcode is inserted
+              Select page where form shortcode is inserted
             </label>
             <multiselect
               v-model="formSettings.pageForm"
@@ -43,11 +43,38 @@
               track-by="ID"
               :options="pages"
             />
+            <small>Used for updating the assessment</small>
+            <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              Select page where assessment list shortcode is inserted
+            </label>
+            <multiselect
+              v-model="formSettings.pageAssessmentList"
+              :multiple="false"
+              label="post_title"
+              placeholder="Select one"
+              class="aoat-w-full"
+              track-by="ID"
+              :options="pages"
+            /><small
+              >After submitting the form the user will be redirected to this
+              page (if catalogue page is not set)</small
+            >
+            <label
+              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              <input
+                v-model="formSettings.showAssessmentListLink"
+                type="checkbox"
+              />
+              Show assessment list link
+            </label>
 
             <label
-              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mb-2"
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
             >
-              Select page of catalog items
+              Select page of catalogue items
             </label>
             <multiselect
               v-model="formSettings.pageCatalog"
@@ -58,6 +85,10 @@
               track-by="ID"
               :options="pages"
             />
+            <small
+              >After submitting the form the user will be redirected to this
+              page</small
+            >
           </div>
           <div>
             <template v-if="id">
@@ -255,6 +286,8 @@ export default {
       formSettings: {
         showPageNumbers: false,
         pageForm: null,
+        pageAssessmentList: null,
+        showAssessmentListLink: false,
         pageCatalog: null
       }
     };

@@ -283,7 +283,14 @@ export default {
         const selectedVerticalOption = object.optionsVertical.find(
           optionVertical => optionVertical.id === value[optionHorizontal.id]
         );
-        bodyItem.end = selectedVerticalOption?.score ?? 0;
+        bodyItem.end = 0;
+        if (selectedVerticalOption) {
+          bodyItem.end = selectedVerticalOption.score ?? 0;
+        } else {
+          console.log(object);
+          console.log(value);
+          console.log(optionHorizontal);
+        }
 
         for (const optionVertical of object.optionsVertical) {
           const text = "";

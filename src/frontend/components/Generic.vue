@@ -39,6 +39,7 @@ import PartScoreReport from "./report-elements/PartScoreReport.vue";
 import TotalScoreReport from "./report-elements/TotalScoreReport.vue";
 import CompareScoreReport from "./report-elements/CompareScoreReport.vue";
 import LegendReport from "./report-elements/LegendReport.vue";
+import LOCItemsReport from "./report-elements/LOCItemsReport.vue";
 import FileUpload from "./form-elements/FileUpload.vue";
 
 export default {
@@ -74,6 +75,7 @@ export default {
     TotalScoreReport,
     CompareScoreReport,
     LegendReport,
+    LOCItemsReport,
     FileUpload
   },
   props: {

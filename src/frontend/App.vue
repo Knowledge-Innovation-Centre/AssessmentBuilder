@@ -90,9 +90,16 @@ export default {
     settings() {
       return this.$store.state.settings;
     },
+    formSettings() {
+      return this.$store.state.formSettings;
+    },
     showLink() {
       if (!this.user) {
         return false;
+      }
+
+      if (this.formSettings.showAssessmentListLink) {
+        return true;
       }
       if (!this.settings.aoat_page_for_assessments) {
         return false;
@@ -100,6 +107,9 @@ export default {
       return this.settings.aoat_show_link_button;
     },
     listLink() {
+      if (this.formSettings.pageAssessmentList) {
+        return this.formSettings.pageAssessmentList.guid;
+      }
       return this.settings.aoat_page_for_assessments;
     }
   },

@@ -475,5 +475,23 @@ export default [
     maxWidth: null,
     maxWidthUnit: "px",
     legendFor: null
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
+    name: "LOCItems",
+    type: "legend",
+    label: "",
+    reportLabel: "",
+    conditions: [],
+    component: "LOCItems",
+    reportComponent: "LOCItemsReport",
+    canRemove: true,
+    hidden: false,
+    hideInForm: false,
+    class: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    legendFor: null
   }
 ];

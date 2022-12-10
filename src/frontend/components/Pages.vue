@@ -186,9 +186,12 @@ export default {
 
         if (this.formSettings.pageCatalog) {
           let url = new URL(this.formSettings.pageCatalog.guid);
-          url.searchParams.set("dimensions", this.getLocFilter().join(","));
+          url.searchParams.set("dimensions", this.getLocDimensions().join(","));
           window.location.href = url.href;
           return;
+        }
+        if (this.user && this.formSettings.pageAssessmentList) {
+          window.location.href = this.formSettings.pageAssessmentList.guid;
         }
         if (this.user && this.settings.aoat_page_for_assessments) {
           window.location.href = this.settings.aoat_page_for_assessments;
@@ -207,7 +210,7 @@ export default {
         this.message = "Assessment successfully submitted!";
         if (this.formSettings.pageCatalog) {
           let url = new URL(this.formSettings.pageCatalog.guid);
-          url.searchParams.set("dimensions", this.getLocFilter().join(","));
+          url.searchParams.set("dimensions", this.getLocDimensions().join(","));
           window.location.href = url.href;
           return;
         }
@@ -233,7 +236,7 @@ export default {
         title: this.title,
         assessmentData: this.assessmentData,
         formId: this.$store.state.formId,
-        locFilter: this.getLocFilter(),
+        locFilter: this.getLocDimensions(),
         queryParameterKey: this.$store.state.queryParameterKey
       })
         .then(function(response) {
@@ -243,22 +246,7 @@ export default {
           console.log(error);
         });
     },
-    getLocFilter() {
-      const locItems = this.filterByTypes(this.filteredItems, ["radio_loc"]);
 
-      let dimensions = [];
-      for (const locItem of locItems) {
-        const option = locItem.options.find(
-          option => option.id === this.assessmentData[locItem.key]
-        );
-        if (option) {
-          dimensions = dimensions.concat(
-            option.dimensions.map(dimension => dimension.ID)
-          );
-        }
-      }
-      return dimensions;
-    },
     setPreviousPage() {
       this.clickedForward = false;
       this.currentIndex--;
