@@ -136,6 +136,10 @@ export default {
         ).then(result => {
           this.$store.dispatch("updateAssessment", result.data.assessment_data);
           this.$store.dispatch("updateAssessmentObject", result.data);
+          this.$store.dispatch(
+            "updateFormSettings",
+            this.data.form.form_settings
+          );
         });
       }
 
@@ -150,6 +154,10 @@ export default {
           this.assessment = result.data;
           this.$store.dispatch("updateAssessmentObject", this.assessment);
           this.assessmentData = this.assessment.assessment_data;
+          this.$store.dispatch(
+            "updateFormSettings",
+            result.data.form.form_settings
+          );
           this.report = this.assessment.report;
           if (this.report) {
             this.reportData = this.assessment.report.report_data;

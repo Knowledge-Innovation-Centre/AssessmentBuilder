@@ -51,6 +51,9 @@ export default {
     getItemsFlatList(items) {
       let index = 0;
       for (let object of items) {
+        if (object.component === "LOCItems") {
+          continue;
+        }
         if (object.items && object.items.length) {
           this.getItemsFlatList(object.items);
 

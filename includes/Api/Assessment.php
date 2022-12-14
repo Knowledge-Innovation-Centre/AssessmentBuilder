@@ -175,6 +175,7 @@ class Assessment extends WP_REST_Controller {
 	    }
 	    if ($assessment->form) {
 	        $assessment->form->form_data = get_post_meta($assessment->form->ID, 'form_data', true);
+            $assessment->form->form_settings = get_post_meta($assessment->form->ID, 'form_settings', true);
 	    }
 
         return rest_ensure_response( $assessment );

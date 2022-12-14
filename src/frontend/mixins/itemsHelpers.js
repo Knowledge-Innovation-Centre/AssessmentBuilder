@@ -120,7 +120,13 @@ export default {
       if (!option) {
         return null;
       }
-      return option.name;
+      let content = option.name;
+      if (option.dimensions) {
+        content +=
+          "\n" +
+          option.dimensions.map(dimension => dimension.post_title).join("\n");
+      }
+      return content;
     },
     findByKey(items, value, key = "type") {
       for (const item of items) {
@@ -178,8 +184,9 @@ export default {
       let dimensions = [];
       for (const locItem of locItems) {
         const option = locItem.options.find(
-          option => option.id === assessmentData[locItem.key]
+          option => option.id === assessmentData[locItem.reportItemKey]
         );
+
         if (option) {
           dimensions = dimensions.concat(
             option.dimensions.map(dimension => dimension.ID)
@@ -187,6 +194,27 @@ export default {
         }
       }
       return dimensions;
+    },
+    getPage(key) {
+      for (let page of this.$store.state.report.items) {
+        if (this.isInPage(page, page.items, key)) {
+          return page;
+        }
+      }
+      return null;
+    },
+    isInPage(page, items, key) {
+      for (let item of items) {
+        if (item.key === key) {
+          return true;
+        }
+        if (item.items) {
+          if (this.isInPage(page, item.items, key)) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
   }
 };

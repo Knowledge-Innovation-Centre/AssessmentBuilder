@@ -9,12 +9,15 @@ export default {
   name: "LOCItemsReport",
 
   mixins: [itemsHelper],
-
+  props: {
+    object: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     filteredItems() {
-      return this.getItems(
-        this.$store.state.assessmentObject.form.form_data.items
-      ).filter(item => item.type === "page");
+      return this.getPage(this.object.key).items;
     },
     dimensions() {
       return this.getLocDimensions(this.$store.state.assessment).join(",");

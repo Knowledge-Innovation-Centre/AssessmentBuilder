@@ -46,11 +46,12 @@
 <script>
 import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
+import itemsHelper from "../../mixins/itemsHelpers";
 
 export default {
   name: "PartScoreReport",
 
-  mixins: [labelMixin, scoreMixin],
+  mixins: [labelMixin, scoreMixin, itemsHelper],
 
   props: {
     object: {
@@ -63,38 +64,14 @@ export default {
     return {};
   },
 
-  computed: {
-    getPage() {
-      for (let page of this.reportData.items) {
-        if (this.isInPage(page, page.items)) {
-          return page;
-        }
-      }
-      return null;
-    }
-  },
-
   mounted() {
     this.setData();
   },
 
   methods: {
-    isInPage(page, items) {
-      for (let item of items) {
-        if (item.key === this.object.key) {
-          return true;
-        }
-        if (item.items) {
-          if (this.isInPage(page, item.items)) {
-            return true;
-          }
-        }
-      }
-      return false;
-    },
     setData() {
       this.chartData.labels = [];
-      this.calculateScore(this.getPage.items);
+      this.calculateScore(this.getPage(this.object.key).items);
       if (this.score !== this.totalScore) {
         if (this.object.hideLabels) {
           this.chartData.labels.push("");

@@ -89,6 +89,12 @@
               >After submitting the form the user will be redirected to this
               page</small
             >
+            <label
+              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              <input v-model="formSettings.hidePDFButton" type="checkbox" />
+              Hide PDF button
+            </label>
           </div>
           <div>
             <template v-if="id">
@@ -288,7 +294,8 @@ export default {
         pageForm: null,
         pageAssessmentList: null,
         showAssessmentListLink: false,
-        pageCatalog: null
+        pageCatalog: null,
+        hidePDFButton: false
       }
     };
   },

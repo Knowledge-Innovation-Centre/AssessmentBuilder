@@ -75,8 +75,9 @@
           </div>
         </template>
 
-        <download-pdf v-if="isReport" />
-
+        <template v-if="isReport">
+          <download-pdf v-if="!hidePdfButton" />
+        </template>
         <button v-else @click="save()">Submit</button>
       </template>
     </div>
@@ -161,6 +162,9 @@ export default {
         "radio_loc",
         "file_upload"
       ]);
+    },
+    hidePdfButton() {
+      return this.formSettings.hidePDFButton;
     }
   },
   watch: {
