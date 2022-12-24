@@ -120,13 +120,7 @@ export default {
       if (!option) {
         return null;
       }
-      let content = option.name;
-      if (option.dimensions) {
-        content +=
-          "\n" +
-          option.dimensions.map(dimension => dimension.post_title).join("\n");
-      }
-      return content;
+      return option.name;
     },
     findByKey(items, value, key = "type") {
       for (const item of items) {

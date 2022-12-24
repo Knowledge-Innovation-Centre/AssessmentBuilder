@@ -32,6 +32,12 @@
                   <input v-model="object.reportLabel" type="text" />
                 </td>
               </tr>
+              <tr v-if="typeof object.dimensionsLabel !== 'undefined'">
+                <th>Dimensions label:</th>
+                <td colspan="2">
+                  <input v-model="object.dimensionsLabel" type="text" />
+                </td>
+              </tr>
               <tr v-if="typeof object.hidden !== 'undefined'">
                 <th>Hidden:</th>
                 <td colspan="2">
@@ -177,6 +183,18 @@
                 <th>Hide labels:</th>
                 <td colspan="2">
                   <input v-model="object.hideLabels" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.showAnswer !== 'undefined'">
+                <th>Show answer:</th>
+                <td colspan="2">
+                  <input v-model="object.showAnswer" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.showDimensions !== 'undefined'">
+                <th>Show dimensions:</th>
+                <td colspan="2">
+                  <input v-model="object.showDimensions" type="checkbox" />
                 </td>
               </tr>
               <tr>

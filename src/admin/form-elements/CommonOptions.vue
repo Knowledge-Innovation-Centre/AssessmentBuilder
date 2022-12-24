@@ -177,6 +177,21 @@
                   </table>
                 </td>
               </tr>
+              <tr v-if="typeof object.relatedQuestions !== 'undefined'">
+                <th>Related questions:</th>
+                <td>
+                  <multiselect
+                    v-model="object.relatedQuestions"
+                    :multiple="true"
+                    label="name"
+                    placeholder="Select one"
+                    class="aoat-w-full"
+                    track-by="key"
+                    :allow-empty="false"
+                    :options="fieldsInForm"
+                  />
+                </td>
+              </tr>
 
               <tr>
                 <th />
