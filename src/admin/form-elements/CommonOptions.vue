@@ -42,6 +42,15 @@
                   <input v-model="object.defaultValue" type="text" />
                 </td>
               </tr>
+              <tr v-if="typeof object.defaultValueCurrentDate !== 'undefined'">
+                <th>Set current date for default value:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.defaultValueCurrentDate"
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.required !== 'undefined'">
                 <th>Required:</th>
                 <td colspan="2">

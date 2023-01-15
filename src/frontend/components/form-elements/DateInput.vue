@@ -4,7 +4,7 @@
       {{ object.label }} <template v-if="object.required">*</template>
     </label>
     <date-picker
-      v-model="localDate"
+      v-model="value"
       :class="hasError ? 'aoat-border-red-400' : ''"
       :style="getWidthStyle"
       :placeholder="object.placeholder"
@@ -23,6 +23,7 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import "vue2-datepicker/index.css";
+import format from "date-fns/format";
 
 export default {
   name: "TextInput",
@@ -43,12 +44,6 @@ export default {
     }
   },
 
-  data() {
-    return {
-      localDate: null
-    };
-  },
-
   computed: {
     selectedAssessmentForReview() {
       return this.$store.state.selectedAssessmentForReview;
@@ -60,15 +55,23 @@ export default {
         );
       }
       return "";
-    }
-  },
-
-  watch: {
-    localDate() {
-      this.$store.dispatch("updateValue", {
-        key: this.object.key,
-        value: this.localDate
-      });
+    },
+    value: {
+      get() {
+        if (!this.$store.state.assessment[this.object.key]) {
+          if (this.object.defaultValueCurrentDate) {
+            return format(new Date(), "yyyy-MM-dd");
+          }
+          return this.object.defaultValue;
+        }
+        return this.$store.state.assessment[this.object.key];
+      },
+      set(newValue) {
+        return this.$store.dispatch("updateValue", {
+          key: this.object.key,
+          value: newValue
+        });
+      }
     }
   },
 

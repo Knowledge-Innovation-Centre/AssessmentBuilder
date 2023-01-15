@@ -29,7 +29,8 @@
     "vue-tippy": "^4.7.0",
     "vue2-datepicker": "^3.6.2",
     "vuex": "^3.5.1",
-    "xlsx": "^0.16.9"
+    "xlsx": "^0.16.9",
+    "date-fns": "^2.29.3"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",

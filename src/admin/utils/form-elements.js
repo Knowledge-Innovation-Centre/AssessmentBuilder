@@ -212,6 +212,7 @@ export default [
     name: "Date input",
     type: "date",
     defaultValue: null,
+    defaultValueCurrentDate: false,
     label: "",
     reportLabel: "",
     conditions: [],
