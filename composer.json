@@ -16,7 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "includes/"
+            "ApprenticeshipOnlineAssessmentTool\\": "includes/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

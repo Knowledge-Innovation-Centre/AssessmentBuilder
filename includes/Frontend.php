@@ -2,7 +2,6 @@
 namespace ApprenticeshipOnlineAssessmentTool;
 
 use WP_Query;
-use function WPML\FP\Strings\replace;
 
 /**
  * Frontend Pages Handler

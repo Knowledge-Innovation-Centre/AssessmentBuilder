@@ -3,7 +3,7 @@
 Plugin Name: ApprenticeshipQ Online Assessment Tool
 Plugin URI: https://knowledgeinnovation.eu/
 Description: A WordPress ApprenticeshipQ Online Assessment Tool plugin
-Version: 2.9.1
+Version: 2.9.2
 Author: Jure Jager, Carmen L. Padron-Napoles, Tara Dev
 Author URI: https://knowledgeinnovation.eu/
 License: GPL2
@@ -40,6 +40,11 @@ Domain Path: /languages
 
 // don't call the file directly
 if ( !defined( 'ABSPATH' ) ) exit;
+
+// Load composer dependencies.
+if ( file_exists( __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php' ) ) {
+    require_once __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+}
 
 /**
  * Apprenticeship_Online_Assessment_Tool class

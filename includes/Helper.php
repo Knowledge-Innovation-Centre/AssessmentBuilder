@@ -1,8 +1,7 @@
 <?php
-
 namespace ApprenticeshipOnlineAssessmentTool;
 
-class Helper{
+class Helper {
 	public static function duplicate_post($post_id, $status = null) {
 		global $wpdb;
 

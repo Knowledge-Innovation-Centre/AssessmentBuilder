@@ -1,7 +1,6 @@
 <?php
 namespace ApprenticeshipOnlineAssessmentTool\Api;
 
-
 use ApprenticeshipOnlineAssessmentTool\Helper;
 use WP_Error;
 use WP_Query;
