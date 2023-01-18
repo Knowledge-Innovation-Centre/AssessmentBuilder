@@ -266,6 +266,9 @@ export default {
 
       data.columns.push({ dataKey: "id", header: "" });
       data.colors.push("#000000");
+      if (!object.optionsVertical) {
+        console.log(object);
+      }
       data.columns = data.columns.concat(
         object.optionsVertical.map(optionVertical => {
           data.colors.push(optionVertical.color);

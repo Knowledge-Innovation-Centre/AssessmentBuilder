@@ -7,6 +7,7 @@
           <pie-chart
             v-if="chartData.datasets[0].data.length"
             :chart-data="chartData"
+            :styles="myStyles"
             :options="chartOptions"
           />
         </template>
@@ -14,6 +15,7 @@
           <radar-chart
             v-if="chartData.datasets[0].data.length"
             :chart-data="chartData"
+            :styles="myStyles"
             :options="chartOptions"
           />
         </template>
@@ -165,6 +167,18 @@ export default {
     },
     optionsVertical() {
       return this.object.optionsVertical;
+    },
+    myStyles() {
+      if (this.object.height) {
+        return {
+          height: this.object.height + this.object.heightUnit,
+          position: "relative"
+        };
+      }
+      return {
+        height: `400px`,
+        position: "relative"
+      };
     }
   },
 
@@ -209,6 +223,14 @@ export default {
       return (
         "rgba(" + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") + ",0.5)"
       );
+    },
+
+    getHeightStyle() {
+      if (this.object.height) {
+        return (
+          "max-height:" + this.object.height + this.object.heightUnit + ";"
+        );
+      }
     }
   }
 };

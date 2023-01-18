@@ -281,6 +281,8 @@ export default [
     ],
     maxWidth: null,
     maxWidthUnit: "px",
+    height: null,
+    heightUnit: "px",
     scoreGraphColor: null
   },
   {
