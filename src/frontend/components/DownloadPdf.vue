@@ -96,9 +96,12 @@ export default {
             let colIndex = 0;
             let colImageIndexesToChange = [];
             for (let item of itemForPdf) {
+              if (item.newPageInPdf) {
+                doc.addPage();
+              }
               if (!["paragraph"].includes(item.type)) {
                 body[0].push({
-                  content: item.label,
+                  content: this.getLabel(item),
                   styles: { fontStyle: "bold" }
                 });
               }
@@ -215,7 +218,10 @@ export default {
     drawTableAndImage(doc, data, images, cellWidth) {
       let height1 = 0;
       let currentRowIndex = -1;
-
+      // if (data.cell.y > 100) {
+      //   doc.addPage();
+      //   data.cell.y = 10;
+      // }
       doc.autoTable({
         startY: data.cell.y + 10,
         tableWidth: data.cell.width - 10,
@@ -310,6 +316,12 @@ export default {
       }
 
       return data;
+    },
+    getLabel(item) {
+      if (item.reportLabel && item.reportLabel !== "") {
+        return item.reportLabel;
+      }
+      return item.label;
     }
   }
 };

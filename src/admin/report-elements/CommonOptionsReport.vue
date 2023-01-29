@@ -44,6 +44,12 @@
                   <input v-model="object.hidden" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.newPageInPdf !== 'undefined'">
+                <th>Add to new page in PDF:</th>
+                <td colspan="2">
+                  <input v-model="object.newPageInPdf" type="checkbox" />
+                </td>
+              </tr>
               <tr v-if="typeof object.excludeForScoreComparing !== 'undefined'">
                 <th>Exclude for score compare:</th>
                 <td colspan="2">

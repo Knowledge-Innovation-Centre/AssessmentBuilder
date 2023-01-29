@@ -58,12 +58,6 @@ export default {
     },
     value: {
       get() {
-        if (!this.$store.state.assessment[this.object.key]) {
-          if (this.object.defaultValueCurrentDate) {
-            return format(new Date(), "yyyy-MM-dd");
-          }
-          return this.object.defaultValue;
-        }
         return this.$store.state.assessment[this.object.key];
       },
       set(newValue) {
@@ -75,6 +69,21 @@ export default {
     }
   },
 
-  methods: {}
+  mounted() {
+    this.setDefaultValue();
+  },
+
+  methods: {
+    setDefaultValue() {
+      if (!this.$store.state.assessment[this.object.key]) {
+        if (this.object.defaultValueCurrentDate) {
+          this.$store.dispatch("updateValue", {
+            key: this.object.key,
+            value: format(new Date(), "yyyy-MM-dd")
+          });
+        }
+      }
+    }
+  }
 };
 </script>
