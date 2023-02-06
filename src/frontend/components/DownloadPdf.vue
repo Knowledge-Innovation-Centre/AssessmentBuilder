@@ -77,7 +77,7 @@ export default {
       this.$store.dispatch("updateDownloadPercentage", 0);
       setTimeout(async () => {
         let currentPage = 0;
-        for (const page of this.reportData.items) {
+        for (const page of this.getItems(this.reportData.items)) {
           this.itemsForPdf = [];
           this.currentIndex = 0;
 
