@@ -1,15 +1,15 @@
 <template>
   <div
     ref="topOfPage"
-    class="aoat-overflow-hidden"
     :class="exportEnabled ? 'export-enabled' : ''"
+    class="aoat-overflow-hidden"
   >
     <template v-if="!exportEnabled">
       <transition-group
         v-if="!exportEnabled"
         :name="clickedForward ? 'slide-fade' : 'slide-fade-back'"
-        style="display: flex;"
         mode="out-in"
+        style="display: flex;"
         tag="div"
       >
         <div
@@ -102,7 +102,14 @@ export default {
   },
   mixins: [itemsHelper],
   props: {
-    items: null
+    items: {
+      type: Array,
+      default: null
+    },
+    additionalAssessments: {
+      type: Array,
+      default: () => []
+    }
   },
   data() {
     return {
@@ -362,31 +369,38 @@ export default {
 .slide-fade-back-enter-active {
   transition: all 0.8s;
 }
+
 .slide-fade-leave-active,
 .slide-fade-back-leave-active {
   transition: all 0.8s;
 }
+
 .slide-fade-enter {
   transform: translateX(0);
   opacity: 0;
 }
+
 .slide-fade-leave-to {
   transform: translateX(-100%);
   opacity: 0;
 }
+
 .slide-fade-enter-to,
 .slide-fade-leave {
   transform: translateX(-100%);
   opacity: 1;
 }
+
 .slide-fade-back-enter {
   transform: translateX(-200%);
   opacity: 0;
 }
+
 .slide-fade-back-leave-to {
   transform: translateX(100%);
   opacity: 0;
 }
+
 .slide-fade-back-enter-to {
   transform: translateX(-100%);
   opacity: 1;

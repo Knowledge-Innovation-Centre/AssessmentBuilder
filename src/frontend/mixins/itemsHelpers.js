@@ -2,6 +2,15 @@ export default {
   methods: {
     getItems(items) {
       return items.filter(item => {
+        if (this.additionalAssessments && this.additionalAssessments.length) {
+          for (let additionalAssessment of this.additionalAssessments) {
+            if (
+              this.checkConditions(item, additionalAssessment.assessment_data)
+            ) {
+              return true;
+            }
+          }
+        }
         return this.checkConditions(item);
       });
     },
@@ -94,12 +103,34 @@ export default {
 
       return any;
     },
-    getReportValue(object, assessment = null) {
+    getReportValue(
+      object,
+      assessment = null,
+      checkAdditionalAssessments = true
+    ) {
       if (!assessment) {
         assessment = this.$store.state.assessment;
       }
       let result = assessment[object.reportItemKey];
       if (!result) {
+        if (
+          checkAdditionalAssessments &&
+          this.$store.state.additionalAssessments &&
+          this.$store.state.additionalAssessments.length
+        ) {
+          for (let additionalAssessment of this.$store.state
+            .additionalAssessments) {
+            let result = this.getReportValue(
+              object,
+              additionalAssessment.assessment_data,
+              false
+            );
+
+            if (result !== "/") {
+              return result;
+            }
+          }
+        }
         return "/";
       }
 

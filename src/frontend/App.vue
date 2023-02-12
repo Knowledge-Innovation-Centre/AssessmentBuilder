@@ -14,7 +14,11 @@
             >
           </base-progress>
         </template>
-        <pages v-if="formData.items.length" :items="formData.items" />
+        <pages
+          v-if="formData.items.length"
+          :additional-assessments="additionalAssessments"
+          :items="formData.items"
+        />
         <pages v-if="reportData.items.length" :items="reportData.items" />
       </div>
     </div>
@@ -22,8 +26,8 @@
       <base-progress
         v-if="exportEnabled"
         :percentage="downloadPercentage"
-        color="blue"
         class="aoat-mx-2 aoat-mb-5 aoat-h-5  aoat-mt-10"
+        color="blue"
       >
         <span
           class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2"
@@ -66,7 +70,8 @@ export default {
         items: []
       },
       assessment: {},
-      assessmentData: {}
+      assessmentData: {},
+      additionalAssessments: []
     };
   },
   computed: {
@@ -123,7 +128,11 @@ export default {
           this.form = result.data;
           this.formData = result.data.form_data;
           this.$store.dispatch("updateFormId", this.form.ID);
-          this.$store.dispatch("updateFormSettings", this.form.form_settings);
+          this.$store
+            .dispatch("updateFormSettings", this.form.form_settings)
+            .then(() => {
+              this.loadAdditionalFormsAssessments();
+            });
         });
       }
 
@@ -154,10 +163,11 @@ export default {
           this.assessment = result.data;
           this.$store.dispatch("updateAssessmentObject", this.assessment);
           this.assessmentData = this.assessment.assessment_data;
-          this.$store.dispatch(
-            "updateFormSettings",
-            result.data.form.form_settings
-          );
+          this.$store
+            .dispatch("updateFormSettings", result.data.form.form_settings)
+            .then(() => {
+              this.loadAdditionalFormsAssessments();
+            });
           this.report = this.assessment.report;
           if (this.report) {
             this.reportData = this.assessment.report.report_data;
@@ -190,6 +200,7 @@ export default {
           }
         });
       }
+
       Api.get(aoat_config.aoatGetSettingsUrl).then(result => {
         let settings = {};
         for (let setting of result.data) {
@@ -197,6 +208,24 @@ export default {
         }
         this.$store.dispatch("updateSettings", settings);
       });
+    },
+    loadAdditionalFormsAssessments() {
+      if (
+        aoat_config.aoatGetLastAssessmentUrl &&
+        this.formSettings.additionalForms &&
+        this.formSettings.additionalForms.length
+      ) {
+        for (let additionalForm of this.formSettings.additionalForms) {
+          Api.get(
+            aoat_config.aoatGetLastAssessmentUrl +
+              "?form_id=" +
+              additionalForm.ID
+          ).then(result => {
+            this.additionalAssessments.push(result.data);
+            this.$store.dispatch("addAdditionalAssessments", result.data);
+          });
+        }
+      }
     }
   }
 };

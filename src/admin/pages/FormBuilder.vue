@@ -19,8 +19,8 @@
             </label>
             <input
               v-model="title"
-              type="text"
               class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white"
+              type="text"
             />
             <label
               class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold"
@@ -37,11 +37,11 @@
             <multiselect
               v-model="formSettings.pageForm"
               :multiple="false"
+              :options="pages"
+              class="aoat-w-full"
               label="post_title"
               placeholder="Select one"
-              class="aoat-w-full"
               track-by="ID"
-              :options="pages"
             />
             <small>Used for updating the assessment</small>
             <label
@@ -52,12 +52,13 @@
             <multiselect
               v-model="formSettings.pageAssessmentList"
               :multiple="false"
+              :options="pages"
+              class="aoat-w-full"
               label="post_title"
               placeholder="Select one"
-              class="aoat-w-full"
               track-by="ID"
-              :options="pages"
-            /><small
+            />
+            <small
               >After submitting the form the user will be redirected to this
               page (if catalogue page is not set)</small
             >
@@ -79,15 +80,34 @@
             <multiselect
               v-model="formSettings.pageCatalog"
               :multiple="false"
+              :options="pages"
+              class="aoat-w-full"
               label="post_title"
               placeholder="Select one"
-              class="aoat-w-full"
               track-by="ID"
-              :options="pages"
             />
             <small
               >After submitting the form the user will be redirected to this
               page</small
+            >
+
+            <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              Select additional forms
+            </label>
+            <multiselect
+              v-model="formSettings.additionalForms"
+              :multiple="true"
+              :options="additionalForms"
+              class="aoat-w-full"
+              label="post_title"
+              placeholder="Select one"
+              track-by="ID"
+            />
+            <small
+              >Fields from this forms will be available in condition
+              fields</small
             >
             <label
               class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
@@ -106,8 +126,8 @@
                   :to="'/reports/' + id + '/create'"
                   class="aoat-no-underline aoat-bg-white aoat-hover:bg-gray-100 aoat-text-gray-800 aoat-font-semibold aoat-px-4 aoat-border aoat-border-gray-400 aoat-rounded aoat-shadow"
                 >
-                  +</router-link
-                >
+                  +
+                </router-link>
               </h2>
               <div
                 v-for="report in reports"
@@ -181,12 +201,12 @@
           </button>
           <tippy
             ref="import_json"
-            arrow
             :interactive="true"
-            theme="light"
             :max-width="800"
-            placement="left"
+            arrow
             class="aoat-inline-block"
+            placement="left"
+            theme="light"
             trigger="click"
           >
             <template v-slot:trigger>
@@ -220,8 +240,8 @@
             <drag
               v-for="element in availableBuilderElements"
               :key="element.key"
-              class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
               :data="element"
+              class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
               @cut="remove(element)"
             >
               {{ element.name }}
@@ -233,8 +253,8 @@
           <drag
             v-for="element in availableFormElements"
             :key="element.key"
-            class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
             :data="element"
+            class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
             @cut="remove(element)"
           >
             {{ element.name }}
@@ -284,6 +304,7 @@ export default {
       loading: false,
       addedElements: [],
       pages: [],
+      additionalForms: [],
       title: "",
       importJson: "",
       formData: {},
@@ -295,6 +316,7 @@ export default {
         pageAssessmentList: null,
         showAssessmentListLink: false,
         pageCatalog: null,
+        additionalForms: [],
         hidePDFButton: false
       }
     };
@@ -346,6 +368,12 @@ export default {
         }
       }
     },
+    formSettings: {
+      deep: true,
+      handler() {
+        this.$store.dispatch("updateFormSettings", this.formSettings);
+      }
+    },
     id() {
       this.loadForm();
     }
@@ -391,6 +419,11 @@ export default {
       Api.get(aoat_config.aoatGetPagesUrl).then(result => {
         this.pages = result.data;
       });
+      Api.get(aoat_config.aoatGetFormsUrl + "?posts_per_page=-1").then(
+        result => {
+          this.additionalForms = result.data;
+        }
+      );
     },
     remove(n) {
       let index = this.addedElements.indexOf(n);

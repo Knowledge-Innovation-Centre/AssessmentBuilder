@@ -2,6 +2,9 @@ export const mutations = {
   UPDATE_FORM(state, payload) {
     state.form = payload;
   },
+  UPDATE_FORM_SETTINGS(state, payload) {
+    state.formSettings = payload;
+  },
   REMOVE_FIELD(state, payload) {
     state.form.items = removeByKey(state.form.items, payload);
   },

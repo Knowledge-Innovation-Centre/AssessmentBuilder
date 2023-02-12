@@ -2,12 +2,12 @@
   <div>
     <div class="more-options-button">
       <tippy
-        arrow
         :interactive="true"
-        theme="light"
         :max-width="800"
-        placement="left"
+        arrow
         class="aoat-inline-block"
+        placement="left"
+        theme="light"
         trigger="click"
         @show="checkKeys()"
       >
@@ -135,13 +135,13 @@
                         <td v-if="isSelect(getFieldByKey(condition.field))">
                           <multiselect
                             v-model="condition.selectedOptions"
+                            :allow-empty="false"
                             :multiple="true"
+                            :options="getFieldByKey(condition.field).options"
+                            class="aoat-w-full"
                             label="name"
                             placeholder="Select one"
-                            class="aoat-w-full"
                             track-by="id"
-                            :allow-empty="false"
-                            :options="getFieldByKey(condition.field).options"
                           />
                         </td>
                         <template
@@ -164,14 +164,14 @@
                           <td v-if="condition.question">
                             <multiselect
                               v-model="condition.selectedOptions"
-                              :multiple="true"
-                              label="name"
-                              placeholder="Select one"
-                              track-by="id"
                               :allow-empty="false"
+                              :multiple="true"
                               :options="
                                 getFieldByKey(condition.field).optionsVertical
                               "
+                              label="name"
+                              placeholder="Select one"
+                              track-by="id"
                             />
                           </td>
                         </template>
@@ -191,20 +191,22 @@
                 <td>
                   <multiselect
                     v-model="object.relatedQuestions"
+                    :allow-empty="false"
                     :multiple="true"
+                    :options="fieldsInForm"
+                    class="aoat-w-full"
                     label="name"
                     placeholder="Select one"
-                    class="aoat-w-full"
                     track-by="key"
-                    :allow-empty="false"
-                    :options="fieldsInForm"
                   />
                 </td>
               </tr>
 
               <tr>
                 <th />
-                <td colspan="2"><button @click="addCondition()">+</button></td>
+                <td colspan="2">
+                  <button @click="addCondition()">+</button>
+                </td>
               </tr>
               <tr>
                 <th>Classes:</th>
@@ -239,10 +241,10 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.acceptedFileTypes"
-                    :multiple="true"
-                    placeholder="Select one"
                     :close-on-select="false"
+                    :multiple="true"
                     :options="fileTypes"
+                    placeholder="Select one"
                   />
                 </td>
               </tr>
@@ -251,9 +253,9 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.roleConditions"
-                    placeholder="Select one"
                     :close-on-select="true"
                     :options="object.options"
+                    placeholder="Select one"
                   />
                 </td>
               </tr>
@@ -269,12 +271,12 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.labelParts"
-                    :multiple="true"
-                    placeholder="Select one"
-                    label="name"
-                    track-by="key"
                     :allow-empty="false"
+                    :multiple="true"
                     :options="countryLabelParts"
+                    label="name"
+                    placeholder="Select one"
+                    track-by="key"
                   />
                 </td>
               </tr>
@@ -297,12 +299,12 @@
       </button>
       <tippy
         ref="remove_element"
-        arrow
         :interactive="true"
-        theme="light"
         :max-width="800"
-        placement="left"
+        arrow
         class="aoat-inline-block"
+        placement="left"
+        theme="light"
         trigger="click"
         @show="checkKeys()"
       >
@@ -315,7 +317,7 @@
         <button class="aoat-mt-2" @click="remove()">Confirm</button>
       </tippy>
     </div>
-    <span class="handle dashicons dashicons-move" :class="getHandleClass()" />
+    <span :class="getHandleClass()" class="handle dashicons dashicons-move" />
   </div>
 </template>
 
@@ -380,13 +382,37 @@ export default {
       let childrenKeys = this.getItemsRecursive([this.object]).map(
         item => item.key
       );
-      return this.getItemsRecursive(this.$store.state.form.items)
+      const state = this.$store.state;
+      let items = this.getItemsRecursive(state.form.items)
         .filter(field => !childrenKeys.includes(field.key))
         .filter(field =>
           ["text", "hidden", "select", "date", "radio", "radio_grid"].includes(
             field.type
           )
         );
+      if (
+        state.formSettings &&
+        state.formSettings.additionalForms &&
+        state.formSettings.additionalForms.length
+      ) {
+        for (let additionalForm of state.formSettings.additionalForms) {
+          items = items.concat(
+            this.getItemsRecursive(additionalForm.form_data.items)
+              .filter(field => !childrenKeys.includes(field.key))
+              .filter(field =>
+                [
+                  "text",
+                  "hidden",
+                  "select",
+                  "date",
+                  "radio",
+                  "radio_grid"
+                ].includes(field.type)
+              )
+          );
+        }
+      }
+      return items;
     },
     conditions() {
       if (!this.object.conditions) {
@@ -468,30 +494,37 @@ export default {
 .table > tbody > tr > td {
   padding: 5px 10px;
 }
+
 .table > tbody > tr > th {
   text-align: right;
   vertical-align: top;
 }
+
 /deep/ .multiselect__input {
   display: none;
 }
+
 .table input:not([type="checkbox"]),
 .table select {
   width: 100%;
 }
+
 .handle {
   position: absolute;
   left: -10px;
   top: -20px;
   cursor: grab;
 }
+
 .w-800 {
   width: 800px;
 }
+
 td {
   max-width: 250px;
   min-width: 200px;
 }
+
 select {
   width: 100%;
 }

@@ -10,10 +10,10 @@
               Editing report: {{ title }} of form: {{ formTitle }}
 
               <router-link
-                class="aoat-float-right aoat-no-underline aoat-text-sm aoat-text-blue-700"
                 :to="'/forms/' + formId"
-                >Back to form</router-link
-              >
+                class="aoat-float-right aoat-no-underline aoat-text-sm aoat-text-blue-700"
+                >Back to form
+              </router-link>
             </h2>
             <h2 v-else class="aoat-mt-0 aoat-text-gray-700">
               Creating new report of form: {{ formTitle }}
@@ -25,8 +25,8 @@
             </label>
             <input
               v-model="title"
-              type="text"
               class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white"
+              type="text"
             />
           </div>
         </div>
@@ -48,12 +48,12 @@
           </button>
           <tippy
             ref="import_json"
-            arrow
             :interactive="true"
-            theme="light"
             :max-width="800"
-            placement="left"
+            arrow
             class="aoat-inline-block"
+            placement="left"
+            theme="light"
             trigger="click"
           >
             <template v-slot:trigger>
@@ -87,8 +87,8 @@
             <drag
               v-for="element in availableBuilderElements"
               :key="element.key"
-              class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
               :data="element"
+              class="aoat-bg-blue-700 aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
               @cut="remove(element)"
             >
               {{ element.name }}
@@ -100,11 +100,11 @@
           <drag
             v-for="element in availableFormElements"
             :key="element.key"
-            class="aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
             :class="
               alreadyInReport(element) ? 'aoat-bg-blue-500' : 'aoat-bg-blue-700'
             "
             :data="element"
+            class="aoat-p-2 aoat-rounded-md aoat-mb-2 aoat-text-white"
             @cut="remove(element)"
           >
             {{ element.name }}
@@ -160,6 +160,7 @@ export default {
       },
       form: {},
       formSettings: {
+        additionalForms: [],
         showPageNumbers: false
       },
       reportData: {},
@@ -178,6 +179,13 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items);
+      if (this.formSettings.additionalForms.length) {
+        for (let additionalForm of this.formSettings.additionalForms) {
+          usedFormElements = usedFormElements.concat(
+            this.getItemsRecursive(additionalForm.form_data.items)
+          );
+        }
+      }
       return usedFormElements
         .filter(
           element =>

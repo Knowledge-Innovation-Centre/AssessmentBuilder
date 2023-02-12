@@ -1,5 +1,6 @@
 export const state = () => ({
   form: {},
+  formSettings: {},
   report: {},
   settings: {
     aoat_max_pages: 5,

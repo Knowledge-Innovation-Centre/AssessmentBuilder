@@ -2,6 +2,9 @@ export const actions = {
   updateForm({ commit }, payload) {
     commit("UPDATE_FORM", payload);
   },
+  updateFormSettings({ commit }, payload) {
+    commit("UPDATE_FORM_SETTINGS", payload);
+  },
   updateReport({ commit }, payload) {
     commit("UPDATE_REPORT", payload);
   },
