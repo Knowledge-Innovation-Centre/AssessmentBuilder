@@ -105,10 +105,6 @@ export default {
     items: {
       type: Array,
       default: null
-    },
-    additionalAssessments: {
-      type: Array,
-      default: () => []
     }
   },
   data() {

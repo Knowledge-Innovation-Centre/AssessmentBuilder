@@ -2,8 +2,9 @@ export default {
   methods: {
     getItems(items) {
       return items.filter(item => {
-        if (this.additionalAssessments && this.additionalAssessments.length) {
-          for (let additionalAssessment of this.additionalAssessments) {
+        let additionalAssessments = this.$store.state.additionalAssessments;
+        if (additionalAssessments && additionalAssessments.length) {
+          for (let additionalAssessment of additionalAssessments) {
             if (
               this.checkConditions(item, additionalAssessment.assessment_data)
             ) {

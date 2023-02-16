@@ -3,7 +3,7 @@
 Plugin Name: ApprenticeshipQ Online Assessment Tool
 Plugin URI: https://knowledgeinnovation.eu/
 Description: A WordPress ApprenticeshipQ Online Assessment Tool plugin
-Version: 2.11.0
+Version: 2.11.1
 Author: Jure Jager, Carmen L. Padron-Napoles, Tara Dev
 Author URI: https://knowledgeinnovation.eu/
 License: GPL2
@@ -97,10 +97,9 @@ final class Apprenticeship_Online_Assessment_Tool
         define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_VERSION', $this->version);
         define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_FILE', __FILE__);
         define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH', dirname(APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_FILE));
-        define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_INCLUDES',
-            APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH . '/includes');
-        define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_URL',
-            plugins_url('', APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_FILE));
+        define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_INCLUDES', APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_PATH
+                                                                 . '/includes');
+        define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_URL', plugins_url('', APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_FILE));
         define('APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_ASSETS', APPRENTICESHIP_ONLINE_ASSESSMENT_TOOL_URL . '/assets');
     }
 
@@ -284,6 +283,33 @@ final class Apprenticeship_Online_Assessment_Tool
     }
 
     /**
+     * What type of request is this?
+     *
+     * @param string $type admin, ajax, cron or frontend.
+     *
+     * @return bool
+     */
+    private function is_request($type)
+    {
+        switch ($type) {
+            case 'admin' :
+                return is_admin();
+
+            case 'ajax' :
+                return defined('DOING_AJAX');
+
+            case 'rest' :
+                return defined('REST_REQUEST');
+
+            case 'cron' :
+                return defined('DOING_CRON');
+
+            case 'frontend' :
+                return (! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
+        }
+    }
+
+    /**
      * Load the plugin after all plugis are loaded
      *
      * @return void
@@ -320,33 +346,6 @@ final class Apprenticeship_Online_Assessment_Tool
     }
 
     /**
-     * What type of request is this?
-     *
-     * @param string $type admin, ajax, cron or frontend.
-     *
-     * @return bool
-     */
-    private function is_request($type)
-    {
-        switch ($type) {
-            case 'admin' :
-                return is_admin();
-
-            case 'ajax' :
-                return defined('DOING_AJAX');
-
-            case 'rest' :
-                return defined('REST_REQUEST');
-
-            case 'cron' :
-                return defined('DOING_CRON');
-
-            case 'frontend' :
-                return (! is_admin() || defined('DOING_AJAX')) && ! defined('DOING_CRON');
-        }
-    }
-
-    /**
      * Initialize the hooks
      *
      * @return void
@@ -370,39 +369,39 @@ final class Apprenticeship_Online_Assessment_Tool
      */
     public function localization_setup()
     {
-        load_plugin_textdomain('apprenticeship-online-assessment-tool', false,
-            dirname(plugin_basename(__FILE__)) . '/languages/');
+        load_plugin_textdomain('apprenticeship-online-assessment-tool', false, dirname(plugin_basename(__FILE__))
+                                                                               . '/languages/');
     }
 
     public function register_post_types()
     {
         register_post_type('aoat_form', [
-                'labels'       => [
-                    'name'          => __('Forms', 'apprenticeship-online-assessment-tool'),
-                    'singular_name' => __('Form', 'apprenticeship-online-assessment-tool'),
-                ],
-                'public'       => true,
-                'has_archive'  => true,
-                'show_in_menu' => 'apprenticeship-online-assessment-tool',
-            ]);
+            'labels'       => [
+                'name'          => __('Forms', 'apprenticeship-online-assessment-tool'),
+                'singular_name' => __('Form', 'apprenticeship-online-assessment-tool'),
+            ],
+            'public'       => true,
+            'has_archive'  => true,
+            'show_in_menu' => 'apprenticeship-online-assessment-tool',
+        ]);
         register_post_type('aoat_assessment', [
-                'labels'       => [
-                    'name'          => __('Assessments', 'apprenticeship-online-assessment-tool'),
-                    'singular_name' => __('Assessment', 'apprenticeship-online-assessment-tool'),
-                ],
-                'public'       => true,
-                'has_archive'  => true,
-                'show_in_menu' => 'apprenticeship-online-assessment-tool',
-            ]);
+            'labels'       => [
+                'name'          => __('Assessments', 'apprenticeship-online-assessment-tool'),
+                'singular_name' => __('Assessment', 'apprenticeship-online-assessment-tool'),
+            ],
+            'public'       => true,
+            'has_archive'  => true,
+            'show_in_menu' => 'apprenticeship-online-assessment-tool',
+        ]);
         register_post_type('aoat_report', [
-                'labels'       => [
-                    'name'          => __('Reports', 'apprenticeship-online-report-tool'),
-                    'singular_name' => __('Report', 'apprenticeship-online-report-tool'),
-                ],
-                'public'       => true,
-                'has_archive'  => true,
-                'show_in_menu' => 'apprenticeship-online-report-tool',
-            ]);
+            'labels'       => [
+                'name'          => __('Reports', 'apprenticeship-online-report-tool'),
+                'singular_name' => __('Report', 'apprenticeship-online-report-tool'),
+            ],
+            'public'       => true,
+            'has_archive'  => true,
+            'show_in_menu' => 'apprenticeship-online-report-tool',
+        ]);
 
         add_filter('admin_url', [$this, 'aoat_change_add_new_for_form'], 10, 2);
 

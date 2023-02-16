@@ -119,7 +119,7 @@
                 <th>Show if:</th>
                 <td colspan="2">
                   <table class="aoat-w-full">
-                    <tr v-for="(condition, index) in conditions">
+                    <tr v-for="(condition, index) in conditions" :key="index">
                       <td v-if="condition">
                         <select v-model="condition.field">
                           <option
@@ -184,6 +184,8 @@
                       </td>
                     </tr>
                   </table>
+
+                  <button @click="addCondition()">+</button>
                 </td>
               </tr>
               <tr v-if="typeof object.relatedQuestions !== 'undefined'">
@@ -202,12 +204,6 @@
                 </td>
               </tr>
 
-              <tr>
-                <th />
-                <td colspan="2">
-                  <button @click="addCondition()">+</button>
-                </td>
-              </tr>
               <tr>
                 <th>Classes:</th>
                 <td colspan="2">
@@ -409,6 +405,19 @@ export default {
                   "radio_grid"
                 ].includes(field.type)
               )
+              .map(field => {
+                if (additionalForm.form_settings.shortTitle) {
+                  let newField = JSON.stringify(field);
+                  newField = JSON.parse(newField);
+                  newField.name =
+                    additionalForm.form_settings.shortTitle +
+                    " - " +
+                    field.name;
+                  return newField;
+                }
+
+                return field;
+              })
           );
         }
       }

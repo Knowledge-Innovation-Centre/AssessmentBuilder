@@ -14,11 +14,7 @@
             >
           </base-progress>
         </template>
-        <pages
-          v-if="formData.items.length"
-          :additional-assessments="additionalAssessments"
-          :items="formData.items"
-        />
+        <pages v-if="formData.items.length" :items="formData.items" />
         <pages v-if="reportData.items.length" :items="reportData.items" />
       </div>
     </div>
@@ -70,8 +66,7 @@ export default {
         items: []
       },
       assessment: {},
-      assessmentData: {},
-      additionalAssessments: []
+      assessmentData: {}
     };
   },
   computed: {
@@ -221,7 +216,6 @@ export default {
               "?form_id=" +
               additionalForm.ID
           ).then(result => {
-            this.additionalAssessments.push(result.data);
             this.$store.dispatch("addAdditionalAssessments", result.data);
           });
         }

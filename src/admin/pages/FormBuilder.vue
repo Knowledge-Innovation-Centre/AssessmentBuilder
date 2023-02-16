@@ -23,6 +23,16 @@
               type="text"
             />
             <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              Short title
+            </label>
+            <input
+              v-model="formSettings.shortTitle"
+              class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white"
+              type="text"
+            />
+            <label
               class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold"
             >
               <input v-model="formSettings.showPageNumbers" type="checkbox" />
@@ -311,6 +321,7 @@ export default {
       form: {},
       reports: [],
       formSettings: {
+        shortTitle: null,
         showPageNumbers: false,
         pageForm: null,
         pageAssessmentList: null,

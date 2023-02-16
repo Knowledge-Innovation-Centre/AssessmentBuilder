@@ -202,6 +202,7 @@ class Form extends WP_REST_Controller
 
         foreach ($forms as $key => $form) {
             $forms[$key]->form_data = get_post_meta($form->ID, 'form_data', true);
+            $forms[$key]->form_settings = get_post_meta($form->ID, 'form_settings', true);
         }
 
         return rest_ensure_response($forms);
