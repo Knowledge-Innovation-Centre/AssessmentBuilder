@@ -72,18 +72,18 @@ class Assets
                 'deps'      => ['jquery'],
                 'in_footer' => true,
             ],
-            'apprenticeship-online-assessment-tool-frontend' => [
-                'src'       => 'http://localhost:8080/frontend.js',
-                'deps'      => ['jquery'],
-                'version'   => '',
-                'in_footer' => true,
-            ],
-            'apprenticeship-online-assessment-tool-admin'    => [
-                'src'       => 'http://localhost:8080/admin.js',
-                'deps'      => ['jquery'],
-                'version'   => '',
-                'in_footer' => true,
-            ],
+            //'apprenticeship-online-assessment-tool-frontend' => [
+            //    'src'       => 'http://localhost:8080/frontend.js',
+            //    'deps'      => ['jquery'],
+            //    'version'   => '',
+            //    'in_footer' => true,
+            //],
+            //'apprenticeship-online-assessment-tool-admin'    => [
+            //    'src'       => 'http://localhost:8080/admin.js',
+            //    'deps'      => ['jquery'],
+            //    'version'   => '',
+            //    'in_footer' => true,
+            //],
         ];
 
         return $scripts;

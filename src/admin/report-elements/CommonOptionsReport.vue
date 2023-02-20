@@ -2,12 +2,12 @@
   <div>
     <div class="more-options-button">
       <tippy
-        arrow
         :interactive="true"
-        theme="light"
         :max-width="800"
-        placement="left"
+        arrow
         class="aoat-inline-block"
+        placement="left"
+        theme="light"
         trigger="click"
         @show="checkKeys()"
       >
@@ -110,8 +110,8 @@
                   <select
                     v-if="object.customFieldResults"
                     v-model="object.customFieldResultsFields"
-                    class="aoat-mt-3"
                     :multiple="true"
+                    class="aoat-mt-3"
                   >
                     <option
                       v-for="fieldInForm in fieldsInForm"
@@ -203,6 +203,12 @@
                   <input v-model="object.showDimensions" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.aggregateResults !== 'undefined'">
+                <th>Aggregate results:</th>
+                <td colspan="2">
+                  <input v-model="object.aggregateResults" type="checkbox" />
+                </td>
+              </tr>
               <tr>
                 <th>Classes:</th>
                 <td colspan="2">
@@ -214,12 +220,12 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.selectedGraph"
+                    :allow-empty="false"
                     :multiple="true"
+                    :options="availableGraphs"
+                    class="aoat-w-full"
                     label="label"
                     track-by="key"
-                    :allow-empty="false"
-                    class="aoat-w-full"
-                    :options="availableGraphs"
                   />
                 </td>
               </tr>
@@ -228,12 +234,12 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.selectedResultType"
+                    :allow-empty="false"
                     :multiple="true"
+                    :options="availableResultTypes"
+                    class="aoat-w-full"
                     label="label"
                     track-by="key"
-                    :allow-empty="false"
-                    class="aoat-w-full"
-                    :options="availableResultTypes"
                   />
                 </td>
               </tr>
@@ -242,12 +248,12 @@
                 <td colspan="2">
                   <multiselect
                     v-model="object.legendFor"
+                    :allow-empty="false"
                     :multiple="false"
+                    :options="availableScores"
+                    class="aoat-w-full"
                     label="reportLabel"
                     track-by="reportItemKey"
-                    :allow-empty="false"
-                    class="aoat-w-full"
-                    :options="availableScores"
                   />
                 </td>
               </tr>
@@ -282,12 +288,12 @@
       </button>
       <tippy
         ref="remove_element"
-        arrow
         :interactive="true"
-        theme="light"
         :max-width="800"
-        placement="left"
+        arrow
         class="aoat-inline-block"
+        placement="left"
+        theme="light"
         trigger="click"
         @show="checkKeys()"
       >
@@ -300,7 +306,7 @@
         <button class="aoat-mt-2" @click="remove()">Confirm</button>
       </tippy>
     </div>
-    <span class="handle dashicons dashicons-move" :class="getHandleClass()" />
+    <span :class="getHandleClass()" class="handle dashicons dashicons-move" />
   </div>
 </template>
 
@@ -443,17 +449,21 @@ export default {
 .table > tbody > tr > td {
   padding: 5px 10px;
 }
+
 .table > tbody > tr > th {
   vertical-align: top;
   text-align: right;
 }
+
 /deep/ .multiselect__input {
   display: none;
 }
+
 .table input:not([type="checkbox"]),
 .table select {
   width: 100%;
 }
+
 .handle {
   position: absolute;
   left: -10px;

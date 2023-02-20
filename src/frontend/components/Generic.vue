@@ -1,5 +1,5 @@
 <template>
-  <div class="generic aoat-flex-1" :class="form.class">
+  <div :class="form.class" class="generic aoat-flex-1">
     <component :is="getComponent" :has-error="hasError" :object="form" />
     <small v-if="hasError" class="error aoat-text-red-400">
       This is required field
@@ -40,6 +40,7 @@ import TotalScoreReport from "./report-elements/TotalScoreReport.vue";
 import CompareScoreReport from "./report-elements/CompareScoreReport.vue";
 import LegendReport from "./report-elements/LegendReport.vue";
 import LOCItemsReport from "./report-elements/LOCItemsReport.vue";
+import AggregationReport from "./report-elements/AggregationReport.vue";
 import FileUpload from "./form-elements/FileUpload.vue";
 
 export default {
@@ -76,6 +77,7 @@ export default {
     CompareScoreReport,
     LegendReport,
     LOCItemsReport,
+    AggregationReport,
     FileUpload
   },
   props: {

@@ -406,7 +406,10 @@ export default {
                 ].includes(field.type)
               )
               .map(field => {
-                if (additionalForm.form_settings.shortTitle) {
+                if (
+                  additionalForm.form_settings &&
+                  additionalForm.form_settings.shortTitle
+                ) {
                   let newField = JSON.stringify(field);
                   newField = JSON.parse(newField);
                   newField.name =

@@ -7,16 +7,16 @@
           <pie-chart
             v-if="chartData.datasets[0].data.length"
             :chart-data="chartData"
-            :styles="myStyles"
             :options="chartOptions"
+            :styles="myStyles"
           />
         </template>
         <template v-if="graphType.key === 'radar'">
           <radar-chart
             v-if="chartData.datasets[0].data.length"
             :chart-data="chartData"
-            :styles="myStyles"
             :options="chartOptions"
+            :styles="myStyles"
           />
         </template>
         <template v-if="graphType.key === 'grid'">
@@ -33,8 +33,8 @@
                   }}</span>
                   <span
                     v-if="optionVertical.icon"
-                    class="dashicons"
                     :class="optionVertical.icon"
+                    class="dashicons"
                   />
                 </th>
                 <th>Score</th>
@@ -78,12 +78,8 @@
                   /></span>
                 </td>
                 <td>
-                  {{
-                    optionsVertical.find(
-                      optionVertical =>
-                        optionVertical.id === value[optionHorizontal.id]
-                    ).score
-                  }}
+                  {{ getSelectedOptionScore(optionHorizontal) }}
+
                   <span
                     v-if="selectedAssessmentForReview"
                     class="aoat-inline aoat-text-gray-500 "
@@ -166,7 +162,7 @@ export default {
       return this.object.optionsHorizontal;
     },
     optionsVertical() {
-      return this.object.optionsVertical;
+      return this.object.optionsVertical ?? [];
     },
     myStyles() {
       if (this.object.height) {
@@ -187,6 +183,19 @@ export default {
   },
 
   methods: {
+    getSelectedOptionScore(optionHorizontal) {
+      const optionVertical = this.optionsVertical.find(
+        optionVertical => optionVertical.id === this.value[optionHorizontal.id]
+      );
+      if (optionVertical) {
+        return optionVertical.score;
+      }
+      // eslint-disable-next-line no-console
+      console.log("Horizontal option does not exists");
+      // eslint-disable-next-line no-console
+      console.log(optionHorizontal);
+      return null;
+    },
     loadChart() {
       this.chartData.labels = this.object.optionsVertical.map(
         optionVertical => optionVertical.name

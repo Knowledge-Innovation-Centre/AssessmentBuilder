@@ -1,6 +1,5 @@
 <template>
   <fieldset
-    class="generic aoat-flex-1 aoat-flex-wrap aoat-p-2 aoat-m-1"
     :class="{
       'border-orange': form.conditions && form.conditions.length,
       'border-red': form.hidden,
@@ -10,6 +9,7 @@
       'aoat-bg-white': ['page', 'form', 'report'].includes(form.type),
       'aoat-bg-blue-300': !['page', 'form', 'report'].includes(form.type)
     }"
+    class="generic aoat-flex-1 aoat-flex-wrap aoat-p-2 aoat-m-1"
   >
     <legend>{{ form.name }}</legend>
     <template v-if="isReport">
@@ -69,6 +69,7 @@ import PartScoreReport from "../report-elements/PartScoreReport.vue";
 import TotalScoreReport from "../report-elements/TotalScoreReport.vue";
 import CompareScoreReport from "../report-elements/CompareScoreReport.vue";
 import LegendReport from "../report-elements/LegendReport.vue";
+import AggregationReport from "../report-elements/AggregationReport.vue";
 import LOCItemsReport from "../report-elements/LOCItemsReport.vue";
 import CommonOptions from "../form-elements/CommonOptions.vue";
 import CommonOptionsReport from "../report-elements/CommonOptionsReport.vue";
@@ -108,6 +109,7 @@ export default {
     CompareScoreReport,
     LegendReport,
     LOCItemsReport,
+    AggregationReport,
     CommonOptions,
     CommonOptionsReport
   },
@@ -137,7 +139,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .generic {
   /*flex: 1;*/
   /*display: flex;*/
@@ -146,13 +148,16 @@ export default {
   border: lightgray solid 1px;
   /*padding: 10px;*/
   position: relative;
+
   &.page,
   &.column {
     border: lightgray dashed 2px;
   }
+
   &.page {
     margin-bottom: 20px;
   }
+
   &.row {
     margin-bottom: 20px;
   }
@@ -169,6 +174,7 @@ export default {
 .background-grey {
   background: #eee;
 }
+
 .inner {
   width: 100%;
   height: 100%;

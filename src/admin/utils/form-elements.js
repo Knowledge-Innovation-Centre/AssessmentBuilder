@@ -444,6 +444,34 @@ export default [
   {
     key: randomValueHex(15),
     reportItemKey: "",
+    name: "Aggregation",
+    type: "aggregation",
+    label: "Aggregation",
+    reportLabel: "",
+    conditions: [],
+    component: "Aggregation",
+    reportComponent: "AggregationReport",
+    canRemove: true,
+    hidden: false,
+    hideInForm: false,
+    newPageInPdf: false,
+    hideLabels: false,
+    class: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    height: null,
+    heightUnit: "px",
+    selectedInputs: [],
+    selectedResultType: [
+      {
+        label: "Score",
+        key: "score"
+      }
+    ]
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
     name: "Compare score",
     type: "compare_score",
     label: "Compare score",
