@@ -125,6 +125,12 @@
               <input v-model="formSettings.hidePDFButton" type="checkbox" />
               Hide PDF button
             </label>
+            <label
+              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold"
+            >
+              <input v-model="formSettings.enableExcelExport" type="checkbox" />
+              Enable excel export
+            </label>
           </div>
           <div>
             <template v-if="id">
@@ -328,7 +334,8 @@ export default {
         showAssessmentListLink: false,
         pageCatalog: null,
         additionalForms: [],
-        hidePDFButton: false
+        hidePDFButton: false,
+        enableExcelExport: false
       }
     };
   },

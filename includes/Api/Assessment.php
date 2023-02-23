@@ -2,6 +2,9 @@
 
 namespace ApprenticeshipOnlineAssessmentTool\Api;
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use WP_Error;
 use WP_Post;
 use WP_REST_Controller;
@@ -227,6 +230,188 @@ class Assessment extends WP_REST_Controller
      *
      * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
      */
+    public function get_excel_assessment_for_user(WP_REST_Request $request)
+    {
+        $user_id = $request->get_params()['user_id'];
+
+        $args = [
+            'post_type'      => 'aoat_form',
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+            'posts_per_page' => -1,
+        ];
+        $forms = get_posts($args);
+
+        $filtered_forms = [];
+        foreach ($forms as $form) {
+            $form->form_settings = get_post_meta($form->ID, 'form_settings', true);
+
+            if ($form->form_settings['enableExcelExport'] ?? false) {
+                $filtered_forms[] = $form;
+            }
+        }
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $writer = new Xlsx($spreadsheet);
+        $sheet->setCellValue('A1', 'Dimension info');
+        $sheet->setCellValue('F1', 'Questions info');
+        $sheet->mergeCells('A1:E1', Worksheet::MERGE_CELL_CONTENT_HIDE);
+        $sheet->mergeCells('F1:L1', Worksheet::MERGE_CELL_CONTENT_HIDE);
+        $sheet->setCellValue('A2', 'DimensionID');
+        $sheet->setCellValue('B2', 'DimensionLabel/PageLabel');
+        $sheet->setCellValue('C2', 'RelatedtoDim');
+        $sheet->setCellValue('D2', 'Exportable (Y/N)');
+        $sheet->setCellValue('E2', 'Num of Questions?');
+        $sheet->setCellValue('F2', 'QuestionID');
+        $sheet->setCellValue('G2', 'QRelatedtoD');
+
+        $sheet->setCellValue('H2', 'QRelatedtoQ');
+        $sheet->setCellValue('I2', 'QRelatedtoRole');
+        $sheet->setCellValue('J2', 'QuestionType');
+        $sheet->setCellValue('K2', 'QuestionLabel');
+        $sheet->setCellValue('L2', 'Value');
+
+        $form_key = 0;
+        $row = 2;
+        foreach ($filtered_forms as $filtered_form) {
+            $form_key++;
+            $args = [
+                'post_type'      => 'aoat_assessment',
+                'meta_key'       => 'form_id',
+                'meta_value'     => $filtered_form->ID,
+                'orderby'        => 'ID',
+                'order'          => 'DESC',
+                'posts_per_page' => -1,
+            ];
+            $assessments = get_posts($args);
+            $assessments_data = [];
+            foreach ($assessments as $assessment) {
+
+                $assessments_data[] = get_post_meta($assessment->ID, 'assessment_data', true);
+            }
+            $form_data = get_post_meta($filtered_form->ID, 'form_data', true);
+
+            $flatListQuestions = [];
+            $this->getFlatListQuestions($form_data['items'], $flatListQuestions);
+
+            $relatedToDimensions = 'All';
+            $additionalForms = $filtered_form->form_settings['additionalForms'] ?? [];
+
+            if (count($additionalForms)) {
+                $relatedToDimensions = '';
+                foreach ($additionalForms as $additionalForm) {
+                    $relatedToDimensions .= $additionalForm['post_title'] . ', ';
+                }
+                $relatedToDimensions .= $filtered_form->post_title;
+            }
+
+            foreach ($flatListQuestions as $key => $flatListQuestion) {
+                $row++;
+                $sheet->setCellValue('A' . $row, $form_key);
+                $sheet->setCellValue('B' . $row, $filtered_form->post_title
+                                                 . ' - page '
+                                                 . $flatListQuestion['pageNumber']);
+                $sheet->setCellValue('C' . $row, $relatedToDimensions);
+                $sheet->setCellValue('D' . $row, ' ');
+                $sheet->setCellValue('E' . $row, ' ');
+                $sheet->setCellValue('F' . $row, $flatListQuestion['name']);
+                $sheet->setCellValue('G' . $row, $filtered_form->post_title);
+
+                $sheet->setCellValue('H' . $row, $this->getRelatedQuestions($flatListQuestion));
+                $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
+                $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
+                $sheet->setCellValue('K' . $row, $flatListQuestion['label']);
+                $sheet->setCellValue('L' . $row, $this->getValues($flatListQuestion, $assessments_data));
+            }
+        }
+
+        $filename = '/assessments_' . wp_generate_password(5, false) . '.xlsx';
+        $filenameForSave = wp_upload_dir()['path'] . $filename;
+        $filenameForDownload = wp_upload_dir()['url'] . $filename;
+        $writer->save($filenameForSave);
+
+        return rest_ensure_response($filenameForDownload);
+    }
+
+    private function getFlatListQuestions($form_data_items, &$flatListQuestions, $currentPage = 0)
+    {
+        foreach ($form_data_items as $form_data_item) {
+
+            if ($form_data_item['type'] == 'paragraph') {
+                continue;
+            }
+            if (isset($form_data_item['items']) && count($form_data_item['items'])) {
+
+                if ($form_data_item['type'] == 'page') {
+                    $currentPage++;
+                }
+                $this->getFlatListQuestions($form_data_item['items'], $flatListQuestions, $currentPage);
+                continue;
+            }
+            $form_data_item['pageNumber'] = $currentPage;
+            $flatListQuestions[] = $form_data_item;
+        }
+    }
+
+    private function getRelatedQuestions($flatListQuestion)
+    {
+
+        $relatedQuestions = [];
+        foreach ($flatListQuestion['relatedQuestions'] ?? [] as $relatedQuestion) {
+            $relatedQuestions[] = $relatedQuestion['name'];
+        }
+
+        if (! count($relatedQuestions)) {
+            return ' ';
+        }
+
+        return implode(',', $relatedQuestions);
+    }
+
+    private function getConditions($flatListQuestion)
+    {
+
+        $conditions = [];
+        foreach ($flatListQuestion['conditions'] ?? [] as $condition) {
+            foreach ($condition['selectedOptions'] ?? [] as $selectedOption) {
+                $conditions[] = $selectedOption['name'];
+            }
+        }
+
+        if (! count($conditions)) {
+            return ' ';
+        }
+
+        return implode(',', $conditions);
+    }
+
+    private function getValues($flatListQuestion, $assessments_data)
+    {
+
+        $values = [];
+        foreach ($assessments_data as $assessment_data) {
+            $value = $assessment_data[$flatListQuestion['key']] ?? null;
+            if ($value) {
+                if (is_array($value)) {
+                    $values[] = implode(',', array_values($value));
+                    continue;
+                }
+                $values[] = $value;
+            }
+        }
+
+        return implode(',', $values);
+    }
+
+    /**
+     * Retrieves a collection of items.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+     */
     public function get_last_user_assessment(WP_REST_Request $request)
     {
 
@@ -274,6 +459,14 @@ class Assessment extends WP_REST_Controller
             [
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => [$this, 'get_last_user_assessment'],
+                'permission_callback' => [$this, 'get_assessment_permissions_check'],
+                'args'                => $this->get_collection_params(),
+            ],
+        ]);
+        register_rest_route($this->namespace, '/assessments/get-excel-for-user', [
+            [
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => [$this, 'get_excel_assessment_for_user'],
                 'permission_callback' => [$this, 'get_assessment_permissions_check'],
                 'args'                => $this->get_collection_params(),
             ],

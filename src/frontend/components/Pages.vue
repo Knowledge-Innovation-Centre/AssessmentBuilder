@@ -81,6 +81,9 @@
         <button v-else @click="save()">Submit</button>
       </template>
     </div>
+    <button style="display: none;" @click="downloadExcel()">
+      Download pdf
+    </button>
     <div v-if="showPageNumbers" class="aoat-text-center">
       {{ getPageNumberText() }}
     </div>
@@ -329,6 +332,19 @@ export default {
         // Use el.scrollIntoView() to instantly scroll to the element
         el.scrollIntoView({ behavior: "smooth" });
       }
+    },
+    downloadExcel() {
+      Api.get(
+        aoat_config.aoatGetExcelForUserAssessmentUrl +
+          "?user_ids=" +
+          this.$store.state.formId
+      )
+        .then(function(response) {
+          window.open(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     checkValidation(items) {
       if (this.isReport) {
