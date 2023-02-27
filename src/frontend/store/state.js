@@ -10,7 +10,6 @@ export const state = () => ({
   user: null,
   downloadPercentage: 0,
   errors: [],
-  additionalAssessments: [],
   exportEnabled: false,
   queryParameterKey: false,
   settings: {

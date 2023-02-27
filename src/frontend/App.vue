@@ -111,6 +111,9 @@ export default {
         return this.formSettings.pageAssessmentList.guid;
       }
       return this.settings.aoat_page_for_assessments;
+    },
+    isFilterForExport() {
+      return aoat_config.isFilterForExport;
     }
   },
   mounted() {
@@ -206,6 +209,7 @@ export default {
     },
     loadAdditionalFormsAssessments() {
       if (
+        !this.isFilterForExport &&
         aoat_config.aoatGetLastAssessmentUrl &&
         this.formSettings.additionalForms &&
         this.formSettings.additionalForms.length
@@ -216,7 +220,13 @@ export default {
               "?form_id=" +
               additionalForm.ID
           ).then(result => {
-            this.$store.dispatch("addAdditionalAssessments", result.data);
+            const assessmentData = result.data.assessment_data;
+            for (const assessmentDataKey of Object.keys(assessmentData)) {
+              this.$store.dispatch("updateValue", {
+                key: assessmentDataKey,
+                value: assessmentData[assessmentDataKey]
+              });
+            }
           });
         }
       }

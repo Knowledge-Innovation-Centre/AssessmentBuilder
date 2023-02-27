@@ -10,9 +10,6 @@ export const mutations = {
   UPDATE_ASSESSMENT_OBJECT(state, payload) {
     state.assessmentObject = payload;
   },
-  ADD_ADITIONAL_ASSESSMENTS(state, payload) {
-    state.additionalAssessments.push(payload);
-  },
   UPDATE_SELECTED_ASSESSMENT_FOR_REVIEW(state, payload) {
     state.selectedAssessmentForReview = payload;
   },

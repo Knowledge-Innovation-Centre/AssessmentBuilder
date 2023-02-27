@@ -131,6 +131,16 @@
               <input v-model="formSettings.enableExcelExport" type="checkbox" />
               Enable excel export
             </label>
+            <label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              Export sort
+            </label>
+            <input
+              v-model="formSettings.exportSort"
+              class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white"
+              type="number"
+            />
           </div>
           <div>
             <template v-if="id">
@@ -196,6 +206,7 @@
         </div>
         <div class="aoat-text-center aoat-my-3">
           <code>[aoat-form id="{{ form.ID }}"]</code>
+          <code>[aoat-form filter-for-export="true" id="{{ form.ID }}"]</code>
           <code>[aoat-assessment-list id="{{ form.ID }}"]</code>
         </div>
 
@@ -335,7 +346,8 @@ export default {
         pageCatalog: null,
         additionalForms: [],
         hidePDFButton: false,
-        enableExcelExport: false
+        enableExcelExport: false,
+        exportSort: 0
       }
     };
   },

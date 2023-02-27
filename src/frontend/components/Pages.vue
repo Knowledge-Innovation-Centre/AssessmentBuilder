@@ -37,7 +37,10 @@
       You are editing!
     </div>
 
-    <div class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5">
+    <div
+      v-if="!isFilterForExport"
+      class="aoat-flex aoat-flex-row aoat-justify-between aoat-mt-5"
+    >
       <template v-if="currentIndex === 0 && filteredItems.length > 1">
         <button v-if="isReport" @click="goToLastPage()">Benchmarking</button>
         <button v-else :disabled="true">Back</button>
@@ -81,8 +84,8 @@
         <button v-else @click="save()">Submit</button>
       </template>
     </div>
-    <button style="display: none;" @click="downloadExcel()">
-      Download pdf
+    <button v-if="isFilterForExport" @click="downloadExcel()">
+      Download excel
     </button>
     <div v-if="showPageNumbers" class="aoat-text-center">
       {{ getPageNumberText() }}
@@ -171,6 +174,9 @@ export default {
     },
     hidePdfButton() {
       return this.formSettings.hidePDFButton;
+    },
+    isFilterForExport() {
+      return aoat_config.isFilterForExport;
     }
   },
   watch: {
@@ -334,11 +340,10 @@ export default {
       }
     },
     downloadExcel() {
-      Api.get(
-        aoat_config.aoatGetExcelForUserAssessmentUrl +
-          "?user_ids=" +
-          this.$store.state.formId
-      )
+      Api.post(aoat_config.aoatGetExcelAssessmentUrl, {
+        assessmentData: this.assessmentData,
+        formId: this.$store.state.formId
+      })
         .then(function(response) {
           window.open(response.data);
         })

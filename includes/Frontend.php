@@ -33,19 +33,19 @@ class Frontend
         global $post;
 
         $data = [
-            'aoatSaveAssessmentUrl'            => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
-            'aoatGetFormUrl'                   => null,
-            'ajax_url'                         => admin_url('admin-ajax.php'),
-            'aoatGetAssessmentUrl'             => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"
-                                                                     . ($post->ID ?: null)),
-            'aoatGetAssessmentsUrl'            => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
-            'aoatGetLastAssessmentUrl'         => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/last-by-user"),
-            'aoatGetExcelForUserAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/get-excel-for-user"),
-            'aoatGetMediaUrl'                  => get_rest_url(null, "/wp/v2/media/"),
-            'aoatGetUserUrl'                   => get_rest_url(null, "/wp/v2/users/me"),
-            'nonce'                            => wp_create_nonce('wp_rest'),
-            'aoatGetSettingsUrl'               => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
-            'aoatGetReportsUrl'                => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports"),
+            'aoatSaveAssessmentUrl'     => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
+            'aoatGetFormUrl'            => null,
+            'ajax_url'                  => admin_url('admin-ajax.php'),
+            'aoatGetAssessmentUrl'      => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"
+                                                              . ($post->ID ?: null)),
+            'aoatGetAssessmentsUrl'     => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
+            'aoatGetLastAssessmentUrl'  => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/last-by-user"),
+            'aoatGetExcelAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/get-excel"),
+            'aoatGetMediaUrl'           => get_rest_url(null, "/wp/v2/media/"),
+            'aoatGetUserUrl'            => get_rest_url(null, "/wp/v2/users/me"),
+            'nonce'                     => wp_create_nonce('wp_rest'),
+            'aoatGetSettingsUrl'        => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
+            'aoatGetReportsUrl'         => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/reports"),
         ];
         wp_localize_script('apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data);
 
@@ -195,18 +195,19 @@ class Frontend
         wp_enqueue_script('apprenticeship-online-assessment-tool-frontend');
         wp_enqueue_script('apprenticeship-online-assessment-tool-frontend-pdf');
         $data = [
-            'upload_url'                       => admin_url('async-upload.php'),
-            'ajax_url'                         => admin_url('admin-ajax.php'),
-            'nonce'                            => wp_create_nonce('wp_rest'),
-            'aoatGetFormUrl'                   => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/"
-                                                                     . ($atts['id']
+            'upload_url'                => admin_url('async-upload.php'),
+            'ajax_url'                  => admin_url('admin-ajax.php'),
+            'nonce'                     => wp_create_nonce('wp_rest'),
+            'isFilterForExport'         => $atts['filter-for-export'] ?: false,
+            'aoatGetFormUrl'            => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/forms/"
+                                                              . ($atts['id']
                     ?: null)),
-            'aoatSaveAssessmentUrl'            => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
-            'aoatGetLastAssessmentUrl'         => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/last-by-user"),
-            'aoatGetExcelForUserAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/get-excel-for-user"),
-            'aoatGetAssessmentsUrl'            => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
-            'aoatGetUserUrl'                   => get_rest_url(null, "/wp/v2/users/me?context=edit"),
-            'aoatGetSettingsUrl'               => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
+            'aoatSaveAssessmentUrl'     => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/create"),
+            'aoatGetLastAssessmentUrl'  => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/last-by-user"),
+            'aoatGetExcelAssessmentUrl' => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/get-excel"),
+            'aoatGetAssessmentsUrl'     => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/assessments/"),
+            'aoatGetUserUrl'            => get_rest_url(null, "/wp/v2/users/me?context=edit"),
+            'aoatGetSettingsUrl'        => get_rest_url(null, "/apprenticeship-online-assessment-tool/v1/settings"),
         ];
         wp_localize_script('apprenticeship-online-assessment-tool-frontend', 'aoat_config', $data);
 

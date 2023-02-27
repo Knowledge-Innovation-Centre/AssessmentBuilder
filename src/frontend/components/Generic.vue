@@ -23,6 +23,7 @@ import CountryInput from "./form-elements/CountryInput.vue";
 import RadioGridInput from "./form-elements/RadioGridInput.vue";
 import RadioInput from "./form-elements/RadioInput.vue";
 import AssessmentsInput from "./form-elements/AssessmentsInput.vue";
+import ExternalElement from "./form-elements/ExternalElement.vue";
 import Form from "./form-elements/Form.vue";
 import Report from "./report-elements/Report.vue";
 import SelectInputReport from "./report-elements/SelectInputReport.vue";
@@ -60,6 +61,7 @@ export default {
     DateInput,
     RadioGridInput,
     AssessmentsInput,
+    ExternalElement,
     Form,
     Report,
     SelectInputReport,

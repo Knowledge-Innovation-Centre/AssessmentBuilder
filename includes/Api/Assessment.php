@@ -230,9 +230,9 @@ class Assessment extends WP_REST_Controller
      *
      * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
      */
-    public function get_excel_assessment_for_user(WP_REST_Request $request)
+    public function get_excel_assessment(WP_REST_Request $request)
     {
-        $user_id = $request->get_params()['user_id'];
+        $assessment_data_filter = $request->get_params()['assessmentData'];
 
         $args = [
             'post_type'      => 'aoat_form',
@@ -250,6 +250,16 @@ class Assessment extends WP_REST_Controller
                 $filtered_forms[] = $form;
             }
         }
+
+        usort($filtered_forms, function ($a, $b) {
+            $exportSortA = $a->form_settings['exportSort'] ?? 0;
+            $exportSortB = $b->form_settings['exportSort'] ?? 0;
+            if ($exportSortA == $exportSortB) {
+                return 0;
+            }
+
+            return ($exportSortA < $exportSortB) ? -1 : 1;
+        });
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -288,9 +298,19 @@ class Assessment extends WP_REST_Controller
             $assessments = get_posts($args);
             $assessments_data = [];
             foreach ($assessments as $assessment) {
+                $assessments_data_item = get_post_meta($assessment->ID, 'assessment_data', true);
 
-                $assessments_data[] = get_post_meta($assessment->ID, 'assessment_data', true);
+                foreach ($assessment_data_filter as $filterItemKey => $filterItem) {
+                    if (! isset($assessments_data_item[$filterItemKey])) {
+                        continue 2;
+                    }
+                    if ($assessments_data_item[$filterItemKey] != $filterItem) {
+                        continue 2;
+                    }
+                }
+                $assessments_data[] = $assessments_data_item;
             }
+
             $form_data = get_post_meta($filtered_form->ID, 'form_data', true);
 
             $flatListQuestions = [];
@@ -322,7 +342,7 @@ class Assessment extends WP_REST_Controller
                 $sheet->setCellValue('H' . $row, $this->getRelatedQuestions($flatListQuestion));
                 $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
                 $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
-                $sheet->setCellValue('K' . $row, $flatListQuestion['label']);
+                $sheet->setCellValue('K' . $row, $this->getLabel($flatListQuestion));
                 $sheet->setCellValue('L' . $row, $this->getValues($flatListQuestion, $assessments_data));
             }
         }
@@ -338,8 +358,7 @@ class Assessment extends WP_REST_Controller
     private function getFlatListQuestions($form_data_items, &$flatListQuestions, $currentPage = 0)
     {
         foreach ($form_data_items as $form_data_item) {
-
-            if ($form_data_item['type'] == 'paragraph') {
+            if ($form_data_item['disableExportExcel']) {
                 continue;
             }
             if (isset($form_data_item['items']) && count($form_data_item['items'])) {
@@ -387,9 +406,20 @@ class Assessment extends WP_REST_Controller
         return implode(',', $conditions);
     }
 
+    private function getLabel($flatListQuestion)
+    {
+        if ($flatListQuestion['hideValuesInExportExcel']) {
+            return ' ';
+        }
+
+        return $flatListQuestion['label'];
+    }
+
     private function getValues($flatListQuestion, $assessments_data)
     {
-
+        if ($flatListQuestion['hideValuesInExportExcel']) {
+            return ' ';
+        }
         $values = [];
         foreach ($assessments_data as $assessment_data) {
             $value = $assessment_data[$flatListQuestion['key']] ?? null;
@@ -463,10 +493,10 @@ class Assessment extends WP_REST_Controller
                 'args'                => $this->get_collection_params(),
             ],
         ]);
-        register_rest_route($this->namespace, '/assessments/get-excel-for-user', [
+        register_rest_route($this->namespace, '/assessments/get-excel', [
             [
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => [$this, 'get_excel_assessment_for_user'],
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => [$this, 'get_excel_assessment'],
                 'permission_callback' => [$this, 'get_assessment_permissions_check'],
                 'args'                => $this->get_collection_params(),
             ],

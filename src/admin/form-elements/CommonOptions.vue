@@ -69,6 +69,21 @@
                   <input v-model="object.multiple" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.disableExportExcel !== 'undefined'">
+                <th>Disable for Excel export:</th>
+                <td colspan="2">
+                  <input v-model="object.disableExportExcel" type="checkbox" />
+                </td>
+              </tr>
+              <tr v-if="typeof object.hideValuesInExportExcel !== 'undefined'">
+                <th>Hide values for Excel export:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.hideValuesInExportExcel"
+                    type="checkbox"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.isUrl !== 'undefined'">
                 <th>Is URL:</th>
                 <td colspan="2">
@@ -196,6 +211,21 @@
                     :allow-empty="false"
                     :multiple="true"
                     :options="fieldsInForm"
+                    class="aoat-w-full"
+                    label="name"
+                    placeholder="Select one"
+                    track-by="key"
+                  />
+                </td>
+              </tr>
+              <tr v-if="typeof object.element !== 'undefined'">
+                <th>External elements:</th>
+                <td>
+                  <multiselect
+                    v-model="object.element"
+                    :allow-empty="false"
+                    :multiple="false"
+                    :options="fieldsAdditionalInForms"
                     class="aoat-w-full"
                     label="name"
                     placeholder="Select one"
@@ -374,18 +404,9 @@ export default {
   },
 
   computed: {
-    fieldsInForm() {
-      let childrenKeys = this.getItemsRecursive([this.object]).map(
-        item => item.key
-      );
+    fieldsAdditionalInForms() {
       const state = this.$store.state;
-      let items = this.getItemsRecursive(state.form.items)
-        .filter(field => !childrenKeys.includes(field.key))
-        .filter(field =>
-          ["text", "hidden", "select", "date", "radio", "radio_grid"].includes(
-            field.type
-          )
-        );
+      let items = [];
       if (
         state.formSettings &&
         state.formSettings.additionalForms &&
@@ -394,7 +415,6 @@ export default {
         for (let additionalForm of state.formSettings.additionalForms) {
           items = items.concat(
             this.getItemsRecursive(additionalForm.form_data.items)
-              .filter(field => !childrenKeys.includes(field.key))
               .filter(field =>
                 [
                   "text",
@@ -424,6 +444,22 @@ export default {
           );
         }
       }
+
+      return items;
+    },
+    fieldsInForm() {
+      let childrenKeys = this.getItemsRecursive([this.object]).map(
+        item => item.key
+      );
+      const state = this.$store.state;
+      let items = this.getItemsRecursive(state.form.items)
+        .filter(field => !childrenKeys.includes(field.key))
+        .filter(field =>
+          ["text", "hidden", "select", "date", "radio", "radio_grid"].includes(
+            field.type
+          )
+        );
+      items = items.concat(this.fieldsAdditionalInForms);
       return items;
     },
     conditions() {

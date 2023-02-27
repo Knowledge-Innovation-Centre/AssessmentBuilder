@@ -51,6 +51,7 @@ import RadioGridInput from "../form-elements/RadioGridInput.vue";
 import SelectInput from "../form-elements/SelectInput.vue";
 import LOCSelectInput from "../form-elements/LOCSelectInput.vue";
 import AssessmentsInput from "../form-elements/AssessmentsInput.vue";
+import ExternalElement from "../form-elements/ExternalElement.vue";
 import CountryInput from "../form-elements/CountryInput.vue";
 import FileUpload from "../form-elements/FileUpload.vue";
 import Form from "../form-elements/Form.vue";
@@ -84,6 +85,7 @@ export default {
     SelectInput,
     LOCSelectInput,
     AssessmentsInput,
+    ExternalElement,
     CountryInput,
     DateInput,
     TextareaInput,
