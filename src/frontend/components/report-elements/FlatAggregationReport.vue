@@ -23,8 +23,8 @@
           <table>
             <thead>
               <tr>
-                <th>Answers</th>
-                <th>Count</th>
+                <th>Question</th>
+                <th>Answer</th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +143,7 @@ export default {
               continue;
             }
 
-            this.setAggregateAnswersKeys(item.options);
+            this.setAggregateAnswersKeys(item);
             this.setGraphColors(item.options);
 
             for (const valueItem of value) {
@@ -152,7 +152,7 @@ export default {
               );
 
               if (verticalOption) {
-                this.aggregatedAnswers[verticalOption.name]++;
+                this.aggregatedAnswers[item.label] = verticalOption.name;
               }
             }
           } else {
@@ -161,7 +161,7 @@ export default {
             );
 
             if (verticalOption) {
-              this.aggregatedAnswers[verticalOption.name]++;
+              this.aggregatedAnswers[item.label] = verticalOption.name;
             }
           }
         }
@@ -173,26 +173,24 @@ export default {
         return 0;
       }
 
-      this.setAggregateAnswersKeys(item.optionsVertical);
-      this.setGraphColors(item.optionsVertical);
+      // this.setGraphColors(item.optionsVertical);
 
       for (let option of item.optionsHorizontal) {
         let verticalOption = item.optionsVertical.find(
           optionVertical => optionVertical.id === value[option.id]
         );
         if (verticalOption) {
-          return this.aggregatedAnswers[verticalOption.name]++;
+          this.setAggregateAnswersKeys(option.name);
+          return (this.aggregatedAnswers[option.name] = verticalOption.name);
         }
       }
 
       return 0;
     },
 
-    setAggregateAnswersKeys(options) {
-      for (let option of options) {
-        if (typeof this.aggregatedAnswers[option.name] === "undefined") {
-          this.aggregatedAnswers[option.name] = 0;
-        }
+    setAggregateAnswersKeys(label) {
+      if (typeof this.aggregatedAnswers[label] === "undefined") {
+        this.aggregatedAnswers[label] = "";
       }
     },
     setGraphColors(options) {

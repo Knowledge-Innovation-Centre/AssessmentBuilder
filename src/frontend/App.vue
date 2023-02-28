@@ -209,6 +209,7 @@ export default {
     },
     loadAdditionalFormsAssessments() {
       if (
+        !this.isReport &&
         !this.isFilterForExport &&
         aoat_config.aoatGetLastAssessmentUrl &&
         this.formSettings.additionalForms &&

@@ -510,6 +510,36 @@ export default [
   {
     key: randomValueHex(15),
     reportItemKey: "",
+    name: "Flat Aggregation",
+    type: "flat_aggregation",
+    disableExportExcel: false,
+    hideValuesInExportExcel: false,
+    label: "Flat Aggregation",
+    reportLabel: "",
+    conditions: [],
+    component: "FlatAggregation",
+    reportComponent: "FlatAggregationReport",
+    canRemove: true,
+    hidden: false,
+    hideInForm: false,
+    newPageInPdf: false,
+    hideLabels: false,
+    class: "",
+    maxWidth: null,
+    maxWidthUnit: "px",
+    height: null,
+    heightUnit: "px",
+    selectedInputs: [],
+    selectedResultType: [
+      {
+        label: "Score",
+        key: "score"
+      }
+    ]
+  },
+  {
+    key: randomValueHex(15),
+    reportItemKey: "",
     name: "Compare score",
     type: "compare_score",
     disableExportExcel: false,

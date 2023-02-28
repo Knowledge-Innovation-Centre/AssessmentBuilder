@@ -209,6 +209,7 @@ export default {
             "total_score_graph",
             "compare_score",
             "aggregation",
+            "flat_aggregation",
             "legend"
           ].includes(element.type)
         )

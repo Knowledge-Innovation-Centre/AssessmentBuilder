@@ -42,6 +42,7 @@ import CompareScoreReport from "./report-elements/CompareScoreReport.vue";
 import LegendReport from "./report-elements/LegendReport.vue";
 import LOCItemsReport from "./report-elements/LOCItemsReport.vue";
 import AggregationReport from "./report-elements/AggregationReport.vue";
+import FlatAggregationReport from "./report-elements/FlatAggregationReport.vue";
 import FileUpload from "./form-elements/FileUpload.vue";
 
 export default {
@@ -80,6 +81,7 @@ export default {
     LegendReport,
     LOCItemsReport,
     AggregationReport,
+    FlatAggregationReport,
     FileUpload
   },
   props: {

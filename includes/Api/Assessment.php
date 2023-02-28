@@ -287,64 +287,7 @@ class Assessment extends WP_REST_Controller
         $row = 2;
         foreach ($filtered_forms as $filtered_form) {
             $form_key++;
-            $args = [
-                'post_type'      => 'aoat_assessment',
-                'meta_key'       => 'form_id',
-                'meta_value'     => $filtered_form->ID,
-                'orderby'        => 'ID',
-                'order'          => 'DESC',
-                'posts_per_page' => -1,
-            ];
-            $assessments = get_posts($args);
-            $assessments_data = [];
-            foreach ($assessments as $assessment) {
-                $assessments_data_item = get_post_meta($assessment->ID, 'assessment_data', true);
-
-                foreach ($assessment_data_filter as $filterItemKey => $filterItem) {
-                    if (! isset($assessments_data_item[$filterItemKey])) {
-                        continue 2;
-                    }
-                    if ($assessments_data_item[$filterItemKey] != $filterItem) {
-                        continue 2;
-                    }
-                }
-                $assessments_data[] = $assessments_data_item;
-            }
-
-            $form_data = get_post_meta($filtered_form->ID, 'form_data', true);
-
-            $flatListQuestions = [];
-            $this->getFlatListQuestions($form_data['items'], $flatListQuestions);
-
-            $relatedToDimensions = 'All';
-            $additionalForms = $filtered_form->form_settings['additionalForms'] ?? [];
-
-            if (count($additionalForms)) {
-                $relatedToDimensions = '';
-                foreach ($additionalForms as $additionalForm) {
-                    $relatedToDimensions .= $additionalForm['post_title'] . ', ';
-                }
-                $relatedToDimensions .= $filtered_form->post_title;
-            }
-
-            foreach ($flatListQuestions as $key => $flatListQuestion) {
-                $row++;
-                $sheet->setCellValue('A' . $row, $form_key);
-                $sheet->setCellValue('B' . $row, $filtered_form->post_title
-                                                 . ' - page '
-                                                 . $flatListQuestion['pageNumber']);
-                $sheet->setCellValue('C' . $row, $relatedToDimensions);
-                $sheet->setCellValue('D' . $row, ' ');
-                $sheet->setCellValue('E' . $row, ' ');
-                $sheet->setCellValue('F' . $row, $flatListQuestion['name']);
-                $sheet->setCellValue('G' . $row, $filtered_form->post_title);
-
-                $sheet->setCellValue('H' . $row, $this->getRelatedQuestions($flatListQuestion));
-                $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
-                $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
-                $sheet->setCellValue('K' . $row, $this->getLabel($flatListQuestion));
-                $sheet->setCellValue('L' . $row, $this->getValues($flatListQuestion, $assessments_data));
-            }
+            $this->addAssessmentDataToSheet($sheet, $filtered_form, $form_key, $row, $assessment_data_filter);
         }
 
         $filename = '/assessments_' . wp_generate_password(5, false) . '.xlsx';
@@ -355,10 +298,72 @@ class Assessment extends WP_REST_Controller
         return rest_ensure_response($filenameForDownload);
     }
 
-    private function getFlatListQuestions($form_data_items, &$flatListQuestions, $currentPage = 0)
+    private function addAssessmentDataToSheet($sheet, $form, $form_key, &$row, $assessment_data_filter)
+    {
+        $relatedToDimensions = 'All';
+        $additionalForms = $form->form_settings['additionalForms'] ?? [];
+
+        $flatListQuestions = [];
+        if (count($additionalForms)) {
+            $relatedToDimensions = '';
+            foreach ($additionalForms as $additionalForm) {
+                $form_data = get_post_meta($additionalForm['ID'], 'form_data', true);
+                $this->getFlatListQuestions($form_data['items'], $flatListQuestions, 0, 'All');
+                $relatedToDimensions .= $additionalForm['post_title'] . ', ';
+            }
+            $relatedToDimensions .= $form->post_title;
+        }
+
+        $args = [
+            'post_type'      => 'aoat_assessment',
+            'meta_key'       => 'form_id',
+            'meta_value'     => $form->ID,
+            'orderby'        => 'ID',
+            'order'          => 'DESC',
+            'posts_per_page' => -1,
+        ];
+        $assessments = get_posts($args);
+
+        $form_data = get_post_meta($form->ID, 'form_data', true);
+
+        $this->getFlatListQuestions($form_data['items'], $flatListQuestions);
+        foreach ($assessments as $assessment) {
+            $assessments_data_item = get_post_meta($assessment->ID, 'assessment_data', true);
+
+            foreach ($assessment_data_filter as $filterItemKey => $filterItem) {
+                if (! isset($assessments_data_item[$filterItemKey])) {
+                    continue 2;
+                }
+                if ($assessments_data_item[$filterItemKey] != $filterItem) {
+                    continue 2;
+                }
+            }
+
+            foreach ($flatListQuestions as $flatListQuestion) {
+                $row++;
+                $sheet->setCellValue('A' . $row, $form_key);
+                $sheet->setCellValue('B' . $row, $flatListQuestion['pageLabel'] ?: $form->post_title
+                                                                                   . ' - page '
+                                                                                   . $flatListQuestion['pageNumber']);
+                $sheet->setCellValue('C' . $row, $relatedToDimensions);
+                $sheet->setCellValue('D' . $row, ' ');
+                $sheet->setCellValue('E' . $row, ' ');
+                $sheet->setCellValue('F' . $row, $flatListQuestion['name']);
+                $sheet->setCellValue('G' . $row, $form->post_title);
+
+                $sheet->setCellValue('H' . $row, $this->getRelatedQuestions($flatListQuestion));
+                $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
+                $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
+                $sheet->setCellValue('K' . $row, $this->getLabel($flatListQuestion));
+                $sheet->setCellValue('L' . $row, $this->getValue($flatListQuestion, $assessments_data_item));
+            }
+        }
+    }
+
+    private function getFlatListQuestions($form_data_items, &$flatListQuestions, $currentPage = 0, $pageLabel = null)
     {
         foreach ($form_data_items as $form_data_item) {
-            if ($form_data_item['disableExportExcel']) {
+            if ($form_data_item['disableExportExcel'] ?? false) {
                 continue;
             }
             if (isset($form_data_item['items']) && count($form_data_item['items'])) {
@@ -366,10 +371,11 @@ class Assessment extends WP_REST_Controller
                 if ($form_data_item['type'] == 'page') {
                     $currentPage++;
                 }
-                $this->getFlatListQuestions($form_data_item['items'], $flatListQuestions, $currentPage);
+                $this->getFlatListQuestions($form_data_item['items'], $flatListQuestions, $currentPage, $pageLabel);
                 continue;
             }
             $form_data_item['pageNumber'] = $currentPage;
+            $form_data_item['pageLabel'] = $pageLabel;
             $flatListQuestions[] = $form_data_item;
         }
     }
@@ -408,31 +414,25 @@ class Assessment extends WP_REST_Controller
 
     private function getLabel($flatListQuestion)
     {
-        if ($flatListQuestion['hideValuesInExportExcel']) {
-            return ' ';
-        }
-
         return $flatListQuestion['label'];
     }
 
-    private function getValues($flatListQuestion, $assessments_data)
+    private function getValue($flatListQuestion, $assessment_data)
     {
-        if ($flatListQuestion['hideValuesInExportExcel']) {
+        if ($flatListQuestion['hideValuesInExportExcel'] ?? false) {
             return ' ';
         }
-        $values = [];
-        foreach ($assessments_data as $assessment_data) {
-            $value = $assessment_data[$flatListQuestion['key']] ?? null;
-            if ($value) {
-                if (is_array($value)) {
-                    $values[] = implode(',', array_values($value));
-                    continue;
-                }
-                $values[] = $value;
+
+        $value = $assessment_data[$flatListQuestion['key']] ?? null;
+        if ($value) {
+            if (is_array($value)) {
+                return implode(',', array_values($value));
             }
+
+            return $value;
         }
 
-        return implode(',', $values);
+        return ' ';
     }
 
     /**
@@ -527,5 +527,25 @@ class Assessment extends WP_REST_Controller
     public function get_collection_params()
     {
         return [];
+    }
+
+    private function getValues($flatListQuestion, $assessments_data)
+    {
+        if ($flatListQuestion['hideValuesInExportExcel'] ?? false) {
+            return ' ';
+        }
+        $values = [];
+        foreach ($assessments_data as $assessment_data) {
+            $value = $assessment_data[$flatListQuestion['key']] ?? null;
+            if ($value) {
+                if (is_array($value)) {
+                    $values[] = implode(',', array_values($value));
+                    continue;
+                }
+                $values[] = $value;
+            }
+        }
+
+        return implode(',', $values);
     }
 }
