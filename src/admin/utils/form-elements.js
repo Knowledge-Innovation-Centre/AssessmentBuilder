@@ -417,7 +417,8 @@ export default [
     newPageInPdf: false,
     class: "",
     maxWidth: null,
-    maxWidthUnit: "px"
+    maxWidthUnit: "px",
+    hideIfFormCompleted: null
   },
   {
     key: randomValueHex(15),

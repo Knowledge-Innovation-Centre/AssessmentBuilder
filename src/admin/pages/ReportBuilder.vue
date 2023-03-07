@@ -179,7 +179,10 @@ export default {
     },
     availableFormElements() {
       let usedFormElements = this.getItemsRecursive(this.formData.items);
-      if (this.formSettings.additionalForms.length) {
+      if (
+        this.formSettings.additionalForms &&
+        this.formSettings.additionalForms.length
+      ) {
         for (let additionalForm of this.formSettings.additionalForms) {
           usedFormElements = usedFormElements.concat(
             this.getItemsRecursive(additionalForm.form_data.items)

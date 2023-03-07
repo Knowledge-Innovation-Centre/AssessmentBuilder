@@ -1,23 +1,23 @@
 <template>
   <div
-    class="aoat-w-full aoat-bg-gray-200 aoat-h-2 aoat-relative aoat-overflow-hidden"
     :class="[
       { 'aoat-rounded-full': rounded },
       { indeterminate: indeterminate }
     ]"
+    class="aoat-w-full aoat-bg-gray-200 aoat-h-2 aoat-relative aoat-overflow-hidden"
   >
     <div
-      class="aoat-h-full progressbar"
+      :aria-valuenow="percentage"
       :class="[
-        `aoat-bg-${color}-500`,
+        colour,
         { 'aoat-absolute aoat-top-0': indeterminate },
         { 'aoat-rounded-full': rounded }
       ]"
-      role="progressbar"
-      :style="{ width: `${percentage}%` }"
-      :aria-valuenow="percentage"
-      aria-valuemin="0"
+      :style="{ width: `${percentage}%`, 'background-color': `${colour}` }"
       aria-valuemax="100"
+      aria-valuemin="0"
+      class="aoat-h-full progressbar"
+      role="progressbar"
     >
       <span class="aoat-flex aoat-items-center aoat-h-full">
         <slot />
@@ -29,9 +29,9 @@
 export default {
   inheritAttrs: false,
   props: {
-    color: {
+    colour: {
       type: String,
-      default: "teal"
+      default: "#008080"
     },
     percentage: {
       type: Number,
@@ -60,9 +60,11 @@ export default {
     width: 0;
   }
 }
+
 .progressbar {
   transition: width 0.25s ease;
 }
+
 .indeterminate .progressbar {
   animation: progress-indeterminate 1.4s ease infinite;
 }

@@ -185,6 +185,12 @@
                   </select>
                 </td>
               </tr>
+              <tr v-if="typeof object.hideIfFormCompleted !== 'undefined'">
+                <th>Hide if form completed:</th>
+                <td colspan="2">
+                  <select v-model="object.hideIfFormCompleted" />
+                </td>
+              </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
                 <th>Hide labels:</th>
                 <td colspan="2">

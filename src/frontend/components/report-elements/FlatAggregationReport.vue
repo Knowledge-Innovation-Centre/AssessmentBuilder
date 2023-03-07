@@ -91,7 +91,6 @@ export default {
       this.chartData.labels = [];
       this.aggregatedAnswers = {};
       this.aggregate(this.reportData.items);
-
       for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
         this.chartData.labels.push(aggregatedAnswerKey);
         this.chartData.datasets[0].data.push(
@@ -133,11 +132,13 @@ export default {
         this.alreadyIncludedElementsForScores.push(item.reportItemKey);
 
         if (item.type === "radio_grid") {
+          // this.chartData.labels.push(this.parseLabel(item.label));
           this.setRadioGridValue(item, value);
         } else if (item.options) {
           if (!value) {
             continue;
           }
+          // this.chartData.labels.push(this.parseLabel(item.label));
           if (Array.isArray(value)) {
             if (!value.length) {
               continue;
@@ -173,7 +174,7 @@ export default {
         return 0;
       }
 
-      // this.setGraphColors(item.optionsVertical);
+      this.setGraphColors(item.optionsVertical);
 
       for (let option of item.optionsHorizontal) {
         let verticalOption = item.optionsVertical.find(
@@ -201,6 +202,10 @@ export default {
           }
         }
       }
+    },
+
+    parseLabel(label) {
+      return label.split(" ")[0] ?? "";
     },
 
     getHeightStyle() {

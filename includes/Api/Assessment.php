@@ -3,7 +3,6 @@
 namespace ApprenticeshipOnlineAssessmentTool\Api;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use WP_Error;
 use WP_Post;
@@ -267,8 +266,6 @@ class Assessment extends WP_REST_Controller
         $writer = new Xlsx($spreadsheet);
         $sheet->setCellValue('A1', 'Dimension info');
         $sheet->setCellValue('F1', 'Questions info');
-        $sheet->mergeCells('A1:E1', Worksheet::MERGE_CELL_CONTENT_HIDE);
-        $sheet->mergeCells('F1:L1', Worksheet::MERGE_CELL_CONTENT_HIDE);
         $sheet->setCellValue('A2', 'DimensionID');
         $sheet->setCellValue('B2', 'DimensionLabel/PageLabel');
         $sheet->setCellValue('C2', 'RelatedtoDim');
@@ -285,12 +282,12 @@ class Assessment extends WP_REST_Controller
 
         $form_key = 0;
         $row = 2;
+        $filename = '';
         foreach ($filtered_forms as $filtered_form) {
             $form_key++;
-            $this->addAssessmentDataToSheet($sheet, $filtered_form, $form_key, $row, $assessment_data_filter);
+            $this->addAssessmentDataToSheet($sheet, $filtered_form, $form_key, $row, $assessment_data_filter, $filename);
         }
 
-        $filename = '/assessments_' . wp_generate_password(5, false) . '.xlsx';
         $filenameForSave = wp_upload_dir()['path'] . $filename;
         $filenameForDownload = wp_upload_dir()['url'] . $filename;
         $writer->save($filenameForSave);
@@ -298,7 +295,7 @@ class Assessment extends WP_REST_Controller
         return rest_ensure_response($filenameForDownload);
     }
 
-    private function addAssessmentDataToSheet($sheet, $form, $form_key, &$row, $assessment_data_filter)
+    private function addAssessmentDataToSheet($sheet, $form, $form_key, &$row, $assessment_data_filter, &$title)
     {
         $relatedToDimensions = 'All';
         $additionalForms = $form->form_settings['additionalForms'] ?? [];
@@ -327,6 +324,7 @@ class Assessment extends WP_REST_Controller
         $form_data = get_post_meta($form->ID, 'form_data', true);
 
         $this->getFlatListQuestions($form_data['items'], $flatListQuestions);
+        $firstAssessment = true;
         foreach ($assessments as $assessment) {
             $assessments_data_item = get_post_meta($assessment->ID, 'assessment_data', true);
 
@@ -338,7 +336,11 @@ class Assessment extends WP_REST_Controller
                     continue 2;
                 }
             }
-
+            if ($firstAssessment) {
+                $firstAssessment = false;
+                $title = $this->getExportTitle($flatListQuestions, $assessment_data_filter, $assessment);
+            }
+            $firstRow = true;
             foreach ($flatListQuestions as $flatListQuestion) {
                 $row++;
                 $sheet->setCellValue('A' . $row, $form_key);
@@ -347,7 +349,7 @@ class Assessment extends WP_REST_Controller
                                                                                    . $flatListQuestion['pageNumber']);
                 $sheet->setCellValue('C' . $row, $relatedToDimensions);
                 $sheet->setCellValue('D' . $row, ' ');
-                $sheet->setCellValue('E' . $row, ' ');
+                $sheet->setCellValue('E' . $row, $firstRow ? count($flatListQuestions) : ' ');
                 $sheet->setCellValue('F' . $row, $flatListQuestion['name']);
                 $sheet->setCellValue('G' . $row, $form->post_title);
 
@@ -355,7 +357,9 @@ class Assessment extends WP_REST_Controller
                 $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
                 $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
                 $sheet->setCellValue('K' . $row, $this->getLabel($flatListQuestion));
+                //$sheet->getStyle('K' . $row)->getAlignment()->setWrapText(true);
                 $sheet->setCellValue('L' . $row, $this->getValue($flatListQuestion, $assessments_data_item));
+                $firstRow = false;
             }
         }
     }
@@ -378,6 +382,27 @@ class Assessment extends WP_REST_Controller
             $form_data_item['pageLabel'] = $pageLabel;
             $flatListQuestions[] = $form_data_item;
         }
+    }
+
+    private function getExportTitle($flatListQuestions, $assessment_data_filter, $assessment)
+    {
+        $title = ['/AssessmentExport'];
+        foreach ($assessment_data_filter as $filterItemKey => $filterItem) {
+            foreach ($flatListQuestions as $flatListQuestion) {
+                if ($flatListQuestion['key'] == $filterItemKey) {
+                    foreach ($flatListQuestion['options'] ?? [] as $option) {
+                        if ($option['id'] === $filterItem) {
+                            $title[] = $option['name'];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        $title[] = date('d.m.Y H:i:s');
+        $title[] = '.xlsx';
+
+        return implode('-', $title);
     }
 
     private function getRelatedQuestions($flatListQuestion)
@@ -414,7 +439,14 @@ class Assessment extends WP_REST_Controller
 
     private function getLabel($flatListQuestion)
     {
-        return $flatListQuestion['label'];
+        $returnValue = $flatListQuestion['label'];
+        if ($flatListQuestion['type'] == 'radio_grid') {
+            foreach ($flatListQuestion['optionsHorizontal'] as $optionHorizontal) {
+                $returnValue .= "\n" . $optionHorizontal['name'];
+            }
+        }
+
+        return $returnValue;
     }
 
     private function getValue($flatListQuestion, $assessment_data)
@@ -527,6 +559,24 @@ class Assessment extends WP_REST_Controller
     public function get_collection_params()
     {
         return [];
+    }
+
+    private function getHorizontalValue($flatListQuestion, $assessment_data)
+    {
+        if ($flatListQuestion['hideValuesInExportExcel'] ?? false) {
+            return ' ';
+        }
+
+        $value = $assessment_data[$flatListQuestion['key']] ?? null;
+        if ($value) {
+            if (is_array($value)) {
+                return implode(',', array_values($value));
+            }
+
+            return $value;
+        }
+
+        return ' ';
     }
 
     private function getValues($flatListQuestion, $assessments_data)

@@ -5,6 +5,7 @@
         <template v-if="formData.items.length">
           <div class="aoat-text-center">Progress</div>
           <base-progress
+            :colour="formSettings.progressBarColour"
             :percentage="percentage"
             class="aoat-mx-2 aoat-mb-5 aoat-h-5"
           >
@@ -23,7 +24,7 @@
         v-if="exportEnabled"
         :percentage="downloadPercentage"
         class="aoat-mx-2 aoat-mb-5 aoat-h-5  aoat-mt-10"
-        color="blue"
+        colour="#004F98"
       >
         <span
           class="aoat-text-lg aoat-text-white aoat-w-full aoat-flex aoat-justify-end aoat-pr-2"

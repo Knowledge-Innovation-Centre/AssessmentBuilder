@@ -3,7 +3,7 @@
     <div class="aoat-flex">
       <div class="aoat-pr-6 aoat-flex-1">
         <div
-          class="aoat-bg-white aoat-grid aoat-grid-cols-2 aoat-gap-10 aoat-mb-5"
+          class="aoat-bg-white aoat-grid aoat-grid-cols-3 aoat-gap-10 aoat-mb-5"
         >
           <div>
             <h2 v-if="id" class="aoat-mt-0 aoat-text-gray-700">
@@ -81,7 +81,23 @@
               />
               Show assessment list link
             </label>
-
+            <label
+              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              <input v-model="formSettings.hidePDFButton" type="checkbox" />
+              Hide PDF button </label
+            ><label
+              class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
+            >
+              Progress bar colour (HEX format)
+            </label>
+            <input
+              v-model="formSettings.progressBarColour"
+              class="aoat-mb-5 aoat-appearance-none aoat-block aoat-w-full aoat-bg-gray-200 aoat-text-gray-700 aoat-border aoat-border-red-500 aoat-rounded aoat-py-3 aoat-px-4 aoat-mb-3 aoat-leading-tight aoat-focus:outline-none aoat-focus:bg-white"
+              type="text"
+            />
+          </div>
+          <div>
             <label
               class="aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
             >
@@ -120,13 +136,7 @@
               fields</small
             >
             <label
-              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold aoat-mt-4"
-            >
-              <input v-model="formSettings.hidePDFButton" type="checkbox" />
-              Hide PDF button
-            </label>
-            <label
-              class="aoat-mb-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold"
+              class="aoat-mb-5 aoat-mt-5  aoat-block aoat-uppercase aoat-tracking-wide aoat-text-gray-700 aoat-text-xs aoat-font-bold"
             >
               <input v-model="formSettings.enableExcelExport" type="checkbox" />
               Enable excel export
@@ -347,7 +357,8 @@ export default {
         additionalForms: [],
         hidePDFButton: false,
         enableExcelExport: false,
-        exportSort: 0
+        exportSort: 0,
+        progressBarColour: 0
       }
     };
   },
