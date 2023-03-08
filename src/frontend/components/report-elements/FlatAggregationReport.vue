@@ -38,6 +38,11 @@
             </tbody>
           </table>
         </template>
+        <template v-if="object.enableLegend">
+          <div v-for="label in labels" :key="label">
+            <small>{{ label }}</small>
+          </div>
+        </template>
       </div>
     </template>
   </div>
@@ -48,7 +53,7 @@ import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
 
 export default {
-  name: "AggregationReport",
+  name: "FlatAggregationReport",
 
   mixins: [labelMixin, scoreMixin],
 
@@ -79,6 +84,13 @@ export default {
         });
       }
       return aggregatedValues;
+    },
+    labels() {
+      let labels = [];
+      for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
+        labels.push(aggregatedAnswerKey);
+      }
+      return labels;
     }
   },
 
@@ -92,7 +104,11 @@ export default {
       this.aggregatedAnswers = {};
       this.aggregate(this.reportData.items);
       for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
-        this.chartData.labels.push(aggregatedAnswerKey);
+        if (this.object.enableLegend) {
+          this.chartData.labels.push(this.parseLabel(aggregatedAnswerKey));
+        } else {
+          this.chartData.labels.push(aggregatedAnswerKey);
+        }
         this.chartData.datasets[0].data.push(
           this.aggregatedAnswers[aggregatedAnswerKey]
         );
@@ -144,8 +160,7 @@ export default {
               continue;
             }
 
-            this.setAggregateAnswersKeys(item);
-            this.setGraphColors(item.options);
+            this.setAggregateAnswersKeys(item.label);
 
             for (const valueItem of value) {
               let verticalOption = item.options.find(
@@ -154,6 +169,7 @@ export default {
 
               if (verticalOption) {
                 this.aggregatedAnswers[item.label] = verticalOption.name;
+                this.colors.push(verticalOption.color);
               }
             }
           } else {
@@ -163,6 +179,7 @@ export default {
 
             if (verticalOption) {
               this.aggregatedAnswers[item.label] = verticalOption.name;
+              this.colors.push(verticalOption.color);
             }
           }
         }
@@ -174,14 +191,13 @@ export default {
         return 0;
       }
 
-      this.setGraphColors(item.optionsVertical);
-
       for (let option of item.optionsHorizontal) {
         let verticalOption = item.optionsVertical.find(
           optionVertical => optionVertical.id === value[option.id]
         );
         if (verticalOption) {
           this.setAggregateAnswersKeys(option.name);
+          this.colors.push(verticalOption.color);
           return (this.aggregatedAnswers[option.name] = verticalOption.name);
         }
       }
@@ -194,14 +210,42 @@ export default {
         this.aggregatedAnswers[label] = "";
       }
     },
-    setGraphColors(options) {
-      for (let option of options) {
-        if (option.color) {
-          if (typeof this.colors[option.id] === "undefined") {
-            this.colors[option.id] = option.color;
+    formatLabel(str, maxwidth = 50) {
+      let sections = [];
+      let words = str.split(" ");
+      let temp = "";
+
+      words.forEach(function(item, index) {
+        if (temp.length > 0) {
+          var concat = temp + " " + item;
+
+          if (concat.length > maxwidth) {
+            sections.push(temp);
+            temp = "";
+          } else {
+            if (index == words.length - 1) {
+              sections.push(concat);
+              return;
+            } else {
+              temp = concat;
+              return;
+            }
           }
         }
-      }
+
+        if (index == words.length - 1) {
+          sections.push(item);
+          return;
+        }
+
+        if (item.length < maxwidth) {
+          temp = item;
+        } else {
+          sections.push(item);
+        }
+      });
+
+      return sections;
     },
 
     parseLabel(label) {

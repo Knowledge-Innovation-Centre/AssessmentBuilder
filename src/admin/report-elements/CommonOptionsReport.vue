@@ -215,6 +215,12 @@
                   <input v-model="object.aggregateResults" type="checkbox" />
                 </td>
               </tr>
+              <tr v-if="typeof object.enableLegend !== 'undefined'">
+                <th>Enable legend:</th>
+                <td colspan="2">
+                  <input v-model="object.enableLegend" type="checkbox" />
+                </td>
+              </tr>
               <tr>
                 <th>Classes:</th>
                 <td colspan="2">

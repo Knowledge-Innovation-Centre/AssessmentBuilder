@@ -501,6 +501,7 @@ export default [
     height: null,
     heightUnit: "px",
     selectedInputs: [],
+    enableLegend: false,
     selectedResultType: [
       {
         label: "Score",
@@ -531,6 +532,7 @@ export default [
     height: null,
     heightUnit: "px",
     selectedInputs: [],
+    enableLegend: false,
     selectedResultType: [
       {
         label: "Score",

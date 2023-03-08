@@ -422,7 +422,8 @@ export default {
                   "select",
                   "date",
                   "radio",
-                  "radio_grid"
+                  "radio_grid",
+                  "textarea"
                 ].includes(field.type)
               )
               .map(field => {
@@ -455,9 +456,15 @@ export default {
       let items = this.getItemsRecursive(state.form.items)
         .filter(field => !childrenKeys.includes(field.key))
         .filter(field =>
-          ["text", "hidden", "select", "date", "radio", "radio_grid"].includes(
-            field.type
-          )
+          [
+            "text",
+            "hidden",
+            "select",
+            "date",
+            "radio",
+            "radio_grid",
+            "textarea"
+          ].includes(field.type)
         );
       items = items.concat(this.fieldsAdditionalInForms);
       return items;
