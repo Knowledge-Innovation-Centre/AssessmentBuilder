@@ -489,6 +489,10 @@ class Assessment extends WP_REST_Controller
 
         $assessment = $query[0] ?? null;
 
+        if (! $assessment) {
+            return rest_ensure_response(null);
+        }
+
         $assessment->assessment_data = get_post_meta($assessment->ID, 'assessment_data', true);
 
         return rest_ensure_response($assessment);

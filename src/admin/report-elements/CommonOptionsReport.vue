@@ -9,7 +9,7 @@
         placement="left"
         theme="light"
         trigger="click"
-        @show="checkKeys()"
+        @show="onShow()"
       >
         <template v-slot:trigger>
           <button class="aoat-px-0 aoat-cursor-pointer">
@@ -188,7 +188,15 @@
               <tr v-if="typeof object.hideIfFormCompleted !== 'undefined'">
                 <th>Hide if form completed:</th>
                 <td colspan="2">
-                  <select v-model="object.hideIfFormCompleted" />
+                  <select v-model="object.hideIfFormCompleted">
+                    <option
+                      v-for="form in forms"
+                      :key="form.ID"
+                      :value="form.ID"
+                    >
+                      {{ form.post_title }}
+                    </option>
+                  </select>
                 </td>
               </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
@@ -327,6 +335,7 @@ import { Multiselect } from "vue-multiselect";
 import formElements from "../utils/form-elements.js";
 import VSwatches from "vue-swatches";
 import "vue-swatches/dist/vue-swatches.css";
+import Api from "../Api";
 
 export default {
   name: "CommonOptionsReport",
@@ -385,7 +394,8 @@ export default {
           label: "Horizontal bar",
           key: "horizontal_bar"
         }
-      ]
+      ],
+      forms: []
     };
   },
 
@@ -418,6 +428,18 @@ export default {
   },
 
   methods: {
+    onShow() {
+      this.checkKeys();
+      this.loadForms();
+    },
+    loadForms() {
+      if (typeof this.object.hideIfFormCompleted !== "undefined") {
+        Api.get(aoat_config.aoatGetFormUrl).then(result => {
+          this.forms = result.data;
+        });
+      }
+    },
+
     getItemsRecursive(items) {
       for (let item of items) {
         if (item.items) {

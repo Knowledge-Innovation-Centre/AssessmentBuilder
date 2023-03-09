@@ -1,5 +1,5 @@
 <template>
-  <div :class="form.class" class="generic aoat-flex-1">
+  <div v-if="show" :class="form.class" class="generic aoat-flex-1">
     <component :is="getComponent" :has-error="hasError" :object="form" />
     <small v-if="hasError" class="error aoat-text-red-400">
       This is required field
@@ -44,6 +44,7 @@ import LOCItemsReport from "./report-elements/LOCItemsReport.vue";
 import AggregationReport from "./report-elements/AggregationReport.vue";
 import FlatAggregationReport from "./report-elements/FlatAggregationReport.vue";
 import FileUpload from "./form-elements/FileUpload.vue";
+import Api from "../Api";
 
 export default {
   name: "Generic",
@@ -90,6 +91,12 @@ export default {
       required: true
     }
   },
+
+  data() {
+    return {
+      show: false
+    };
+  },
   computed: {
     getComponent() {
       if (this.isReport) {
@@ -104,7 +111,28 @@ export default {
       return this.$store.state.errors.includes(this.form.key);
     }
   },
-  methods: {}
+  mounted() {
+    this.checkShow();
+  },
+  methods: {
+    checkShow() {
+      this.show = false;
+      if (!this.form.hideIfFormCompleted) {
+        this.show = true;
+        return;
+      }
+
+      Api.get(
+        aoat_config.aoatGetLastAssessmentUrl +
+          "?form_id=" +
+          this.form.hideIfFormCompleted
+      ).then(result => {
+        if (!result.data) {
+          this.show = true;
+        }
+      });
+    }
+  }
 };
 </script>
 
