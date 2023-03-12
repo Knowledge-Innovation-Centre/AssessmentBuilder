@@ -279,6 +279,7 @@ class Assessment extends WP_REST_Controller
         $sheet->setCellValue('J2', 'QuestionType');
         $sheet->setCellValue('K2', 'QuestionLabel');
         $sheet->setCellValue('L2', 'Value');
+        $sheet->setCellValue('M2', 'Legend');
 
         $form_key = 0;
         $row = 2;
@@ -305,7 +306,7 @@ class Assessment extends WP_REST_Controller
             $relatedToDimensions = '';
             foreach ($additionalForms as $additionalForm) {
                 $form_data = get_post_meta($additionalForm['ID'], 'form_data', true);
-                $this->getFlatListQuestions($form_data['items'], $flatListQuestions, 0, 'All');
+                $this->getFlatListQuestions($form_data['items'], $flatListQuestions, 0, $additionalForm['post_title']);
                 $relatedToDimensions .= $additionalForm['post_title'] . ', ';
             }
             $relatedToDimensions .= $form->post_title;
@@ -357,8 +358,8 @@ class Assessment extends WP_REST_Controller
                 $sheet->setCellValue('I' . $row, $this->getConditions($flatListQuestion));
                 $sheet->setCellValue('J' . $row, $flatListQuestion['type']);
                 $sheet->setCellValue('K' . $row, $this->getLabel($flatListQuestion));
-                //$sheet->getStyle('K' . $row)->getAlignment()->setWrapText(true);
                 $sheet->setCellValue('L' . $row, $this->getValue($flatListQuestion, $assessments_data_item));
+                $sheet->setCellValue('M' . $row, $this->getLegend($flatListQuestion));
                 $firstRow = false;
             }
         }
@@ -439,7 +440,7 @@ class Assessment extends WP_REST_Controller
 
     private function getLabel($flatListQuestion)
     {
-        $returnValue = $flatListQuestion['label'];
+        $returnValue = strip_tags($flatListQuestion['label']);
         if ($flatListQuestion['type'] == 'radio_grid') {
             foreach ($flatListQuestion['optionsHorizontal'] as $optionHorizontal) {
                 $returnValue .= "\n" . $optionHorizontal['name'];
@@ -465,6 +466,23 @@ class Assessment extends WP_REST_Controller
         }
 
         return ' ';
+    }
+
+    private function getLegend($flatListQuestion)
+    {
+        if ($flatListQuestion['hideValuesInExportExcel'] ?? false) {
+            return ' ';
+        }
+
+        $returnValue = '';
+
+        if (in_array($flatListQuestion['type'], ['select', 'radio'])) {
+            foreach ($flatListQuestion['options'] as $option) {
+                $returnValue .= $option['id'] . ' - ' . $option['name'] . "\n";
+            }
+        }
+
+        return $returnValue;
     }
 
     /**

@@ -30,6 +30,16 @@
                   />
                 </td>
               </tr>
+              <tr v-if="typeof object.labelForGraphs !== 'undefined'">
+                <th style="width: 100px;">Label for graphs:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.labelForGraphs"
+                    class="aoat-w-full"
+                    type="text"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.placeholder !== 'undefined'">
                 <th>Placeholder:</th>
                 <td colspan="2">
@@ -119,7 +129,7 @@
                 </td>
               </tr>
               <tr v-if="typeof object.disableForScoring !== 'undefined'">
-                <th>Disable for scoring:</th>
+                <th>Disable for scoring/aggregation:</th>
                 <td colspan="2">
                   <input v-model="object.disableForScoring" type="checkbox" />
                 </td>

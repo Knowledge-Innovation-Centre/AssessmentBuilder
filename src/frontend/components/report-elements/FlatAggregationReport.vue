@@ -32,17 +32,17 @@
                 v-for="aggregatedValue in aggregatedValues"
                 :key="aggregatedValue.key"
               >
-                <td>{{ aggregatedValue.key }}</td>
-                <td>{{ aggregatedValue.value }}</td>
+                <td>{{ aggregatedValue.question }}</td>
+                <td>{{ aggregatedValue.answer }}</td>
               </tr>
             </tbody>
           </table>
         </template>
-        <template v-if="object.enableLegend">
-          <div v-for="label in labels" :key="label">
-            <small>{{ label }}</small>
-          </div>
-        </template>
+      </div>
+    </template>
+    <template v-if="object.enableLegend">
+      <div v-for="(label, index) in labels" :key="index">
+        <small>{{ label }}</small>
       </div>
     </template>
   </div>
@@ -51,6 +51,7 @@
 <script>
 import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
+import reverse from "lodash/reverse";
 
 export default {
   name: "FlatAggregationReport",
@@ -66,7 +67,7 @@ export default {
 
   data() {
     return {
-      aggregatedAnswers: {},
+      aggregatedAnswers: [],
       alreadyIncludedElementsForScores: []
     };
   },
@@ -77,10 +78,10 @@ export default {
     },
     aggregatedValues() {
       let aggregatedValues = [];
-      for (let key of Object.keys(this.aggregatedAnswers)) {
+      for (let aggregatedAnswer of this.aggregatedAnswers) {
         aggregatedValues.push({
-          key: key,
-          value: this.aggregatedAnswers[key]
+          answer: aggregatedAnswer.name,
+          question: aggregatedAnswer.label
         });
       }
       return aggregatedValues;
@@ -88,7 +89,11 @@ export default {
     labels() {
       let labels = [];
       for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
-        labels.push(aggregatedAnswerKey);
+        labels.push(
+          this.aggregatedAnswers[aggregatedAnswerKey].graphLabel +
+            ": " +
+            this.aggregatedAnswers[aggregatedAnswerKey].label
+        );
       }
       return labels;
     }
@@ -101,16 +106,21 @@ export default {
   methods: {
     setData() {
       this.chartData.labels = [];
-      this.aggregatedAnswers = {};
+      this.aggregatedAnswers = [];
       this.aggregate(this.reportData.items);
+      this.sortAnswers();
       for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
         if (this.object.enableLegend) {
-          this.chartData.labels.push(this.parseLabel(aggregatedAnswerKey));
+          this.chartData.labels.push(
+            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel
+          );
         } else {
-          this.chartData.labels.push(aggregatedAnswerKey);
+          this.chartData.labels.push(
+            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel
+          );
         }
         this.chartData.datasets[0].data.push(
-          this.aggregatedAnswers[aggregatedAnswerKey]
+          this.aggregatedAnswers[aggregatedAnswerKey].name
         );
       }
       this.chartData.datasets[0].backgroundColor = this.colors;
@@ -148,19 +158,15 @@ export default {
         this.alreadyIncludedElementsForScores.push(item.reportItemKey);
 
         if (item.type === "radio_grid") {
-          // this.chartData.labels.push(this.parseLabel(item.label));
           this.setRadioGridValue(item, value);
         } else if (item.options) {
           if (!value) {
             continue;
           }
-          // this.chartData.labels.push(this.parseLabel(item.label));
           if (Array.isArray(value)) {
             if (!value.length) {
               continue;
             }
-
-            this.setAggregateAnswersKeys(item.label);
 
             for (const valueItem of value) {
               let verticalOption = item.options.find(
@@ -168,7 +174,9 @@ export default {
               );
 
               if (verticalOption) {
-                this.aggregatedAnswers[item.label] = verticalOption.name;
+                this.aggregatedAnswers.push(
+                  this.getAnswerObject(item, verticalOption)
+                );
                 this.colors.push(verticalOption.color);
               }
             }
@@ -178,14 +186,50 @@ export default {
             );
 
             if (verticalOption) {
-              this.aggregatedAnswers[item.label] = verticalOption.name;
+              this.aggregatedAnswers.push(
+                this.getAnswerObject(item, verticalOption)
+              );
               this.colors.push(verticalOption.color);
             }
           }
         }
       }
     },
-
+    compare(a, b) {
+      if (a.graphLabel.toLowerCase() < b.graphLabel.toLowerCase()) {
+        return -1;
+      }
+      if (a.graphLabel.toLowerCase() > b.graphLabel.toLowerCase()) {
+        return 1;
+      }
+      return 0;
+    },
+    sortAnswers() {
+      if (!this.object.sortLegend) {
+        return;
+      }
+      if (this.object.sortLegend == 0) {
+        return;
+      }
+      this.aggregatedAnswers.sort(this.compare);
+      if (this.object.sortLegend == 1) {
+        return;
+      }
+      this.aggregatedAnswers = reverse(this.aggregatedAnswers);
+    },
+    getAnswerObject(item, verticalOption) {
+      return {
+        name: verticalOption.name,
+        label: item.label,
+        graphLabel: this.getGraphLabel(item)
+      };
+    },
+    getGraphLabel(item) {
+      if (item.labelForGraphs && item.labelForGraphs !== "") {
+        return item.labelForGraphs;
+      }
+      return item.label;
+    },
     setRadioGridValue(item, value) {
       if (!value) {
         return 0;
@@ -196,20 +240,18 @@ export default {
           optionVertical => optionVertical.id === value[option.id]
         );
         if (verticalOption) {
-          this.setAggregateAnswersKeys(option.name);
           this.colors.push(verticalOption.color);
-          return (this.aggregatedAnswers[option.name] = verticalOption.name);
+          this.aggregatedAnswers.push(
+            this.getAnswerObject(item, verticalOption)
+          );
+
+          return;
         }
       }
 
       return 0;
     },
 
-    setAggregateAnswersKeys(label) {
-      if (typeof this.aggregatedAnswers[label] === "undefined") {
-        this.aggregatedAnswers[label] = "";
-      }
-    },
     formatLabel(str, maxwidth = 50) {
       let sections = [];
       let words = str.split(" ");

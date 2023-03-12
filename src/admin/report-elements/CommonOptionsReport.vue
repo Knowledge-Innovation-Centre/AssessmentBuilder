@@ -295,6 +295,16 @@
                   </select>
                 </td>
               </tr>
+              <tr v-if="typeof object.sortLegend !== 'undefined'">
+                <th>Sort labels in legend:</th>
+                <td colspan="2">
+                  <select v-model="object.sortLegend">
+                    <option value="0">none</option>
+                    <option value="1">asc</option>
+                    <option value="-1">desc</option>
+                  </select>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
