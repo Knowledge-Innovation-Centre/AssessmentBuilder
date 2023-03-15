@@ -38,6 +38,16 @@
                   <input v-model="object.dimensionsLabel" type="text" />
                 </td>
               </tr>
+              <tr v-if="typeof object.labelForGraphs !== 'undefined'">
+                <th style="width: 100px;">Label for graphs:</th>
+                <td colspan="2">
+                  <input
+                    v-model="object.labelForGraphs"
+                    class="aoat-w-full"
+                    type="text"
+                  />
+                </td>
+              </tr>
               <tr v-if="typeof object.hidden !== 'undefined'">
                 <th>Hidden:</th>
                 <td colspan="2">

@@ -12,6 +12,8 @@ import { jsPDF } from "jspdf";
 import Api from "../Api";
 import "jspdf-autotable";
 import itemsHelper from "../mixins/itemsHelpers";
+import aggregationMixin from "../components/report-elements/mixins/aggregationMixin";
+
 const downloadFile = (blob, fileName) => {
   const link = document.createElement("a");
   // create a blobURI pointing to our Blob
@@ -27,7 +29,7 @@ const downloadFile = (blob, fileName) => {
 export default {
   name: "DownloadPdf",
 
-  mixins: [itemsHelper],
+  mixins: [itemsHelper, aggregationMixin],
 
   data() {
     return {
@@ -125,6 +127,27 @@ export default {
                 };
                 body[1].push("");
                 colImageIndexesToChange.push(colIndex);
+                if (canvas) {
+                  var dataURL = canvas.toDataURL();
+
+                  images[colIndex].imageData = dataURL;
+                  images[colIndex].width = canvas.width;
+                  images[colIndex].height = canvas.height;
+                } else {
+                  body[1].push(this.getReportValue(item));
+                }
+              } else if (["flat_aggregation"].includes(item.type)) {
+                let className = "#flat-aggregation-" + item.reportItemKey;
+                var canvas = document.querySelectorAll(
+                  className + " canvas"
+                )[0];
+
+                images[colIndex] = {
+                  data: this.getAggregateData(item)
+                };
+                body[1].push("");
+                colImageIndexesToChange.push(colIndex);
+
                 if (canvas) {
                   var dataURL = canvas.toDataURL();
 
@@ -265,13 +288,11 @@ export default {
     getRadioGridData(object) {
       const value = this.getReportValue(object);
       const data = {
-        colors: [],
-        columns: [],
+        colors: ["#000000"],
+        columns: [{ dataKey: "id", header: "" }],
         body: []
       };
 
-      data.columns.push({ dataKey: "id", header: "" });
-      data.colors.push("#000000");
       if (!object.optionsVertical) {
         console.log(object);
       }
@@ -287,7 +308,6 @@ export default {
 
       data.colors.push("#000000");
       data.columns.push({ dataKey: "end", header: "Score" });
-
       for (const optionHorizontal of object.optionsHorizontal) {
         const bodyItem = {
           id: optionHorizontal.name
@@ -313,6 +333,32 @@ export default {
         }
 
         data.body.push(bodyItem);
+      }
+
+      return data;
+    },
+    getAggregateData(object) {
+      const aggregatedAnswers = [];
+      this.aggregate(
+        this.getItems(this.reportData.items),
+        this.$store.state.assessment,
+        aggregatedAnswers
+      );
+
+      const data = {
+        colors: ["#000000", "#000000"],
+        columns: [
+          { dataKey: "question", header: "Question" },
+          { dataKey: "answer", header: "Answer" }
+        ],
+        body: []
+      };
+
+      for (let aggregatedAnswer of aggregatedAnswers) {
+        data.body.push({
+          question: aggregatedAnswer.label,
+          answer: aggregatedAnswer.name
+        });
       }
 
       return data;

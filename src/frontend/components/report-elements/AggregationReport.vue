@@ -1,5 +1,5 @@
 <template>
-  <div :id="'total-score-' + object.reportItemKey">
+  <div :id="'aggregation-' + object.reportItemKey">
     <div class="aoat-font-bold">{{ getLabel }}</div>
     <template v-for="graphType in object.selectedResultType">
       <div :key="graphType.key">
