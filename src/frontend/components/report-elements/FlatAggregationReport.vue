@@ -15,14 +15,23 @@
           <horizontal-bar-chart
             v-if="chartData.datasets[0].data.length"
             :chart-data="chartData"
-            :options="horizontalBarOptionsOptions"
+            :options="
+              merge(horizontalBarOptionsOptions, {
+                legend: {
+                  display: false
+                }
+              })
+            "
+            :remove-legend="true"
             :styles="myStyles"
+            class="aoat-mt-3"
           />
         </template>
         <template v-if="graphType.key === 'score'">
           <table>
             <thead>
               <tr>
+                <th>Question ID</th>
                 <th>Question</th>
                 <th>Answer</th>
               </tr>
@@ -32,17 +41,31 @@
                 v-for="aggregatedValue in aggregatedValues"
                 :key="aggregatedValue.key"
               >
-                <td>{{ aggregatedValue.question }}</td>
-                <td>{{ aggregatedValue.answer }}</td>
+                <td>
+                  <span v-if="object.enableLegend && aggregatedValue.graphLabel"
+                    >{{ aggregatedValue.graphLabel }}
+                  </span>
+                </td>
+                <td>
+                  {{ aggregatedValue.question
+                  }}<span v-if="aggregatedValue.horizontal_name"
+                    >:<br />
+                    {{
+                      aggregatedValue.horizontal_name
+                        ? aggregatedValue.horizontal_name
+                        : ""
+                    }}
+                  </span>
+                </td>
+                <td>
+                  <span :style="`color: ${aggregatedValue.color}`">
+                    {{ aggregatedValue.answer }}
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>
         </template>
-      </div>
-    </template>
-    <template v-if="object.enableLegend">
-      <div v-for="(label, index) in labels" :key="index">
-        <small>{{ label }}</small>
       </div>
     </template>
   </div>
@@ -52,6 +75,7 @@
 import labelMixin from "./mixins/labelMixin";
 import scoreMixin from "./mixins/scoreMixin";
 import aggregationMixin from "./mixins/aggregationMixin";
+import merge from "lodash/merge";
 
 export default {
   name: "FlatAggregationReport",
@@ -67,7 +91,8 @@ export default {
 
   data() {
     return {
-      aggregatedAnswers: []
+      aggregatedAnswers: [],
+      orderAsc: true
     };
   },
 
@@ -80,7 +105,10 @@ export default {
       for (let aggregatedAnswer of this.aggregatedAnswers) {
         aggregatedValues.push({
           answer: aggregatedAnswer.name,
-          question: aggregatedAnswer.label
+          question: aggregatedAnswer.label.trim(),
+          horizontal_name: aggregatedAnswer.horizontal_name,
+          color: aggregatedAnswer.color,
+          graphLabel: aggregatedAnswer.graphLabel
         });
       }
       return aggregatedValues;
@@ -103,6 +131,7 @@ export default {
   },
 
   methods: {
+    merge,
     setData() {
       this.chartData.labels = [];
       this.aggregatedAnswers = [];
@@ -111,11 +140,13 @@ export default {
       for (let aggregatedAnswerKey of Object.keys(this.aggregatedAnswers)) {
         if (this.object.enableLegend) {
           this.chartData.labels.push(
-            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel
+            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel ??
+              this.aggregatedAnswers[aggregatedAnswerKey].label
           );
         } else {
           this.chartData.labels.push(
-            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel
+            this.aggregatedAnswers[aggregatedAnswerKey].graphLabel ??
+              this.aggregatedAnswers[aggregatedAnswerKey].label
           );
         }
         this.chartData.datasets[0].data.push(

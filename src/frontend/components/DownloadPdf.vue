@@ -346,8 +346,9 @@ export default {
       );
 
       const data = {
-        colors: ["#000000", "#000000"],
+        colors: ["#000000", "#000000", "#000000"],
         columns: [
+          { dataKey: "question_id", header: "Question ID" },
           { dataKey: "question", header: "Question" },
           { dataKey: "answer", header: "Answer" }
         ],
@@ -356,7 +357,11 @@ export default {
 
       for (let aggregatedAnswer of aggregatedAnswers) {
         data.body.push({
-          question: aggregatedAnswer.label,
+          question_id: aggregatedAnswer.graphLabel,
+          question:
+            (aggregatedAnswer.horizontal_name
+              ? aggregatedAnswer.horizontal_name
+              : "") + aggregatedAnswer.label,
           answer: aggregatedAnswer.name
         });
       }

@@ -91,11 +91,52 @@ export default {
       }
     },
     compare(a, b) {
-      if (a.graphLabel.toLowerCase() < b.graphLabel.toLowerCase()) {
-        return -1;
+      let aString = a.name.toLowerCase();
+      let bString = b.name.toLowerCase();
+
+      if (isNaN(aString) && isNaN(bString)) {
+        return this.sortAsc(aString, bString);
+      } else if (isNaN(aString) && !isNaN(bString)) {
+        return this.sortDesc(aString, bString);
+      } else if (!isNaN(aString) && isNaN(bString)) {
+        return this.sortDesc(aString, bString);
+      } else {
+        return this.sortAsc(aString, bString);
       }
-      if (a.graphLabel.toLowerCase() > b.graphLabel.toLowerCase()) {
-        return 1;
+
+      return 0;
+    },
+    sortAsc(aString, bString) {
+      if (aString < bString) {
+        if (this.orderAsc) {
+          return 1;
+        } else {
+          return -1;
+        }
+      }
+      if (aString > bString) {
+        if (this.orderAsc) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      return 0;
+    },
+    sortDesc(aString, bString) {
+      if (aString < bString) {
+        if (this.orderAsc) {
+          return -1;
+        } else {
+          return 1;
+        }
+      }
+      if (aString > bString) {
+        if (this.orderAsc) {
+          return 1;
+        } else {
+          return -1;
+        }
       }
       return 0;
     },
@@ -115,7 +156,14 @@ export default {
     getAnswerObject(item, verticalOption) {
       return {
         name: verticalOption.name,
-        label: item.label,
+        horizontal_name: item.optionsHorizontal
+          ? item.optionsHorizontal[0].name
+          : null,
+        label:
+          item.reportLabel && item.reportLabel !== ""
+            ? item.reportLabel
+            : item.label,
+        color: verticalOption.color,
         graphLabel: this.getGraphLabel(item)
       };
     },
@@ -123,7 +171,7 @@ export default {
       if (item.labelForGraphs && item.labelForGraphs !== "") {
         return item.labelForGraphs;
       }
-      return item.label;
+      return null;
     },
     setRadioGridValue(item, value, aggregatedAnswers = null) {
       if (!value) {
