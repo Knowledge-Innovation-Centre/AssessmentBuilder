@@ -20,13 +20,13 @@
       <tbody>
         <tr v-for="(option, index) in object.options" :key="option.id">
           <td class="aoat-w-32">
-            <input v-model="option.id" type="text" class="aoat-w-full" />
+            <input v-model="option.id" class="aoat-w-full" type="text" />
           </td>
           <td>
-            <input v-model="option.name" type="text" class="aoat-w-full" />
+            <input v-model="option.name" class="aoat-w-full" type="text" />
           </td>
           <td class="aoat-w-12">
-            <input v-model="option.score" type="number" class="aoat-w-full" />
+            <input v-model="option.score" class="aoat-w-full" type="number" />
           </td>
           <td class="aoat-w-12">
             <button class="aoat-h-6" @click="removeOption(index)">X</button>
@@ -37,6 +37,54 @@
         <tr>
           <td colspan="4" style="text-align: center">
             <button @click="addOption()">+</button>
+            <tippy
+              ref="import"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Import options
+                </button>
+              </template>
+              <div>
+                Paste comma separated values (id, value, score). Each line is
+                new option
+              </div>
+              <textarea v-model="pastedOptions" />
+              <div>Delimiter</div>
+              <input v-model="delimiter" />
+              <div>
+                <button class="aoat-mt-2" @click="addOptions()">
+                  Import options
+                </button>
+              </div>
+            </tippy>
+            <tippy
+              ref="remove_element"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Clear all options
+                </button>
+              </template>
+              <div>Are you sure?</div>
+              <button class="aoat-mt-2" @click="removeOptions()">
+                Confirm
+              </button>
+            </tippy>
           </td>
         </tr>
       </tfoot>
@@ -59,7 +107,9 @@ export default {
 
   data() {
     return {
-      show: false
+      show: false,
+      pastedOptions: "",
+      delimiter: ","
     };
   },
   methods: {
@@ -70,6 +120,25 @@ export default {
         score: 1,
         color: "#E84B3C"
       });
+    },
+    addOptions() {
+      const lines = this.pastedOptions.split(/\r?\n/);
+
+      for (const line of lines) {
+        const values = line.split(this.delimiter);
+        if (values.length < 2) {
+          continue;
+        }
+        this.object.options.push({
+          id: values[0].trim(),
+          name: values[1].trim(),
+          score: parseInt((values[2] ?? "1").trim()),
+          color: "#E84B3C"
+        });
+      }
+    },
+    removeOptions() {
+      this.object.options = [];
     },
     removeOption(index) {
       this.object.options.splice(index, 1);
@@ -82,6 +151,7 @@ export default {
 .table > tbody > tr > td {
   padding: 5px 10px;
 }
+
 .table > tbody > tr > th {
   text-align: right;
 }

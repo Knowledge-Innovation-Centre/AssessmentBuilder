@@ -31,9 +31,9 @@
           <td>
             <multiselect
               v-model="option.icon"
-              placeholder=""
-              :show-labels="false"
               :options="dashicons"
+              :show-labels="false"
+              placeholder=""
             >
               <template slot="singleLabel" slot-scope="props">
                 <span :class="props.option" class="dashicons" />
@@ -54,6 +54,54 @@
         <tr>
           <td colspan="6" style="text-align: center">
             <button @click="addOptionVertical()">+</button>
+            <tippy
+              ref="import"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Import options
+                </button>
+              </template>
+              <div>
+                Paste comma separated values (id, value, score). Each line is
+                new option
+              </div>
+              <textarea v-model="pastedOptions" />
+              <div>Delimiter</div>
+              <input v-model="delimiter" />
+              <div>
+                <button class="aoat-mt-2" @click="addOptionsVertical()">
+                  Import options
+                </button>
+              </div>
+            </tippy>
+            <tippy
+              ref="remove_element"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Clear all options
+                </button>
+              </template>
+              <div>Are you sure?</div>
+              <button class="aoat-mt-2" @click="removeOptionsVertical()">
+                Confirm
+              </button>
+            </tippy>
           </td>
         </tr>
       </tfoot>
@@ -75,7 +123,7 @@
         >
           <td class="aoat-w-32"><input v-model="option.id" type="text" /></td>
           <td>
-            <input v-model="option.name" type="text" class="aoat-w-full" />
+            <input v-model="option.name" class="aoat-w-full" type="text" />
           </td>
           <td class="aoat-w-12">
             <button class="aoat-h-6" @click="removeHorizontalOption(index)">
@@ -88,6 +136,54 @@
         <tr>
           <td colspan="2" style="text-align: center">
             <button @click="addOptionHorizontal()">+</button>
+            <tippy
+              ref="import"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Import options
+                </button>
+              </template>
+              <div>
+                Paste comma separated values (id, value, score). Each line is
+                new option
+              </div>
+              <textarea v-model="pastedOptions" />
+              <div>Delimiter</div>
+              <input v-model="delimiter" />
+              <div>
+                <button class="aoat-mt-2" @click="addOptionsHorizontal()">
+                  Import options
+                </button>
+              </div>
+            </tippy>
+            <tippy
+              ref="remove_element"
+              :interactive="true"
+              :max-width="800"
+              arrow
+              class="aoat-inline-block"
+              placement="left"
+              theme="light"
+              trigger="click"
+            >
+              <template v-slot:trigger>
+                <button class="aoat-px-0 aoat-cursor-pointer">
+                  Clear all options
+                </button>
+              </template>
+              <div>Are you sure?</div>
+              <button class="aoat-mt-2" @click="removeOptionsHorizontal()">
+                Confirm
+              </button>
+            </tippy>
           </td>
         </tr>
       </tfoot>
@@ -102,6 +198,7 @@ import dashicons from "../utils/dashicons";
 
 // Import the styles too, globally
 import "vue-swatches/dist/vue-swatches.css";
+
 export default {
   name: "RadioGridInput",
 
@@ -121,7 +218,9 @@ export default {
     return {
       show: false,
       dashicons: dashicons,
-      swatches: this.$store.state.settings.available_colors
+      swatches: this.$store.state.settings.available_colors,
+      pastedOptions: "",
+      delimiter: ","
     };
   },
   methods: {
@@ -140,6 +239,44 @@ export default {
         icon: null
       });
     },
+    addOptionsVertical() {
+      const lines = this.pastedOptions.split(/\r?\n/);
+
+      for (const line of lines) {
+        const values = line.split(this.delimiter);
+        if (values.length < 2) {
+          continue;
+        }
+        this.object.optionsVertical.push({
+          id: values[0].trim(),
+          name: values[1].trim(),
+          score: parseInt((values[2] ?? "1").trim()),
+          color: "#E84B3C"
+        });
+      }
+    },
+    removeOptionsVertical() {
+      this.object.optionsVertical = [];
+    },
+    addOptionsHorizontal() {
+      const lines = this.pastedOptions.split(/\r?\n/);
+
+      for (const line of lines) {
+        const values = line.split(this.delimiter);
+        if (values.length < 2) {
+          continue;
+        }
+        this.object.optionsHorizontal.push({
+          id: values[0].trim(),
+          name: values[1].trim(),
+          score: parseInt((values[2] ?? "1").trim()),
+          color: "#E84B3C"
+        });
+      }
+    },
+    removeOptionsHorizontal() {
+      this.object.optionsHorizontal = [];
+    },
 
     removeHorizontalOption(index) {
       this.object.optionsHorizontal.splice(index, 1);
@@ -157,9 +294,11 @@ export default {
 .table > tbody > tr > td {
   padding: 5px 10px;
 }
+
 .table > tbody > tr > th {
   text-align: right;
 }
+
 /deep/ .multiselect__input {
   opacity: 0;
 }
