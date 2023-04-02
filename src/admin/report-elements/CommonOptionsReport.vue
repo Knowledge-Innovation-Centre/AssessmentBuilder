@@ -195,18 +195,18 @@
                   </select>
                 </td>
               </tr>
-              <tr v-if="typeof object.hideIfFormCompleted !== 'undefined'">
+              <tr v-if="typeof object.hideIfFormsCompleted !== 'undefined'">
                 <th>Hide if form completed:</th>
                 <td colspan="2">
-                  <select v-model="object.hideIfFormCompleted">
-                    <option
-                      v-for="form in forms"
-                      :key="form.ID"
-                      :value="form.ID"
-                    >
-                      {{ form.post_title }}
-                    </option>
-                  </select>
+                  <multiselect
+                    v-model="object.hideIfFormsCompleted"
+                    :allow-empty="false"
+                    :multiple="true"
+                    :options="forms"
+                    class="aoat-w-full"
+                    label="post_title"
+                    track-by="ID"
+                  />
                 </td>
               </tr>
               <tr v-if="typeof object.hideLabels !== 'undefined'">
@@ -453,7 +453,7 @@ export default {
       this.loadForms();
     },
     loadForms() {
-      if (typeof this.object.hideIfFormCompleted !== "undefined") {
+      if (typeof this.object.hideIfFormsCompleted !== "undefined") {
         Api.get(aoat_config.aoatGetFormUrl).then(result => {
           this.forms = result.data;
         });

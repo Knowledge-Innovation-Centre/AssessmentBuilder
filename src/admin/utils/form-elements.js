@@ -434,7 +434,7 @@ export default [
     class: "",
     maxWidth: null,
     maxWidthUnit: "px",
-    hideIfFormCompleted: null
+    hideIfFormsCompleted: []
   },
   {
     key: randomValueHex(15),

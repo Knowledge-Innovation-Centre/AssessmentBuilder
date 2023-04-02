@@ -117,20 +117,24 @@ export default {
   methods: {
     checkShow() {
       this.show = false;
-      if (!this.form.hideIfFormCompleted) {
+      if (
+        !this.form.hideIfFormsCompleted ||
+        !this.form.hideIfFormsCompleted.length
+      ) {
         this.show = true;
         return;
       }
 
-      Api.get(
-        aoat_config.aoatGetLastAssessmentUrl +
-          "?form_id=" +
-          this.form.hideIfFormCompleted
-      ).then(result => {
-        if (!result.data) {
-          this.show = true;
-        }
-      });
+      let promises = [];
+      for (let form of this.form.hideIfFormsCompleted) {
+        Api.get(
+          aoat_config.aoatGetLastAssessmentUrl + "?form_id=" + form.ID
+        ).then(result => {
+          if (!result.data) {
+            this.show = true;
+          }
+        });
+      }
     }
   }
 };
